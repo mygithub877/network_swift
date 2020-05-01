@@ -218,5 +218,11 @@ extension BKWebViewController: WKUIDelegate{
         }))
         self.present(alertController, animated: true, completion: nil)
     }
-
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        let alertController = UIAlertController(title: "提示", message: message, preferredStyle: .alert);
+         alertController.addAction(UIAlertAction(title: "确定", style: .default, handler: { (action) in
+             completionHandler();
+         }))
+         self.present(alertController, animated: true, completion:nil )
+    }
 }
