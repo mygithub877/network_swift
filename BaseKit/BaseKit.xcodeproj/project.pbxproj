@@ -11,6 +11,8 @@
 		386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386A1663245AA3F900616BAB /* BKWebViewController.swift */; };
 		386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386A1665245ABA8C00616BAB /* UIViewControllerExtension.swift */; };
 		E01C8926EFF12EA0C641ABCD /* Pods_BaseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4A57FD649F1A328D79F2569 /* Pods_BaseKit.framework */; };
+		EDA7F570245FEB120027A569 /* BKNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */; };
+		EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		386A1665245ABA8C00616BAB /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		C37D5F775FBE32C65F7A1554 /* Pods-BaseKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BaseKit.debug.xcconfig"; path = "Target Support Files/Pods-BaseKit/Pods-BaseKit.debug.xcconfig"; sourceTree = "<group>"; };
 		E4A57FD649F1A328D79F2569 /* Pods_BaseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BaseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKNavigationViewController.swift; sourceTree = "<group>"; };
+		EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKNavigationBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,7 @@
 		386A1660245AA3A600616BAB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -93,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				386A1665245ABA8C00616BAB /* UIViewControllerExtension.swift */,
+				EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -230,6 +236,8 @@
 			files = (
 				386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */,
 				386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */,
+				EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */,
+				EDA7F570245FEB120027A569 /* BKNavigationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

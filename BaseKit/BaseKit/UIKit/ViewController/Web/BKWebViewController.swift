@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import SnapKit
 
-class BKWebViewController: UIViewController{
+public class BKWebViewController: UIViewController{
     
     private lazy var progressView: UIProgressView = {
         let prgv=UIProgressView()
@@ -61,7 +61,7 @@ class BKWebViewController: UIViewController{
         self.init()
         self.request=request
     }
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor=UIColor.init(white: 243/255.0, alpha: 1);
         self.extendedLayoutIncludesOpaqueBars=true;
@@ -88,7 +88,7 @@ class BKWebViewController: UIViewController{
             make.left.right.bottom.top.equalTo(0)
         }
         self.activityIndicator.snp.makeConstraints { (make) in
-            make.centerX.centerY.equalTo(0)
+            make.centerX.centerY.equalToSuperview()
             make.width.height.equalTo(88)
         }
         self.progressView.snp.makeConstraints { (make) in
@@ -96,7 +96,7 @@ class BKWebViewController: UIViewController{
             make.height.equalTo(2)
         }
     }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (keyPath == "title") {
             let title = change?[.newKey]
             self.title = title as? String;
@@ -109,33 +109,33 @@ class BKWebViewController: UIViewController{
 }
 
 extension BKWebViewController: WKNavigationDelegate{
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         print("开始加载网页...");
         activityIndicator.startAnimating()
         progressView.isHidden = false;
         progressView.progress = 0.0;
 
     }
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("完成网页加载。");
         activityIndicator.stopAnimating()
         progressView.isHidden = true;
         progressView.progress = 1.0;
 
     }
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         print("网页加载失败：\(error.localizedDescription)");
         activityIndicator.stopAnimating()
         progressView.isHidden = true;
         progressView.progress = 0.0;
     }
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         print("网页加载失败：\(error.localizedDescription)");
         activityIndicator.stopAnimating()
         progressView.isHidden = true;
         progressView.progress = 0.0;
     }
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         print("HTTPHeader:\(String(describing: navigationAction.request.allHTTPHeaderFields))");
         print("\n****href:\(String(describing: navigationAction.request.url?.absoluteString))");
         if let cur_url = navigationAction.request.url {
@@ -165,13 +165,15 @@ extension BKWebViewController: WKNavigationDelegate{
                     }
                 }
                 decisionHandler(.cancel);
+            }else{
+                decisionHandler(.allow);
             }
         }else{
             decisionHandler(.allow);
         }
     }
     
-    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         // 判断服务器采用的验证方法
         if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
             // 如果没有错误的情况下 创建一个凭证，并使用证书
@@ -189,7 +191,7 @@ extension BKWebViewController: WKNavigationDelegate{
     }
 }
 extension BKWebViewController: WKUIDelegate{
-    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+    public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         //内页跳转
         let frameInfo:WKFrameInfo? = navigationAction.targetFrame;
         if (!(frameInfo?.isMainFrame ?? false)) {
@@ -198,7 +200,7 @@ extension BKWebViewController: WKUIDelegate{
         return nil;
 
     }
-    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+    public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
        let alertController = UIAlertController(title: "提示", message: message, preferredStyle: .alert);
         alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
             completionHandler(false);
@@ -208,7 +210,7 @@ extension BKWebViewController: WKUIDelegate{
         }))
         self.present(alertController, animated: true, completion:nil )
     }
-    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+    public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
         let alertController = UIAlertController(title: prompt, message: "", preferredStyle: .alert);
         alertController.addTextField { (textField) in
             textField.text = defaultText
@@ -218,7 +220,7 @@ extension BKWebViewController: WKUIDelegate{
         }))
         self.present(alertController, animated: true, completion: nil)
     }
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+    public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let alertController = UIAlertController(title: "提示", message: message, preferredStyle: .alert);
          alertController.addAction(UIAlertAction(title: "确定", style: .default, handler: { (action) in
              completionHandler();

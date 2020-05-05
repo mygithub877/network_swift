@@ -1,5 +1,6 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
+workspace 'BaseKit.xcworkspace'
 
 target 'BaseKit' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -7,4 +8,12 @@ target 'BaseKit' do
 
   # Pods for BaseKit
 	pod 'SnapKit'
+end
+target 'Demo' do
+  project 'Demo/Demo.xcodeproj'
+  # Comment the next line if you don't want to use dynamic framework
+  use_frameworks!
+
+  # Pods for BaseKit
+  pod 'SnapKit'
 end

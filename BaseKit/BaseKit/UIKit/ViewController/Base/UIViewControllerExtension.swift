@@ -14,7 +14,7 @@ extension UIViewController {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         var index = 0
         for btn in buttons {
-            alert.addAction(UIAlertAction(title: btn, style: .default, handler: { (action) in
+            alert.addAction(UIAlertAction(title: btn, style: .default, handler: {[index] (action) in
                 if handle != nil{
                     handle!(index)
                 }
@@ -29,7 +29,7 @@ extension UIViewController {
         alert.setValue(attributedMsg, forKey: "attributedMessage")
         var index = 0
         for btn in buttons {
-            alert.addAction(UIAlertAction(title: btn, style: .default, handler: { (action) in
+            alert.addAction(UIAlertAction(title: btn, style: .default, handler: {[index] (action) in
                 if handle != nil{
                     handle!(index)
                 }
@@ -64,7 +64,7 @@ extension UIViewController {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .actionSheet)
         var index = 0
         for btn in buttons {
-            alert.addAction(UIAlertAction(title: btn, style: .default, handler: { (action) in
+            alert.addAction(UIAlertAction(title: btn, style: .default, handler: {[index] (action) in
                 if handle != nil{
                     handle!(index)
                 }
@@ -72,7 +72,7 @@ extension UIViewController {
             index += 1
         }
         if cancel != nil {
-            alert.addAction(UIAlertAction(title: cancel, style: .cancel, handler: { (action) in
+            alert.addAction(UIAlertAction(title: cancel, style: .cancel, handler: {[index] (action) in
                 if handle != nil{
                     handle!(index)
                 }
@@ -86,7 +86,7 @@ extension UIViewController {
         alert.setValue(attributedMsg, forKey: "attributedMessage")
         var index = 0
         for btn in buttons {
-            alert.addAction(UIAlertAction(title: btn, style: .default, handler: { (action) in
+            alert.addAction(UIAlertAction(title: btn, style: .default, handler: {[index] (action) in
                 if handle != nil{
                     handle!(index)
                 }
@@ -94,7 +94,7 @@ extension UIViewController {
             index += 1
         }
         if cancel != nil {
-            alert.addAction(UIAlertAction(title: cancel, style: .cancel, handler: { (action) in
+            alert.addAction(UIAlertAction(title: cancel, style: .cancel, handler: {[index] (action) in
                 if handle != nil{
                     handle!(index)
                 }
