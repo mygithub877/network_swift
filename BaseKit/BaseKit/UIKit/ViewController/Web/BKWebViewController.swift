@@ -46,6 +46,7 @@ public class BKWebViewController: UIViewController{
         web.uiDelegate = self;
         web.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         web.addObserver(self, forKeyPath: "title", options: .new, context: nil)
+        
         return web
     }()
     

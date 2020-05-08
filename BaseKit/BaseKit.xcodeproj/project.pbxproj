@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		381139DC246554C3008CA8A4 /* UIBarButtonItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */; };
 		386A1656245A80B800616BAB /* BaseKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 386A1654245A80B800616BAB /* BaseKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386A1663245AA3F900616BAB /* BKWebViewController.swift */; };
 		386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386A1665245ABA8C00616BAB /* UIViewControllerExtension.swift */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		1B71C60020DA7F690AD068D8 /* Pods-BaseKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BaseKit.release.xcconfig"; path = "Target Support Files/Pods-BaseKit/Pods-BaseKit.release.xcconfig"; sourceTree = "<group>"; };
+		381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBarButtonItemExtension.swift; sourceTree = "<group>"; };
 		386A1651245A80B800616BAB /* BaseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BaseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		386A1654245A80B800616BAB /* BaseKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseKit.h; sourceTree = "<group>"; };
 		386A1655245A80B800616BAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -40,6 +42,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		381139DA24655494008CA8A4 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		386A1647245A80B800616BAB = {
 			isa = PBXGroup;
 			children = (
@@ -71,6 +81,7 @@
 		386A165E245AA37D00616BAB /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				381139DA24655494008CA8A4 /* Extension */,
 				386A1660245AA3A600616BAB /* View */,
 				386A165F245AA39800616BAB /* ViewController */,
 			);
@@ -234,6 +245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				381139DC246554C3008CA8A4 /* UIBarButtonItemExtension.swift in Sources */,
 				386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */,
 				386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */,
 				EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */,

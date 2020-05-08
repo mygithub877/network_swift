@@ -16,9 +16,14 @@ class ViewController: UIViewController {
     }
 
     @IBAction func alertAction(_ sender: Any) {
-        showAlert("title", msg: "message", buttons: "Btn1","btn2") { (idx) in
+//        showAlert("title", msg: "message", buttons: "Btn1","btn2") { (idx) in
+//            print("点击索引：\(idx)")
+//        }
+//        showAlert(.Style1, title: "Title")
+        showAlert(.Style1, title: "Title"){(idx) in
             print("点击索引：\(idx)")
         }
+
     }
     
     @IBAction func sheetAction(_ sender: Any) {
