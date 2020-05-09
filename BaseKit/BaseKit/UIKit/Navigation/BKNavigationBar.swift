@@ -8,7 +8,7 @@
 
 import UIKit
 fileprivate let bar = BKNavigationBar()
-protocol _BarPrivateProtocol : NSObject{
+private protocol _BarPrivateProtocol : NSObject{
     var navigationController:UINavigationController? { get set }
     func _updateTransitionPercent(percent:CGFloat)
     func _updateTransitionLeftImage(image:UIImage)
@@ -99,11 +99,17 @@ public class BKNavigationBar: UINavigationBar {
         insertSubview(_rigntBackgroundImageView, at: 0)
         insertSubview(_leftBackgroundImageView, at: 0)
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    public override func awakeFromNib() {
+        super.awakeFromNib()
+        isTranslucent = true
+        insertSubview(_rigntBackgroundImageView, at: 0)
+        insertSubview(_leftBackgroundImageView, at: 0)
     }
-    private func swiftClassFromString(className: String) -> AnyClass! {
+    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+    }
+    private func swiftClassFromString(className: String) -> AnyClass? {
         // get the project name
         if  let appName: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String? {
             // YourProject.className
@@ -139,7 +145,7 @@ public class BKNavigationBar: UINavigationBar {
         var k = 0
         if itemGroups.first?.barButtonItems.count == buttons.count {
             buttons.forEach { (btn) in
-                let item:UIBarButtonItem? = itemGroups.first?.barButtonItems[i]
+                let item:UIBarButtonItem? = itemGroups.first?.barButtonItems[k]
                 item?.barButton = btn
             }
             k += 1
@@ -148,8 +154,11 @@ public class BKNavigationBar: UINavigationBar {
     }
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let v = super.hitTest(point, with: event)
-        let acls: AnyClass = swiftClassFromString(className: "_UINavigationBarContentView")
-        let isacls = (v?.isMember(of: acls) == true) || (v?.isMember(of: BKNavigationBar.self) == true)
+        let acls: AnyClass? = NSClassFromString("_UINavigationBarContentView")//swiftClassFromString(className: "_UINavigationBarContentView")
+        if acls == nil {
+            return v
+        }
+        let isacls = (v?.isMember(of: acls!) == true) || (v?.isMember(of: BKNavigationBar.self) == true)
         if (v != nil && self.color != nil && isacls == true) {
             var alpha:CGFloat = 0.0;
             self.color?.getRed(nil, green: nil, blue: nil, alpha: &alpha)
@@ -165,7 +174,10 @@ public class BKNavigationBar: UINavigationBar {
         super.layoutSubviews()
         self.subviews.forEach { (subView1) in
             if #available(iOS 10.0, *){
-                if subView1.isMember(of: swiftClassFromString(className: "_UIBarBackground")){
+                let cls1: AnyClass? = NSClassFromString("_UIBarBackground")//swiftClassFromString(className: "_UIBarBackground")
+                let cls2: AnyClass? = NSClassFromString("_UINavigationBarContentView")//swiftClassFromString(className: "_UINavigationBarContentView")
+
+                if cls1 != nil && subView1.isMember(of: cls1!){
                     _bgFrame = subView1.frame
                     subView1.subviews.forEach { (subView2) in
                         if subView2.isKind(of: UIImageView.self) && subView2.frame.height>0 && subView2.frame.height < 1.0 {
@@ -177,16 +189,18 @@ public class BKNavigationBar: UINavigationBar {
                         }
                     }
                     
-                }else if  subView1.isMember(of: swiftClassFromString(className: "_UINavigationBarContentView")){
+                }else if cls2 != nil && subView1.isMember(of: cls2!){
+                    let cls3: AnyClass? = NSClassFromString("_UIButtonBarStackView")//swiftClassFromString(className: "_UIButtonBarStackView")
                     subView1.subviews.forEach { (subView2) in
-                        if subView2.isMember(of: swiftClassFromString(className: "_UIButtonBarStackView")){
+                        if cls3 != nil && subView2.isMember(of: cls3!){
                             self._configBarButtonStackView(stackView: subView2 as! UIStackView)
                         }
                     }
                 }
                 
             }else{
-                if subView1.isMember(of: swiftClassFromString(className: "_UINavigationBarBackground")) {
+                let cls4: AnyClass? = NSClassFromString("_UINavigationBarBackground")//swiftClassFromString(className: "_UINavigationBarBackground")
+                if cls4 != nil && subView1.isMember(of: cls4!) {
                     subView1.subviews.forEach { (subView2) in
                         if subView2.isKind(of: UIImageView.self) && subView2.frame.height>0 && subView2.frame.height < 1.0 {
                             subView2.isHidden=true
@@ -195,6 +209,8 @@ public class BKNavigationBar: UINavigationBar {
                 }
             }
         }
+        self.sendSubviewToBack(_rigntBackgroundImageView)
+        self.sendSubviewToBack(_leftBackgroundImageView)
     }
 }
 
