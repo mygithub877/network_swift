@@ -27,6 +27,8 @@ private protocol _BarPrivateProtocol : NSObject{
 
 
 public class BKNavigationBar: UINavigationBar {
+    
+    /// 设置导航栏背景色
     public var color:UIColor?{
         didSet{
             if color == nil {
@@ -35,22 +37,30 @@ public class BKNavigationBar: UINavigationBar {
             setNavigationBarWithColor(color: color!)
         }
     }
+    
+    /// 设置导航栏标题颜色
     public var titleColor:UIColor?{
         didSet{
             self.titleTextAttributes?[NSAttributedString.Key.foregroundColor]=titleColor
         }
     }
+    
+    /// 设置导航栏背景图
     public var backgroundImage:UIImage?{
         didSet{
             setBackgroundImage(backgroundImage, for: .default)
         }
     }
+    
+    /// 设置导航栏字体
     public var titleFont:UIFont?{
         didSet{
             self.titleTextAttributes?[NSAttributedString.Key.font]=titleFont
         }
     }
     public var backItemImage:UIImage?
+    
+    /// 设置导航栏渐变背景色
     public var gradientColors:[UIColor]?{
         didSet{
             if gradientColors != nil {
@@ -59,6 +69,7 @@ public class BKNavigationBar: UINavigationBar {
             backgroundImage = _gradientImage
         }
     }
+    //MARK: - Private
     private lazy var _whiteImage: UIImage = {
          let img = imageWithColor(color: UIColor.white)
         return img

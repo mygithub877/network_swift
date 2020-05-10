@@ -18,6 +18,9 @@
 		E01C8926EFF12EA0C641ABCD /* Pods_BaseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4A57FD649F1A328D79F2569 /* Pods_BaseKit.framework */; };
 		EDA7F570245FEB120027A569 /* BKNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */; };
 		EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */; };
+		EDD98EE32467DF29003672E3 /* UIResponderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */; };
+		EDD98EE52467E3E9003672E3 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */; };
+		EDD98EE72467F05D003672E3 /* BKNoDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE62467F05D003672E3 /* BKNoDataView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,9 @@
 		E4A57FD649F1A328D79F2569 /* Pods_BaseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BaseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKNavigationViewController.swift; sourceTree = "<group>"; };
 		EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKNavigationBar.swift; sourceTree = "<group>"; };
+		EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIResponderExtension.swift; sourceTree = "<group>"; };
+		EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		EDD98EE62467F05D003672E3 /* BKNoDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BKNoDataView.swift; path = BaseKit/UIKit/Extension/BKNoDataView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +62,8 @@
 			children = (
 				3887031A2466B1E000D01AD3 /* UIColorExtension.swift */,
 				3887031C2466BC3500D01AD3 /* UIImageExtension.swift */,
+				EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */,
+				EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -112,6 +120,7 @@
 		386A1660245AA3A600616BAB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EDD98EE62467F05D003672E3 /* BKNoDataView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -268,13 +277,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDD98EE52467E3E9003672E3 /* UIViewExtension.swift in Sources */,
 				3887031824667B9300D01AD3 /* UINavigationItemExtension.swift in Sources */,
 				3887031B2466B1E000D01AD3 /* UIColorExtension.swift in Sources */,
 				381139DC246554C3008CA8A4 /* UIBarButtonItemExtension.swift in Sources */,
+				EDD98EE72467F05D003672E3 /* BKNoDataView.swift in Sources */,
 				386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */,
 				386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */,
 				EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */,
 				EDA7F570245FEB120027A569 /* BKNavigationViewController.swift in Sources */,
+				EDD98EE32467DF29003672E3 /* UIResponderExtension.swift in Sources */,
 				3887031D2466BC3500D01AD3 /* UIImageExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

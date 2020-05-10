@@ -22,6 +22,7 @@ class ViewController: UIViewController {
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem?.badgeEnabled = true
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

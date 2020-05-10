@@ -17,7 +17,8 @@ extension UIBarButtonItem{
         static let badgeLabel = UnsafeRawPointer(bitPattern: "badgeLabel".hashValue)!
 
     }
-
+    
+    /// 设置 UIBarButtonItem角标
     public var badgeText:String?{
         set{
             objc_setAssociatedObject(self, AssociatedKey.badgeText, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -98,6 +99,7 @@ extension UIBarButtonItem{
             return objc_getAssociatedObject(self, AssociatedKey.barButton) as? UIControl
         }
     }
+    /// 设置 UIBarButtonItem角标有效性
     public var badgeEnabled:Bool{
         set{
             objc_setAssociatedObject(self, AssociatedKey.badgeEnabled, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -130,6 +132,11 @@ extension UIBarButtonItem{
 }
 extension UIBarButtonItem{
     public typealias UIBarButtonItemHandle = (_ sender:UIButton)->()
+    
+    /// 创建UIBarButtonItem，自定义UIButton
+    /// - Parameters:
+    ///   - title: title
+    ///   - action: action
     public convenience init(_ title:String,action:UIBarButtonItemHandle?) {
         let btn = UIButton()
         btn.setTitle(title, for: .normal)
@@ -148,6 +155,10 @@ extension UIBarButtonItem{
         objc_setAssociatedObject(self, AssociatedKey.UIBarButtonItemBlock, action, .OBJC_ASSOCIATION_COPY_NONATOMIC);
         btn.addTarget(self, action: #selector(_UIBarButtonItemAction), for: .touchUpInside)
     }
+    /// 创建UIBarButtonItem，自定义UIButton
+    /// - Parameters:
+    ///   - image: image
+    ///   - action: action
     public convenience init(_ image:UIImage,action:UIBarButtonItemHandle?) {
         let btn = UIButton()
         btn.setImage(image, for: .normal)
@@ -159,6 +170,10 @@ extension UIBarButtonItem{
         objc_setAssociatedObject(self, AssociatedKey.UIBarButtonItemBlock, action, .OBJC_ASSOCIATION_COPY_NONATOMIC);
         btn.addTarget(self, action: #selector(_UIBarButtonItemAction), for: .touchUpInside)
     }
+    /// 创建UIBarButtonItem，自定义UIButton
+    /// - Parameters:
+    ///   - title: title
+    ///   - action: action
     public convenience init(_ title:String,target:AnyClass, action:Selector) {
         let btn = UIButton()
         btn.setTitle(title, for: .normal)
@@ -177,6 +192,10 @@ extension UIBarButtonItem{
         self.init(customView:btn)
         
     }
+    /// 创建UIBarButtonItem，自定义UIButton
+    /// - Parameters:
+    ///   - image: image
+    ///   - action: action
     public convenience init(_ image:UIImage,target:AnyClass, action:Selector) {
         let btn = UIButton()
         btn.setImage(image, for: .normal)

@@ -20,6 +20,7 @@ public class BKNavigationViewController: UINavigationController{
             return self.navigationBar as! BKNavigationBar
         }
     }
+    //MARK: - init
     public override init(rootViewController: UIViewController) {
         super.init(navigationBarClass: BKNavigationBar.self, toolbarClass: nil)
         self.bar.navigationController=self
@@ -130,6 +131,7 @@ extension BKNavigationViewController{
         super._updateInteractiveTransition(percent)
         self.bar._updateTransitionPercent(percent: percent)
     }
+    
     public override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         if self.viewControllers.count == 1 {
             viewController.hidesBottomBarWhenPushed = true
@@ -141,6 +143,7 @@ extension BKNavigationViewController{
         self.bar._navigationBeginPush()
         super.pushViewController(viewController, animated: animated)
     }
+    @discardableResult
     public override func popViewController(animated: Bool) -> UIViewController? {
         let vc = super.popViewController(animated: animated)
         self.bar._navigationBeginPopInitiallyInteractive(initiallyInteractive: vc?.transitionCoordinator?.initiallyInteractive ?? false)
@@ -151,6 +154,7 @@ extension BKNavigationViewController{
         }
         return vc
     }
+    @discardableResult
     public override func popToRootViewController(animated: Bool) -> [UIViewController]? {
         let vcs = super.popToRootViewController(animated: animated)
         self.bar._navigationBeginPopInitiallyInteractive(initiallyInteractive: vcs?.last?.transitionCoordinator?.initiallyInteractive ?? false)
@@ -161,6 +165,7 @@ extension BKNavigationViewController{
         }
         return vcs
     }
+    @discardableResult
     public override func popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
         let vcs = super.popToViewController(viewController, animated: animated)
         self.bar._navigationBeginPopInitiallyInteractive(initiallyInteractive: vcs?.last?.transitionCoordinator?.initiallyInteractive ?? false)

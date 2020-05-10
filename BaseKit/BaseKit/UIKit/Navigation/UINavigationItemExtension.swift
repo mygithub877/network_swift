@@ -20,6 +20,8 @@ extension UINavigationItem{
         static let translucent = UnsafeRawPointer(bitPattern: "translucent".hashValue)!
         static let alpha = UnsafeRawPointer(bitPattern: "alpha".hashValue)!
     }
+    
+    /// 设置单个页面侧滑手势有效性
     public var interactivePopGestureRecognizerEnabled:Bool{
         set{
             objc_setAssociatedObject(self, AssociatedKey.interactive, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -28,6 +30,8 @@ extension UINavigationItem{
             return (objc_getAssociatedObject(self, AssociatedKey.interactive) ?? false) as! Bool
         }
     }
+    
+    /// 设置单个页面导航栏图片
     public var barImage:UIImage?{
         set{
             objc_setAssociatedObject(self, AssociatedKey.barImage, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -38,6 +42,8 @@ extension UINavigationItem{
             return objc_getAssociatedObject(self, AssociatedKey.barImage) as? UIImage
         }
     }
+    
+    /// 设置单个页面导航栏背景色
     public var barColor:UIColor?{
        set{
             objc_setAssociatedObject(self, AssociatedKey.barColor, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -49,6 +55,8 @@ extension UINavigationItem{
            return rs as? UIColor
        }
     }
+    
+    /// 设置单个页面导航栏渐变色
     public var gradientColors:[UIColor]?{
        set{
         objc_setAssociatedObject(self, AssociatedKey.gradientColors, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -59,6 +67,8 @@ extension UINavigationItem{
            return objc_getAssociatedObject(self, AssociatedKey.gradientColors) as? [UIColor]
        }
     }
+    
+    /// 设置单个页面导航栏标题颜色
     public var titleColor:UIColor?{
        set{
         objc_setAssociatedObject(self, AssociatedKey.titleColor, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -67,6 +77,8 @@ extension UINavigationItem{
            return objc_getAssociatedObject(self, AssociatedKey.titleColor) as? UIColor
        }
     }
+    
+    /// 设置单个页面导航栏标题字体
     public var titleFont:UIFont?{
        set{
         objc_setAssociatedObject(self, AssociatedKey.titleFont, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -75,6 +87,7 @@ extension UINavigationItem{
            return objc_getAssociatedObject(self, AssociatedKey.titleFont) as? UIFont
        }
     }
+    /// 设置单个页面导航栏按钮颜色
     public var barButtonTintColor:UIColor?{
        set{
            objc_setAssociatedObject(self, AssociatedKey.barButtonTintColor, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -83,6 +96,8 @@ extension UINavigationItem{
            return objc_getAssociatedObject(self, AssociatedKey.barButtonTintColor) as? UIColor
        }
     }
+    
+    /// 设置单个页面导航栏高斯效果
     public var translucent:Bool{
        set{
            objc_setAssociatedObject(self, AssociatedKey.translucent, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -93,6 +108,8 @@ extension UINavigationItem{
            return (objc_getAssociatedObject(self, AssociatedKey.translucent) ?? false) as! Bool
        }
     }
+    
+    /// 设置单个页面导航栏透明度
     public var alpha:CGFloat{
        set{
            objc_setAssociatedObject(self, AssociatedKey.alpha, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -101,8 +118,9 @@ extension UINavigationItem{
            return (objc_getAssociatedObject(self, AssociatedKey.alpha) ?? 0) as! CGFloat
        }
     }
-
-    public func updateNavigationBar() -> Void {
+    
+    /// 更新导航栏样式
+    public func updateNavigationBar() {
         let nav=self.value(forKey: "_navigationBar") as? BKNavigationBar;
         if (self.barColor != nil) {
             nav?.color=self.barColor;
