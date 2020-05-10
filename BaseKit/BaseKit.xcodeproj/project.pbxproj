@@ -20,7 +20,23 @@
 		EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */; };
 		EDD98EE32467DF29003672E3 /* UIResponderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */; };
 		EDD98EE52467E3E9003672E3 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */; };
-		EDD98EE72467F05D003672E3 /* BKNoDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE62467F05D003672E3 /* BKNoDataView.swift */; };
+		EDD98EE924682DD3003672E3 /* BKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE824682DD3003672E3 /* BKConstants.swift */; };
+		EDD98EEB24683C2F003672E3 /* BKCategroyBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EEA24683C2F003672E3 /* BKCategroyBar.swift */; };
+		EDD98EED24683C54003672E3 /* BKNoDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EEC24683C54003672E3 /* BKNoDataView.swift */; };
+		EDD98EEF24683CE2003672E3 /* BKButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EEE24683CE2003672E3 /* BKButton.swift */; };
+		EDD98EF124683CFC003672E3 /* BKSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EF024683CFC003672E3 /* BKSearchBar.swift */; };
+		EDD98EF324683D15003672E3 /* BKDashedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EF224683D15003672E3 /* BKDashedView.swift */; };
+		EDD98EF524683D20003672E3 /* BKGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EF424683D20003672E3 /* BKGradientView.swift */; };
+		EDD98EF724683D39003672E3 /* BKActivityIndicatorLoadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EF624683D38003672E3 /* BKActivityIndicatorLoadView.swift */; };
+		EDD98EF924683D53003672E3 /* BKHUDLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EF824683D53003672E3 /* BKHUDLoadingView.swift */; };
+		EDD98EFB24683D6A003672E3 /* BKTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EFA24683D6A003672E3 /* BKTextView.swift */; };
+		EDD98EFD24683D91003672E3 /* BKDownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EFC24683D91003672E3 /* BKDownloadProgressView.swift */; };
+		EDD98EFF24683D9F003672E3 /* BKBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EFE24683D9F003672E3 /* BKBlurView.swift */; };
+		EDD98F0224683DF1003672E3 /* BKTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98F0124683DF1003672E3 /* BKTransition.swift */; };
+		EDD98F0524683E68003672E3 /* BKChineseToPinyin.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98F0424683E68003672E3 /* BKChineseToPinyin.swift */; };
+		EDD98F0724683E76003672E3 /* BKKeyChainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98F0624683E76003672E3 /* BKKeyChainManager.swift */; };
+		EDD98F0924683E81003672E3 /* BKLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98F0824683E81003672E3 /* BKLocationManager.swift */; };
+		EDD98F0B24683E97003672E3 /* BKUDID.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98F0A24683E97003672E3 /* BKUDID.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +58,23 @@
 		EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKNavigationBar.swift; sourceTree = "<group>"; };
 		EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIResponderExtension.swift; sourceTree = "<group>"; };
 		EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
-		EDD98EE62467F05D003672E3 /* BKNoDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BKNoDataView.swift; path = BaseKit/UIKit/Extension/BKNoDataView.swift; sourceTree = SOURCE_ROOT; };
+		EDD98EE824682DD3003672E3 /* BKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKConstants.swift; sourceTree = "<group>"; };
+		EDD98EEA24683C2F003672E3 /* BKCategroyBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKCategroyBar.swift; sourceTree = "<group>"; };
+		EDD98EEC24683C54003672E3 /* BKNoDataView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BKNoDataView.swift; sourceTree = "<group>"; };
+		EDD98EEE24683CE2003672E3 /* BKButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKButton.swift; sourceTree = "<group>"; };
+		EDD98EF024683CFC003672E3 /* BKSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKSearchBar.swift; sourceTree = "<group>"; };
+		EDD98EF224683D15003672E3 /* BKDashedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKDashedView.swift; sourceTree = "<group>"; };
+		EDD98EF424683D20003672E3 /* BKGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKGradientView.swift; sourceTree = "<group>"; };
+		EDD98EF624683D38003672E3 /* BKActivityIndicatorLoadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKActivityIndicatorLoadView.swift; sourceTree = "<group>"; };
+		EDD98EF824683D53003672E3 /* BKHUDLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKHUDLoadingView.swift; sourceTree = "<group>"; };
+		EDD98EFA24683D6A003672E3 /* BKTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKTextView.swift; sourceTree = "<group>"; };
+		EDD98EFC24683D91003672E3 /* BKDownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKDownloadProgressView.swift; sourceTree = "<group>"; };
+		EDD98EFE24683D9F003672E3 /* BKBlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKBlurView.swift; sourceTree = "<group>"; };
+		EDD98F0124683DF1003672E3 /* BKTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKTransition.swift; sourceTree = "<group>"; };
+		EDD98F0424683E68003672E3 /* BKChineseToPinyin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKChineseToPinyin.swift; sourceTree = "<group>"; };
+		EDD98F0624683E76003672E3 /* BKKeyChainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKKeyChainManager.swift; sourceTree = "<group>"; };
+		EDD98F0824683E81003672E3 /* BKLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKLocationManager.swift; sourceTree = "<group>"; };
+		EDD98F0A24683E97003672E3 /* BKUDID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKUDID.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,8 +121,10 @@
 		386A1653245A80B800616BAB /* BaseKit */ = {
 			isa = PBXGroup;
 			children = (
+				EDD98F0324683E44003672E3 /* Foundation */,
 				386A165E245AA37D00616BAB /* UIKit */,
 				386A1654245A80B800616BAB /* BaseKit.h */,
+				EDD98EE824682DD3003672E3 /* BKConstants.swift */,
 				388703162466786200D01AD3 /* BaseKit-Bridging-Header.h */,
 				386A1655245A80B800616BAB /* Info.plist */,
 			);
@@ -111,6 +145,7 @@
 		386A165F245AA39800616BAB /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				EDD98F0024683DD5003672E3 /* TransitionAnimation */,
 				386A1662245AA3C400616BAB /* Web */,
 				386A1661245AA3BB00616BAB /* Base */,
 			);
@@ -120,7 +155,17 @@
 		386A1660245AA3A600616BAB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				EDD98EE62467F05D003672E3 /* BKNoDataView.swift */,
+				EDD98EEC24683C54003672E3 /* BKNoDataView.swift */,
+				EDD98EEA24683C2F003672E3 /* BKCategroyBar.swift */,
+				EDD98EEE24683CE2003672E3 /* BKButton.swift */,
+				EDD98EF024683CFC003672E3 /* BKSearchBar.swift */,
+				EDD98EF224683D15003672E3 /* BKDashedView.swift */,
+				EDD98EF424683D20003672E3 /* BKGradientView.swift */,
+				EDD98EF624683D38003672E3 /* BKActivityIndicatorLoadView.swift */,
+				EDD98EF824683D53003672E3 /* BKHUDLoadingView.swift */,
+				EDD98EFA24683D6A003672E3 /* BKTextView.swift */,
+				EDD98EFC24683D91003672E3 /* BKDownloadProgressView.swift */,
+				EDD98EFE24683D9F003672E3 /* BKBlurView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -168,6 +213,25 @@
 				E4A57FD649F1A328D79F2569 /* Pods_BaseKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EDD98F0024683DD5003672E3 /* TransitionAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				EDD98F0124683DF1003672E3 /* BKTransition.swift */,
+			);
+			path = TransitionAnimation;
+			sourceTree = "<group>";
+		};
+		EDD98F0324683E44003672E3 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				EDD98F0424683E68003672E3 /* BKChineseToPinyin.swift */,
+				EDD98F0624683E76003672E3 /* BKKeyChainManager.swift */,
+				EDD98F0824683E81003672E3 /* BKLocationManager.swift */,
+				EDD98F0A24683E97003672E3 /* BKUDID.swift */,
+			);
+			path = Foundation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,16 +342,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDD98EE52467E3E9003672E3 /* UIViewExtension.swift in Sources */,
+				EDD98F0B24683E97003672E3 /* BKUDID.swift in Sources */,
+				EDD98F0224683DF1003672E3 /* BKTransition.swift in Sources */,
+				EDD98EED24683C54003672E3 /* BKNoDataView.swift in Sources */,
 				3887031824667B9300D01AD3 /* UINavigationItemExtension.swift in Sources */,
+				EDD98EE924682DD3003672E3 /* BKConstants.swift in Sources */,
+				EDD98EEF24683CE2003672E3 /* BKButton.swift in Sources */,
 				3887031B2466B1E000D01AD3 /* UIColorExtension.swift in Sources */,
+				EDD98EF724683D39003672E3 /* BKActivityIndicatorLoadView.swift in Sources */,
+				EDD98F0524683E68003672E3 /* BKChineseToPinyin.swift in Sources */,
 				381139DC246554C3008CA8A4 /* UIBarButtonItemExtension.swift in Sources */,
-				EDD98EE72467F05D003672E3 /* BKNoDataView.swift in Sources */,
 				386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */,
+				EDD98EF124683CFC003672E3 /* BKSearchBar.swift in Sources */,
 				386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */,
+				EDD98EEB24683C2F003672E3 /* BKCategroyBar.swift in Sources */,
 				EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */,
+				EDD98F0924683E81003672E3 /* BKLocationManager.swift in Sources */,
 				EDA7F570245FEB120027A569 /* BKNavigationViewController.swift in Sources */,
 				EDD98EE32467DF29003672E3 /* UIResponderExtension.swift in Sources */,
+				EDD98EFD24683D91003672E3 /* BKDownloadProgressView.swift in Sources */,
+				EDD98F0724683E76003672E3 /* BKKeyChainManager.swift in Sources */,
+				EDD98EFF24683D9F003672E3 /* BKBlurView.swift in Sources */,
+				EDD98EF324683D15003672E3 /* BKDashedView.swift in Sources */,
+				EDD98EFB24683D6A003672E3 /* BKTextView.swift in Sources */,
+				EDD98EF924683D53003672E3 /* BKHUDLoadingView.swift in Sources */,
 				3887031D2466BC3500D01AD3 /* UIImageExtension.swift in Sources */,
+				EDD98EF524683D20003672E3 /* BKGradientView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

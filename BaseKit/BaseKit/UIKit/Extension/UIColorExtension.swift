@@ -15,7 +15,7 @@ extension UIColor{
     ///   - hex: 16进制颜色 000000~FFFFFF
     ///   - alpha: 透明度 0~1
     /// - Returns: 颜色对象
-    public class func hex(_ hex:String, alpha:CGFloat? = 1.0)->UIColor {
+    public class func Hex(_ hex:String, alpha:CGFloat? = 1.0)->UIColor {
         let colorhex = hex.replacingOccurrences(of: "#", with: "")
         if alpha == 1.0{
             if let color = colorsCache.object(forKey: hex as AnyObject){

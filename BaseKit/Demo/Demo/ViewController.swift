@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         self.navigationItem.barColor = colors[index]
         self.view.backgroundColor = UIColor.RGB(r: 230, g: 230, b: 230, alpha: 1)
         self.view.backgroundColor = UIColor.RGB(r: 230, g: 230, b: 230)
-        self.view.backgroundColor = UIColor.hex("f7f7f7")
+        self.view.backgroundColor = .Hex("f7f7f7")
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem?.badgeEnabled = true
