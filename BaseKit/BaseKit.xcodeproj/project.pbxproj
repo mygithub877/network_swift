@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		381139DC246554C3008CA8A4 /* UIBarButtonItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */; };
+		383594E324693F5D00BB334E /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383594E224693F5D00BB334E /* UIControlExtension.swift */; };
+		383594E524695E1100BB334E /* UINavigationController+Percent.m in Sources */ = {isa = PBXBuildFile; fileRef = 383594E424695E1100BB334E /* UINavigationController+Percent.m */; };
 		386A1656245A80B800616BAB /* BaseKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 386A1654245A80B800616BAB /* BaseKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386A1663245AA3F900616BAB /* BKWebViewController.swift */; };
 		386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386A1665245ABA8C00616BAB /* UIViewControllerExtension.swift */; };
@@ -42,6 +44,8 @@
 /* Begin PBXFileReference section */
 		1B71C60020DA7F690AD068D8 /* Pods-BaseKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BaseKit.release.xcconfig"; path = "Target Support Files/Pods-BaseKit/Pods-BaseKit.release.xcconfig"; sourceTree = "<group>"; };
 		381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBarButtonItemExtension.swift; sourceTree = "<group>"; };
+		383594E224693F5D00BB334E /* UIControlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControlExtension.swift; sourceTree = "<group>"; };
+		383594E424695E1100BB334E /* UINavigationController+Percent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Percent.m"; sourceTree = "<group>"; };
 		386A1651245A80B800616BAB /* BaseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BaseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		386A1654245A80B800616BAB /* BaseKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseKit.h; sourceTree = "<group>"; };
 		386A1655245A80B800616BAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,6 +100,7 @@
 				3887031C2466BC3500D01AD3 /* UIImageExtension.swift */,
 				EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */,
 				EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */,
+				383594E224693F5D00BB334E /* UIControlExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -191,6 +196,7 @@
 			children = (
 				EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */,
 				388703122466628300D01AD3 /* UINavigationController+Percent.h */,
+				383594E424695E1100BB334E /* UINavigationController+Percent.m */,
 				EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */,
 				381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */,
 				3887031724667B9300D01AD3 /* UINavigationItemExtension.swift */,
@@ -343,6 +349,7 @@
 			files = (
 				EDD98EE52467E3E9003672E3 /* UIViewExtension.swift in Sources */,
 				EDD98F0B24683E97003672E3 /* BKUDID.swift in Sources */,
+				383594E524695E1100BB334E /* UINavigationController+Percent.m in Sources */,
 				EDD98F0224683DF1003672E3 /* BKTransition.swift in Sources */,
 				EDD98EED24683C54003672E3 /* BKNoDataView.swift in Sources */,
 				3887031824667B9300D01AD3 /* UINavigationItemExtension.swift in Sources */,
@@ -356,6 +363,7 @@
 				EDD98EF124683CFC003672E3 /* BKSearchBar.swift in Sources */,
 				386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */,
 				EDD98EEB24683C2F003672E3 /* BKCategroyBar.swift in Sources */,
+				383594E324693F5D00BB334E /* UIControlExtension.swift in Sources */,
 				EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */,
 				EDD98F0924683E81003672E3 /* BKLocationManager.swift in Sources */,
 				EDA7F570245FEB120027A569 /* BKNavigationViewController.swift in Sources */,

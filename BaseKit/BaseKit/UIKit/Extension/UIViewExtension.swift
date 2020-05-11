@@ -155,3 +155,83 @@ extension UIView{
     }
     
 }
+
+extension UIView{
+    private struct AssociatedKey {
+        static let noDataView = UnsafeRawPointer(bitPattern: "noDataView".hashValue)!
+        static let netErrorView = UnsafeRawPointer(bitPattern: "netErrorView".hashValue)!
+        static let activityIndicatorView = UnsafeRawPointer(bitPattern: "activityIndicatorView".hashValue)!
+    }
+    public var noDataView:BKNoDataView{
+        get{
+            var view = objc_getAssociatedObject(self, AssociatedKey.noDataView) as? BKNoDataView
+            if view == nil {
+                view = BKNoDataView()
+                view!.isHidden = true
+                self.addSubview(view!)
+                objc_setAssociatedObject(self, AssociatedKey.noDataView, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                view!.translatesAutoresizingMaskIntoConstraints = false
+                let centerXConstraint = NSLayoutConstraint(item: view!, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0.0)
+                self.addConstraint(centerXConstraint)
+                view!.centerXConstrait=centerXConstraint
+                var constant:CGFloat = 0
+                if (iPhone.isX_X) {
+                    constant = -34;
+                }
+                let centerYConstraint = NSLayoutConstraint(item: view!, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: constant)
+                self.addConstraint(centerYConstraint)
+                view!.centerYConstrait=centerYConstraint
+            }
+            return view!
+        }
+    }
+    public var netErrorView:BKNoDataView{
+        get{
+            var view = objc_getAssociatedObject(self, AssociatedKey.netErrorView) as? BKNoDataView
+            if view == nil {
+                view = BKNoDataView()
+                view!.isHidden = true
+                self.addSubview(view!)
+                objc_setAssociatedObject(self, AssociatedKey.netErrorView, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                view!.translatesAutoresizingMaskIntoConstraints = false
+                let centerXConstraint = NSLayoutConstraint(item: view!, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0.0)
+                self.addConstraint(centerXConstraint)
+                view!.centerXConstrait=centerXConstraint
+                var constant:CGFloat = 0
+                if (iPhone.isX_X) {
+                    constant = -34;
+                }
+                let centerYConstraint = NSLayoutConstraint(item: view!, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: constant)
+                self.addConstraint(centerYConstraint)
+                view!.centerYConstrait=centerYConstraint
+            }
+            return view!
+        }
+    }
+    public var activityIndicatorView: UIActivityIndicatorView{
+        get{
+            var view = objc_getAssociatedObject(self, AssociatedKey.activityIndicatorView) as? UIActivityIndicatorView
+            if view == nil {
+                view = UIActivityIndicatorView(style: .gray)
+                view!.hidesWhenStopped = true
+                self.addSubview(view!)
+                objc_setAssociatedObject(self, AssociatedKey.activityIndicatorView, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                view!.translatesAutoresizingMaskIntoConstraints = false
+                let widthConstraint = NSLayoutConstraint(item: view!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 30)
+                let heightConstraint = NSLayoutConstraint(item: view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 30)
+                view!.addConstraints([widthConstraint,heightConstraint])
+                let centerXConstraint = NSLayoutConstraint(item: view!, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0.0)
+                self.addConstraint(centerXConstraint)
+                let centerYConstraint = NSLayoutConstraint(item: view!, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
+                self.addConstraint(centerYConstraint)
+            }
+            return view!
+        }
+    }
+    public func showActivityIndicator() {
+        self.activityIndicatorView.startAnimating()
+    }
+    public func hiddenActivityIndicator() {
+        self.activityIndicatorView.stopAnimating()
+    }
+}

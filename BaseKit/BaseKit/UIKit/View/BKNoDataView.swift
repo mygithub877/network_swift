@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BKNoDataView: UIView {
+public class BKNoDataView: UIView {
     
     public var title:String = "" {
         didSet{
@@ -63,7 +63,7 @@ class BKNoDataView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    override var intrinsicContentSize: CGSize{
+    public override var intrinsicContentSize: CGSize{
         let width = max(titleLabel.width, imageView.width)
         var height = titleLabel.height+imageView.height+30
         if button.isHidden == false {
@@ -76,7 +76,7 @@ class BKNoDataView: UIView {
         titleLabel.textColor = .Hex("999999")
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
-        titleLabel.preferredMaxLayoutWidth = SCREEN_WIDTH-20;
+        titleLabel.preferredMaxLayoutWidth = SCREEN.WIDTH-20;
         self.addSubview(imageView)
         self.addSubview(titleLabel)
         imageView.snp.makeConstraints { (make) in
@@ -86,7 +86,7 @@ class BKNoDataView: UIView {
         titleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(imageView.snp.bottom).offset(10);
             make.centerX.equalTo(self.snp.centerX);
-            make.width.lessThanOrEqualTo(SCREEN_WIDTH-20)
+            make.width.lessThanOrEqualTo(SCREEN.WIDTH-20)
         }
         button.isHidden = true
         button.addTarget(self, action: #selector(_buttonAction), for: .touchUpInside)
@@ -98,7 +98,7 @@ class BKNoDataView: UIView {
         }
         button.addObserver(self, forKeyPath: "isHidden", options: .new, context: nil)
     }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "isHidden" {
             self.sizeToFit()
         }

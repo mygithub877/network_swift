@@ -26,9 +26,10 @@ extension UIBarButtonItem{
                 return
             }
             let lbl=objc_getAssociatedObject(self.barButton!, AssociatedKey.badgeLabel) as? UILabel;
+            lbl?.text=newValue;
             var size:CGSize = .zero
-            if badgeText?.count == 0{
-                if (badgeText != nil) {
+            if newValue?.count == 0{
+                if (newValue != nil) {
                     size=CGSize(width:8,height:8);
                     lbl?.isHidden=false;
                 }else{
@@ -38,7 +39,6 @@ extension UIBarButtonItem{
                 lbl?.isHidden=false;
                 size = self.unReadLabelSize()
             }
-            lbl?.text=badgeText;
             lbl?.layer.cornerRadius=size.height/2;
             lbl?.snp.updateConstraints({ (make) in
                 make.size.equalTo(size)
@@ -169,6 +169,7 @@ extension UIBarButtonItem{
         self.init(customView:btn)
         objc_setAssociatedObject(self, AssociatedKey.UIBarButtonItemBlock, action, .OBJC_ASSOCIATION_COPY_NONATOMIC);
         btn.addTarget(self, action: #selector(_UIBarButtonItemAction), for: .touchUpInside)
+        
     }
     /// 创建UIBarButtonItem，自定义UIButton
     /// - Parameters:
