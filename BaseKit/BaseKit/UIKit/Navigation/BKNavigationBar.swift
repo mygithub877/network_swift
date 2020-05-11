@@ -106,13 +106,13 @@ public class BKNavigationBar: UINavigationBar {
     }
     public override init(frame: CGRect) {
         super.init(frame:frame)
-        isTranslucent = true
+        isTranslucent = false
         insertSubview(_rigntBackgroundImageView, at: 0)
         insertSubview(_leftBackgroundImageView, at: 0)
     }
     public override func awakeFromNib() {
         super.awakeFromNib()
-        isTranslucent = true
+        isTranslucent = false
         insertSubview(_rigntBackgroundImageView, at: 0)
         insertSubview(_leftBackgroundImageView, at: 0)
     }
