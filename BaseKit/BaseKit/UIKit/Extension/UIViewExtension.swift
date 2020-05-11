@@ -208,22 +208,17 @@ extension UIView{
             return view!
         }
     }
-    public var activityIndicatorView: UIActivityIndicatorView{
+    public var activityIndicatorView: BKActivityIndicatorLoadView{
         get{
-            var view = objc_getAssociatedObject(self, AssociatedKey.activityIndicatorView) as? UIActivityIndicatorView
+            var view = objc_getAssociatedObject(self, AssociatedKey.activityIndicatorView) as? BKActivityIndicatorLoadView
             if view == nil {
-                view = UIActivityIndicatorView(style: .gray)
-                view!.hidesWhenStopped = true
+                view = BKActivityIndicatorLoadView(style: .horizontal)
                 self.addSubview(view!)
                 objc_setAssociatedObject(self, AssociatedKey.activityIndicatorView, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-                view!.translatesAutoresizingMaskIntoConstraints = false
-                let widthConstraint = NSLayoutConstraint(item: view!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 30)
-                let heightConstraint = NSLayoutConstraint(item: view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 30)
-                view!.addConstraints([widthConstraint,heightConstraint])
-                let centerXConstraint = NSLayoutConstraint(item: view!, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0.0)
-                self.addConstraint(centerXConstraint)
-                let centerYConstraint = NSLayoutConstraint(item: view!, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
-                self.addConstraint(centerYConstraint)
+                view!.snp.makeConstraints { (make) in
+                    make.centerX.equalToSuperview()
+                    make.centerY.equalToSuperview()
+                }
             }
             return view!
         }

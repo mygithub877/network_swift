@@ -41,30 +41,40 @@ class ViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.tintColor = barItemTintColors[index]
         self.navigationItem.rightBarButtonItem?.badgeEnabled = true
         
+        loadDataSources()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.rightBarButtonItem?.badgeText = "\(index)"
+    }
+}
+extension ViewController{
+    func loadDataSources() {
+        
         let item0: UITableViewCellItem = (title:"UIBarButtonItem",subtitle:"badge", action:{() in
             self.navigationItem.rightBarButtonItem?.badgeText = "\(arc4random()%99)"
         })
         self.dataSource.append(item0)
         
-        let item1: UITableViewCellItem = (title:"UIViewControllerExtension\nAlert",subtitle:"style1", action:{() in
+        let item1: UITableViewCellItem = (title:"UIViewControllerExtension\n  -Alert",subtitle:"style1", action:{() in
             self.showAlert(.Style1, title: "Title"){(idx) in
                 print("点击索引：\(idx)")
             }
         })
         self.dataSource.append(item1)
-        let item2: UITableViewCellItem = (title:"UIViewControllerExtension\nAlert",subtitle:"style2", action:{() in
+        let item2: UITableViewCellItem = (title:"UIViewControllerExtension\n  -Alert",subtitle:"style2", action:{() in
             self.showAlert(.Style2, title: "Title"){(idx) in
                 print("点击索引：\(idx)")
             }
         })
         self.dataSource.append(item2)
-        let item3: UITableViewCellItem = (title:"UIViewControllerExtension\nAlert",subtitle:"style3", action:{() in
+        let item3: UITableViewCellItem = (title:"UIViewControllerExtension\n  -Alert",subtitle:"style3", action:{() in
             self.showAlert(.Style3, title: "Title"){(idx) in
                 print("点击索引：\(idx)")
             }
         })
         self.dataSource.append(item3)
-        let item4: UITableViewCellItem = (title:"UIViewControllerExtension\nActionSheet",subtitle:"style3", action:{() in
+        let item4: UITableViewCellItem = (title:"UIViewControllerExtension\n  -ActionSheet",subtitle:"ActionSheet", action:{() in
             self.showSheet("title", msg: "message", cancel: "Cancel", buttons: "Btn1","B2tn") { (idx) in
                 print("点击索引：\(idx)")
             }
@@ -76,7 +86,7 @@ class ViewController: UIViewController {
             self.navigationController?.pushViewController(web, animated: true)
         })
         self.dataSource.append(item5)
-        let item6: UITableViewCellItem = (title:"BKNavigationViewController\nBKNavigationBar",subtitle:"Push", action:{() in
+        let item6: UITableViewCellItem = (title:"BKNavigationViewController\n+BKNavigationBar",subtitle:"Push", action:{() in
             let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "vc") as! ViewController
             if self.index == colors.count-1{
                 vc.index = 0
@@ -86,7 +96,7 @@ class ViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         })
         self.dataSource.append(item6)
-        let item7: UITableViewCellItem = (title:"BKNavigationViewController\nBKNavigationBar",subtitle:"Present", action:{() in
+        let item7: UITableViewCellItem = (title:"BKNavigationViewController\n+BKNavigationBar",subtitle:"Present", action:{() in
             let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "vc") as! ViewController
             let nav = BKNavigationViewController(rootViewController: vc)
             self.present(nav, animated: true, completion: nil)
@@ -102,14 +112,57 @@ class ViewController: UIViewController {
             UIApplication.shared.keyWindow?.rootViewController?.dismissAll(animated: true, completion: nil)
         })
         self.dataSource.append(item9)
+        let item10: UITableViewCellItem = (title:"UIViewControllerExtension\n  -Toast",subtitle:"Text", action:{() in
+            self.showToast("Toast") {
+                print("消失")
+            }
+        })
+        self.dataSource.append(item10)
+        let item11: UITableViewCellItem = (title:"UIViewControllerExtension\n  -Toast",subtitle:"Text and Title", action:{() in
+            self.showToast("Title", text: "Text") {
+                print("消失")
+            }
+        })
+        self.dataSource.append(item11)
         
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationItem.rightBarButtonItem?.badgeText = "\(index)"
+        let item12: UITableViewCellItem = (title:"UIViewExtension\n  -NoDataView",subtitle:"Network Error", action:{() in
+            let vc = NoDataViewController()
+            vc.isNetworkError = true
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item12)
+
+        let item13: UITableViewCellItem = (title:"UIViewExtension\n  -NoDataView",subtitle:"No Data View", action:{() in
+            let vc = NoDataViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item13)
+
+        let item14: UITableViewCellItem = (title:"UIViewExtension\n  -ActivityIndicatorView",subtitle:"horizontal", action:{() in
+            let vc = IndicatorViewController()
+            vc.style = .horizontal
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item14)
+        let item15: UITableViewCellItem = (title:"UIViewExtension\n   -ActivityIndicatorView",subtitle:"vertical", action:{() in
+            let vc = IndicatorViewController()
+            vc.style = .vertical
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item15)
+        let item16: UITableViewCellItem = (title:"UIViewExtension\n  -ActivityIndicatorView",subtitle:"withoutLabel", action:{() in
+            let vc = IndicatorViewController()
+            vc.style = .withoutLabel
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item16)
+
     }
 }
 
+
+
+//MARK: - delegate & datasource
 extension ViewController:UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataSource.count

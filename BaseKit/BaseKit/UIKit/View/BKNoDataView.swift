@@ -58,10 +58,12 @@ public class BKNoDataView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupUI()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setupUI()
     }
     public override var intrinsicContentSize: CGSize{
         let width = max(titleLabel.width, imageView.width)
@@ -77,8 +79,8 @@ public class BKNoDataView: UIView {
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
         titleLabel.preferredMaxLayoutWidth = SCREEN.WIDTH-20;
-        self.addSubview(imageView)
-        self.addSubview(titleLabel)
+        self.addSubview(self.imageView)
+        self.addSubview(self.titleLabel)
         imageView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.snp.centerX)
             make.top.equalTo(10)
@@ -89,6 +91,9 @@ public class BKNoDataView: UIView {
             make.width.lessThanOrEqualTo(SCREEN.WIDTH-20)
         }
         button.isHidden = true
+        (button as! BKNoDataButton).didLayoutSubviews = {
+            self.sizeToFit()
+        }
         button.addTarget(self, action: #selector(_buttonAction), for: .touchUpInside)
         addSubview(button)
         button.snp.makeConstraints { (make) in
@@ -111,6 +116,8 @@ public class BKNoDataView: UIView {
 }
 
 private class BKNoDataButton : UIButton{
+    var didLayoutSubviews:(()->())?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setTitleColor(.white, for: .normal)
@@ -127,5 +134,11 @@ private class BKNoDataButton : UIButton{
         var size = super.intrinsicContentSize
         size.width += 60
         return size
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if didLayoutSubviews != nil {
+            didLayoutSubviews!()
+        }
     }
 }
