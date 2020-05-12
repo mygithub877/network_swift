@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class BKNoDataView: UIView {
+public class BKNoDataView: UIView{
     
     public var title:String = "" {
         didSet{

@@ -27,8 +27,8 @@ class NoDataViewController: UIViewController {
                 print(sender.title(for: .normal)!)
             }
         }else{
-            self.view.noDataView.title = "暂无数据"
-            self.view.noDataView.image = UIImage(named: "no_information")
+//            self.view.noDataView.title = "暂无数据"
+//            self.view.noDataView.image = UIImage(named: "no_information")
             self.view.noDataView.isHidden = false
         }
     }
