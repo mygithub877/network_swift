@@ -195,10 +195,10 @@
 			isa = PBXGroup;
 			children = (
 				EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */,
+				381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */,
 				388703122466628300D01AD3 /* UINavigationController+Percent.h */,
 				383594E424695E1100BB334E /* UINavigationController+Percent.m */,
 				EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */,
-				381139DB246554C3008CA8A4 /* UIBarButtonItemExtension.swift */,
 				3887031724667B9300D01AD3 /* UINavigationItemExtension.swift */,
 			);
 			path = Navigation;

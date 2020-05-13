@@ -57,7 +57,7 @@ public class BKButton: UIButton {
     }
     public var item:Item?
     private var titleSize:CGSize?
-    init(style:Style) {
+    public init(style:Style) {
         super.init(frame:.zero)
         self.style=style
     }
@@ -109,7 +109,7 @@ public class BKButton: UIButton {
             let vh=(self.imageView?.height ?? 0.0)+(self.titleLabel?.height ?? 0.0) + margin;
             self.titleLabel?.frame=CGRect(x:self.width/2-(self.titleLabel?.width ?? 0.0)/2, y:self.height/2-vh/2, width:self.titleLabel?.width ?? 0.0, height:self.titleLabel?.height ?? 0.0);
             
-            self.imageView?.frame=CGRect(x:self.width/2-(self.imageView?.width ?? 0.0)/2, y:(self.imageView?.maxY ?? 0.0)+margin, width:self.imageView?.width ?? 0.0, height:self.imageView?.height ?? 0.0);
+            self.imageView?.frame=CGRect(x:self.width/2-(self.imageView?.width ?? 0.0)/2, y:(self.titleLabel?.maxY ?? 0.0)+margin, width:self.imageView?.width ?? 0.0, height:self.imageView?.height ?? 0.0);
 
         case .custom:
             self.imageView?.frame = self.imageRect;

@@ -150,12 +150,30 @@ extension ViewController{
             self.navigationController?.pushViewController(vc, animated: true)
         })
         self.dataSource.append(item15)
-        let item16: UITableViewCellItem = (title:"UIViewExtension\n  -ActivityIndicatorView",subtitle:"withoutLabel", action:{() in
+        let item16: UITableViewCellItem = (title:"UIViewExtension\n  -ActivityIndicatorView",subtitle:"without label", action:{() in
             let vc = IndicatorViewController()
             vc.style = .withoutLabel
             self.navigationController?.pushViewController(vc, animated: true)
         })
         self.dataSource.append(item16)
+
+        let item17: UITableViewCellItem = (title:"BKButton",subtitle:"button", action:{() in
+            let vc = ButtonViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item17)
+
+        let item18: UITableViewCellItem = (title:"BKDashedView",subtitle:"虚线", action:{() in
+            let vc = DashViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item18)
+
+        let item19: UITableViewCellItem = (title:"BKGradientView",subtitle:"渐变", action:{() in
+            let vc = GradientViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item19)
 
     }
 }
