@@ -35,8 +35,9 @@ class CategoryViewController: UIViewController {
         bar.setTitleColor(.systemBlue, state: .selected)
         bar.setTitleColor(.yellow, state: .normal, index: 6)
         bar.setTitleColor(.orange, state: .selected, index: 7)
-        
-//        bar.setFont(UIFont.boldSystemFont(ofSize: 17), state: .selected)
+        bar.setBackgroundColor(.green, state: .normal, index: 6)
+        bar.setBackgroundColor(.systemPink, state: .selected, index: 6)
+
 
         self.view.addSubview(bar)
         bar.snp.makeConstraints { (make) in

@@ -35,6 +35,7 @@ public class BKCategroyBar: UIView {
     private var scrollView:UIScrollView = UIScrollView()
     private var buttons:[BKCategroyBarButton] = Array<BKCategroyBarButton>()
     
+    //MARK: - functions
     public func setFont(_ font:UIFont,state:UIControl.State,index:Int? = nil){
         guard self.items != nil else {
             return
@@ -154,6 +155,8 @@ public class BKCategroyBar: UIView {
         super.init(coder: coder)
         setupInit()
     }
+}
+private extension BKCategroyBar{
     private func setupInit() {
         self.backgroundColor = .white
         scrollView.showsVerticalScrollIndicator=false;
@@ -238,12 +241,25 @@ public class BKCategroyBar: UIView {
         }
         self.scrollView.setContentOffset(oldOffset, animated: true)
     }
+
 }
+
+
+
+
 public class BKCategroyBarLine: UIView {
     public enum Style {
         case inset
         case width
         case auto
+    }
+    public enum AnimationCurve {
+        case easeInOut
+        case easeIn
+        case easeOut
+        case linear
+        case spring
+        case none
     }
     public var style:Style = .auto
     public var inset:UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
@@ -251,6 +267,7 @@ public class BKCategroyBarLine: UIView {
     public var lineHeight:CGFloat = 2
     fileprivate var selectedBtn:BKCategroyBarButton?{
         didSet{
+            
             oldValue?.removeObserver(self, forKeyPath: "center")
             selectedBtn?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
             updateFrame()
