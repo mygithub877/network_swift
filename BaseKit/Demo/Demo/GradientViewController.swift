@@ -14,18 +14,27 @@ class GradientViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .Hex("f7f7f7")
         // Do any additional setup after loading the view.
+        let view = BKGradientView()
+        self.view.addSubview(view)
+
         let view1 = BKGradientView()
+        view1.style = .linear(.horizontal)
         self.view.addSubview(view1)
         
         let view2 = BKGradientView()
         view2.style = .radial
         self.view.addSubview(view2)
 
-        view1.snp.makeConstraints { (make) in
+        view.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(30)
             make.height.equalTo(70)
             make.width.equalToSuperview().multipliedBy(0.8)
+        }
+        view1.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.snp.bottom).offset(30)
+            make.height.width.equalTo(200)
         }
         view2.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()

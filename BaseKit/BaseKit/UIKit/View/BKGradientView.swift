@@ -9,9 +9,25 @@
 import UIKit
 
 public class BKGradientView: UIView {
-   public  enum Style {
-        case linear
+    public  enum Style:Equatable {
+        public enum Direction {
+            case horizontal
+            case vertical
+        }
+        case linear(_ direction:Direction)
         case radial
+        public static func == (lhs: Self, rhs: Self) -> Bool{
+            switch (lhs, rhs) {
+            case (.radial,.radial):
+                return true
+            case (.linear(.horizontal),.linear(.horizontal)):
+                return true
+            case (.linear(.vertical),.linear(.vertical)):
+                return true
+            default:
+                return false
+            }
+        }
     }
     public var startColor:UIColor = .clear{
         didSet{
@@ -23,7 +39,7 @@ public class BKGradientView: UIView {
             self.setNeedsDisplay()
         }
     }
-    public var style:Style = .linear{
+    public var style:Style = .linear(.vertical){
         didSet{
             self.setNeedsDisplay()
         }
@@ -46,19 +62,27 @@ public class BKGradientView: UIView {
             self._drawLinearGradientInRect(rect)
         }
     }
+    //MARK: - Private Draw
     private func _drawLinearGradientInRect(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         let colorSpace = CGColorSpaceCreateDeviceRGB();
         let locations:[CGFloat] = [ 0.0, 1.0 ];
         let colors = [startColor.cgColor,endColor.cgColor];
          let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: locations)
-        let startPoint = CGPoint(x:0,y:0);
-        let endPoint = CGPoint(x:1,y:0);
+        var startPoint:CGPoint
+        var endPoint:CGPoint
+        if self.style == .linear(.horizontal) {
+            startPoint = CGPoint(x:0,y:0);
+            endPoint = CGPoint(x:rect.maxX,y:0);
+        }else{
+            startPoint = CGPoint(x:0,y:0);
+            endPoint = CGPoint(x:0,y:rect.maxY);
+        }
+
         context?.saveGState();
         context?.addRect(rect);
         context?.clip();
         context?.drawLinearGradient(gradient!, start: startPoint, end: endPoint, options: CGGradientDrawingOptions(rawValue: 0))
-//        context?.setStrokeColor(UIColor.clear.cgColor);
         
     }
     private func _drawRadialGradientInRect(_ rect: CGRect) {

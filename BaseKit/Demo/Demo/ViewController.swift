@@ -163,17 +163,23 @@ extension ViewController{
         })
         self.dataSource.append(item17)
 
-        let item18: UITableViewCellItem = (title:"BKDashedView",subtitle:"虚线", action:{() in
+        let item18: UITableViewCellItem = (title:"BKDashedView",subtitle:"Dash Line", action:{() in
             let vc = DashViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         })
         self.dataSource.append(item18)
 
-        let item19: UITableViewCellItem = (title:"BKGradientView",subtitle:"渐变", action:{() in
+        let item19: UITableViewCellItem = (title:"BKGradientView",subtitle:"Gradient", action:{() in
             let vc = GradientViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         })
         self.dataSource.append(item19)
+
+        let item20: UITableViewCellItem = (title:"BKCategroyBar",subtitle:"category", action:{() in
+            let vc = CategoryViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item20)
 
     }
 }
