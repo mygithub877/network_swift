@@ -30,7 +30,6 @@ extension UIControl{
         var set = self.events[key]
         if set == nil {
             set = Set()
-            self.events[key] = set;
         }
         set?.forEach({ (wrappper) in
             wrappper.callBack = nil
@@ -40,7 +39,9 @@ extension UIControl{
         wrapper.event = event;
         wrapper.callBack = action;
         set?.insert(wrapper)
-        self.addTarget(wrapper, action: #selector(_BKControlWrapper.invoke), for: event)
+        self.events[key] = set;
+        objc_setAssociatedObject(self, BKControlHandlersKey, self.events, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        self.addTarget(wrapper, action:#selector(_BKControlWrapper.invoke), for: event)
     }
     public func removeAction(event:UIControl.Event) {
         self.allTargets.forEach { (target) in

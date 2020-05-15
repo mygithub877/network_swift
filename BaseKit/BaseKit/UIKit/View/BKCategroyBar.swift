@@ -12,29 +12,44 @@ public class BKCategroyBar: UIView {
         case fit
         case full
     }
-    
-    
-    
-    public var selectedIndex:Int = 0
-    
-    public var style:Style = .fit
-    
-    public var badgeTintColor:UIColor = .red
-    
-    public var titleWidthOffset:CGFloat = 20
-    
-    public var badgeInsets:UIEdgeInsets = .zero
-    
+    public enum SelectedStyle {
+        case line
+        case backgroundView
+        case humpBackground(color:UIColor)
+        case without
+    }
+    public var selectedIndex:Int = 0{
+        didSet{
+            updateSelectedIndex()
+        }
+    }
+    public var style:Style = .fit {
+        didSet{
+            resetItems()
+        }
+    }
+    public var titleWidthOffset:CGFloat = 20 {
+        didSet{
+            resetItems()
+        }
+    }
     public var items:[Item]?{
         didSet{
             resetItems()
         }
     }
+    public var selectedMaskStyle:SelectedStyle = .line {
+        didSet{
+            resetSelectMaskView()
+        }
+    }
+    public var badgeInsets:UIEdgeInsets = .zero
+    public var badgeTintColor:UIColor = .red
 
-    private(set) var line:BKCategroyBarLine = BKCategroyBarLine()
-    private var scrollView:UIScrollView = UIScrollView()
+    private(set) var selectedMaskView:BKCategroyBarSelectedView?
+
+    private var scrollView:BKCategroyBarScrollView = BKCategroyBarScrollView()
     private var buttons:[BKCategroyBarButton] = Array<BKCategroyBarButton>()
-    
     //MARK: - functions
     public func setFont(_ font:UIFont,state:UIControl.State,index:Int? = nil){
         guard self.items != nil else {
@@ -162,6 +177,7 @@ private extension BKCategroyBar{
         scrollView.showsVerticalScrollIndicator=false;
         scrollView.showsHorizontalScrollIndicator=false
         scrollView.bounces=false
+        scrollView.backgroundColor = .clear
         self.addSubview(self.scrollView)
         self.scrollView.snp.makeConstraints { (make) in
             make.top.bottom.right.left.equalToSuperview()
@@ -173,7 +189,7 @@ private extension BKCategroyBar{
         guard (self.items?.isEmpty ?? true) == false else {
             return
         }
-        scrollView.addSubview(self.line)
+        resetSelectMaskView()
         var totalWidth:CGFloat = 0
         let offset=titleWidthOffset
         var index = 0
@@ -188,7 +204,7 @@ private extension BKCategroyBar{
             totalWidth += (btn.width+offset)
             if index == self.selectedIndex{
                 btn.isSelected=true;
-                line.selectedBtn=btn;
+                selectedMaskView?.selectedBtn=btn;
             }
             index += 1
         })
@@ -221,18 +237,57 @@ private extension BKCategroyBar{
             make.right.equalToSuperview()
         }
     }
+    func resetSelectMaskView() {
+        self.selectedMaskView?.removeFromSuperview()
+        scrollView.selectedView=nil
+        switch self.selectedMaskStyle {
+        case .line:
+            self.selectedMaskView = BKCategroyBarLine()
+        case .backgroundView:
+            self.selectedMaskView = BKCategroyBarBackgroundView()
+        case .humpBackground(let color):
+            let v = BKCategroyBarBackgroundView()
+            v.humpFillColor = color
+            scrollView.selectedView=v
+            self.selectedMaskView = v
+        default:
+            self.selectedMaskView = nil
+        }
+        if self.selectedMaskView != nil {
+            scrollView.insertSubview(self.selectedMaskView!, at: 0)
+            if buttons.count > selectedIndex {
+                selectedMaskView?.selectedBtn=buttons[selectedIndex];
+            }
+        }
+
+    }
     @objc func buttonAction(_ sender:BKCategroyBarButton) {
         guard sender.isSelected == false else {
             return
         }
-        sender.isSelected=true
-        line.selectedBtn?.isSelected=false;
-        line.selectedBtn=sender
+        selectedIndex = sender.tag
+        updateSelectButton(sender)
+    }
+    func updateSelectedIndex() {
+        guard buttons.count > selectedIndex else {
+            return
+        }
+        let btn = buttons[selectedIndex]
+        guard btn.isSelected == false else {
+            return
+        }
+        updateSelectButton(btn)
+    }
+    func updateSelectButton(_ btn:BKCategroyBarButton) {
+        btn.isSelected=true
+        selectedMaskView?.selectedBtn?.isSelected=false;
+        selectedMaskView?.selectedBtn=btn
         adjustScrollContentOffset()
+        scrollView.setNeedsDisplay()
     }
     func adjustScrollContentOffset() {
         var oldOffset=self.scrollView.contentOffset
-        let selectedCenter:CGFloat = (self.line.selectedBtn?.center.x ?? 0) - oldOffset.x
+        let selectedCenter:CGFloat = (self.selectedMaskView?.selectedBtn?.center.x ?? 0) - oldOffset.x
         oldOffset.x =  oldOffset.x+(selectedCenter-self.scrollView.width/2)
         if oldOffset.x<0 {
             oldOffset.x=0
@@ -241,16 +296,72 @@ private extension BKCategroyBar{
         }
         self.scrollView.setContentOffset(oldOffset, animated: true)
     }
+}
 
+class BKCategroyBarScrollView: UIScrollView {
+    var selectedView:BKCategroyBarBackgroundView?{
+        didSet{
+            oldValue?.removeObserver(self, forKeyPath: "frame")
+            self.selectedView?.addObserver(self, forKeyPath: "frame", options: .new, context: nil)
+            setNeedsDisplay()
+        }
+    }
+    deinit {
+        selectedView?.removeObserver(self, forKeyPath: "frame")
+    }
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        setNeedsDisplay()
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.setNeedsDisplay()
+    }
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        guard let maskview = self.selectedView else {
+            return
+        }
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return
+        }
+        var maskFrame = maskview.frame
+        let cor = maskFrame.height/2
+        let cap:CGFloat = 2
+        maskFrame.origin.x -= (cap);
+        maskFrame.origin.y -= cap;
+        maskFrame.size.width += 2*cap;
+        maskFrame.size.height += cap;
+        
+        //左下
+        context.move(to: CGPoint(x: maskFrame.minX-cor, y: maskFrame.maxY))
+        context.addQuadCurve(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY), control: CGPoint(x: maskFrame.minX-cap*0.5, y: maskFrame.maxY-cap*0.5))
+        context.addLine(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY))
+        //左上
+        context.addQuadCurve(to: CGPoint(x: maskFrame.minX+cor, y: maskFrame.minY), control: CGPoint(x: maskFrame.minX+cap*0.7, y: maskFrame.minY+cap*0.7))
+        context.addLine(to: CGPoint(x: maskFrame.maxX-cor, y: maskFrame.minY))
+        //右上
+        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX, y: maskFrame.midY), control: CGPoint(x: maskFrame.maxX-cap*0.5, y: maskFrame.minY+cap*0.5))
+        context.addLine(to: CGPoint(x: maskFrame.maxX, y: maskFrame.midY))
+        //右下
+        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX+cor, y: maskFrame.maxY), control: CGPoint(x: maskFrame.maxX+cap*0.5, y: maskFrame.maxY-cap*0.5))
+        
+        context.addLine(to: CGPoint(x: contentSize.width, y: maskFrame.maxY))
+        context.addLine(to: CGPoint(x: contentSize.width, y: 0))
+        context.addLine(to: CGPoint(x: 0, y: 0))
+        context.addLine(to: CGPoint(x: 0, y: maskFrame.maxY))
+        context.addLine(to: CGPoint(x: maskFrame.minX-cor, y: maskFrame.maxY))
+        context.setFillColor(maskview.humpFillColor.cgColor)
+        context.fillPath()
+    }
+    
 }
 
 
 
-
-public class BKCategroyBarLine: UIView {
+public class BKCategroyBarSelectedView: UIView{
     public enum Style {
         case inset
-        case width
+        case size
         case auto
     }
     public enum AnimationCurve {
@@ -261,46 +372,110 @@ public class BKCategroyBarLine: UIView {
         case spring
         case none
     }
+    public var image:UIImage?
     public var style:Style = .auto
     public var inset:UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-    public var lineWidth:CGFloat = 0
-    public var lineHeight:CGFloat = 2
+    public var lineSize:CGSize = CGSize(width: 0, height: 2)
     fileprivate var selectedBtn:BKCategroyBarButton?{
         didSet{
-            
             oldValue?.removeObserver(self, forKeyPath: "center")
-            selectedBtn?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-            updateFrame()
+            self.selectedBtn?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+            
+            self.updateFrame()
         }
     }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .red
     }
-    
+    deinit {
+        selectedBtn?.removeObserver(self, forKeyPath: "center")
+    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         updateFrame()
     }
-    func updateFrame()  {
+    open func updateFrame()  {
+        
+    }
+}
+ 
+
+public class BKCategroyBarLine: BKCategroyBarSelectedView {
+    
+    override public func updateFrame()  {
+        super.updateFrame()
         var width:CGFloat=0;
         let btnWidth:CGFloat = (selectedBtn?.width ?? 0)
+        var x:CGFloat = 0
+        var y:CGFloat = 0
         if (self.style == .auto) {
             width=btnWidth-inset.left-inset.right;
-            lineWidth=width
-        }else if (self.style == .width){
-            width=lineWidth;
+            lineSize.width=width
+            x=(selectedBtn?.minX ?? 0)+inset.left
+            y = (superview?.height ?? 0)-lineSize.width-inset.bottom
+        }else if (self.style == .size){
+            width=lineSize.width;
+            x = (selectedBtn?.minX ?? 0)+btnWidth/2-width/2
+            y = (superview?.height ?? 0)-lineSize.height
         }else{
             width=btnWidth-inset.left-inset.right;
-            lineWidth=width
+            lineSize.width=width
+            x=(selectedBtn?.minX ?? 0)+inset.left
+            y = (superview?.height ?? 0)-lineSize.height-inset.bottom
         }
-        let rect = CGRect(x:(selectedBtn?.minX ?? 0)+btnWidth/2-width/2, y: (superview?.height ?? 0)-lineHeight, width: width, height: lineHeight)
+
+        let rect = CGRect(x:x, y: y, width: width, height: lineSize.height)
         self.frame = rect
     }
 }
+public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
+    var humpFillColor:UIColor = .white
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        inset = UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override public func updateFrame()  {
+        super.updateFrame()
+        var width:CGFloat=0;
+        var height:CGFloat=0;
+        let btnWidth:CGFloat = (selectedBtn?.width ?? 0)
+        let btnHeight:CGFloat = (selectedBtn?.height ?? 0)
+        var x:CGFloat = 0
+        var y:CGFloat = 0
 
+        if (self.style == .auto) {
+            width=btnWidth-inset.left-inset.right;
+            height=btnHeight-inset.top-inset.bottom;
+            lineSize.height=height
+            lineSize.width=width
+            x=(selectedBtn?.minX ?? 0)+inset.left
+            y=inset.top
+        }else if (self.style == .size){
+            width=lineSize.width;
+            height=lineSize.height
+            x = (selectedBtn?.minX ?? 0)+btnWidth/2-width/2
+            y=btnHeight/2-lineSize.height/2;
+        }else{
+            width=btnWidth-inset.left-inset.right;
+            height=btnHeight-inset.top-inset.bottom
+            lineSize.height=height
+            lineSize.width=width
+            x=(selectedBtn?.minX ?? 0)+inset.left
+            y=inset.top
+        }
+        let rect = CGRect(x:x, y: y, width: width, height: lineSize.height)
+        self.layer.cornerRadius = lineSize.height/2
+        self.frame = rect
+    }
+}
 public class Item: NSObject{
     
     public var title:String?
