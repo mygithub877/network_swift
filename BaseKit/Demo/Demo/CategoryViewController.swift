@@ -9,7 +9,7 @@
 import UIKit
 import BaseKit
 class CategoryViewController: UIViewController {
-    var bar:BKCategroyBar = BKCategroyBar()
+    var bar = BKCategroyBar()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,21 +34,47 @@ class CategoryViewController: UIViewController {
         bar.backgroundColor = .clear
         bar.setFont(UIFont.boldSystemFont(ofSize: 15), state: .selected)
         bar.setTitleColor(.gray, state: .normal)
-        bar.setTitleColor(.systemBlue, state: .selected)
+        bar.setTitleColor(.lightText, state: .selected)
         bar.setTitleColor(.yellow, state: .normal, index: 6)
         bar.setTitleColor(.orange, state: .selected, index: 7)
 //        bar.setBackgroundColor(.green, state: .normal, index: 6)
 //        bar.setBackgroundColor(.systemPink, state: .selected, index: 6)
-        bar.selectedMaskStyle = .humpBackground(color: .white)
-
         self.view.addSubview(bar)
         bar.snp.makeConstraints { (make) in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
             make.height.equalTo(50)
         }
-        
+        let styletitles=["下标线样式","背景样式1","背景样式2","背景样式3","无样式"]
+        for i in 0..<styletitles.count {
+            let button = UIButton()
+            button.setTitle(styletitles[i], for: .normal)
+            button.setTitleColor(.systemBlue, for: .normal)
+            button.tag=i
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+            button.addTarget(self, action: #selector(buttonActions), for: .touchUpInside)
+            view.addSubview(button)
+            button.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview().multipliedBy(Float(2*i+1)/Float(styletitles.count))
+                make.centerY.equalToSuperview().offset(-100)
+            }
+        }
+        let bgtitles=["Inset","固定大小"]
+        for i in 0..<bgtitles.count {
+            let button = UIButton()
+            button.setTitle(bgtitles[i], for: .normal)
+            button.setTitleColor(.systemBlue, for: .normal)
+            button.tag=i
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+            button.addTarget(self, action: #selector(bgbuttonActions), for: .touchUpInside)
+            view.addSubview(button)
+            button.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview().multipliedBy(Float(2*i+1)/Float(bgtitles.count))
+                make.centerY.equalToSuperview().offset(-60)
+            }
+        }
+
         let button = UIButton()
         button.setTitle("随机切换索引", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
@@ -60,10 +86,39 @@ class CategoryViewController: UIViewController {
         view.addSubview(button)
         button.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.centerY.equalToSuperview().offset(100)
         }
     }
     
+    @objc func bgbuttonActions(_ sender:UIButton) {
+        switch sender.tag {
+        case 0:
+            bar.selectedMaskView?.style = .inset(inset: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+        case 1:
+            bar.selectedMaskView?.style = .size(size: CGSize(width: 40, height: 30))
+        default:
+            break
+        }
+    }
+    @objc func buttonActions(_ sender:UIButton) {
+        switch sender.tag {
+        case 0:
+            bar.selectedMaskStyle = .line
+        case 1:
+            bar.selectedMaskStyle = .backgroundView
+            bar.selectedMaskView?.image  = UIImage(named: "btn_ad_02")
+        case 2:
+            bar.selectedMaskView?.backgroundColor = .black
+            bar.selectedMaskStyle = .humpBackground(color: .systemGreen)
+        case 3:
+            bar.selectedMaskStyle = .humpBackground(color: .systemGreen)
+            bar.selectedMaskView?.image  = UIImage(named: "btn_ad_02")
+        case 4:
+            bar.selectedMaskStyle = .without
+        default:
+            break
+        }
+    }
 
     /*
     // MARK: - Navigation

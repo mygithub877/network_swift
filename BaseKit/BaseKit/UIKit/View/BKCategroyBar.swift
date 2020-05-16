@@ -7,6 +7,29 @@
 //
 
 import UIKit
+public class Item: NSObject{
+    public var title:String?
+    public var selectedTitle:String?
+    public var image:UIImage?
+    public var selectedImage:UIImage?
+    fileprivate var badgeText:String = ""
+    fileprivate var fonts:[UInt:UIFont] = [UIControl.State.normal.rawValue:UIFont.systemFont(ofSize: 14),UIControl.State.selected.rawValue:UIFont.systemFont(ofSize: 14)]
+    fileprivate var titleColors:[UInt:UIColor] = [UIControl.State.normal.rawValue:UIColor.black,UIControl.State.selected.rawValue:UIColor.red,UIControl.State.highlighted.rawValue:UIColor.red]
+    fileprivate var backgroundColors:[UInt:UIColor] = [:]
+    fileprivate var backgroundImages:[UInt:UIImage] = [:]
+
+    public init(title:String?,selectedTitle:String? = nil) {
+        super.init()
+        self.title=title
+        self.selectedTitle=selectedTitle
+    }
+    public init(image:UIImage?,selectedImage:UIImage? = nil) {
+        super.init()
+        self.image=image
+        self.selectedImage=selectedImage
+    }
+}
+
 public class BKCategroyBar: UIView {
     public enum Style {
         case fit
@@ -45,9 +68,8 @@ public class BKCategroyBar: UIView {
     }
     public var badgeInsets:UIEdgeInsets = .zero
     public var badgeTintColor:UIColor = .red
-
-    private(set) var selectedMaskView:BKCategroyBarSelectedView?
-
+    public private(set) var selectedMaskView:BKCategroyBarSelectedView?
+    
     private var scrollView:BKCategroyBarScrollView = BKCategroyBarScrollView()
     private var buttons:[BKCategroyBarButton] = Array<BKCategroyBarButton>()
     //MARK: - functions
@@ -265,8 +287,7 @@ private extension BKCategroyBar{
         guard sender.isSelected == false else {
             return
         }
-        selectedIndex = sender.tag
-        updateSelectButton(sender)
+        self.selectedIndex = sender.tag        
     }
     func updateSelectedIndex() {
         guard buttons.count > selectedIndex else {
@@ -334,16 +355,16 @@ class BKCategroyBarScrollView: UIScrollView {
         
         //左下
         context.move(to: CGPoint(x: maskFrame.minX-cor, y: maskFrame.maxY))
-        context.addQuadCurve(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY), control: CGPoint(x: maskFrame.minX-cap*0.5, y: maskFrame.maxY-cap*0.5))
+        context.addQuadCurve(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY), control: CGPoint(x: maskFrame.minX-cap*0.8, y: maskFrame.maxY-cap*0.8))
         context.addLine(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY))
         //左上
-        context.addQuadCurve(to: CGPoint(x: maskFrame.minX+cor, y: maskFrame.minY), control: CGPoint(x: maskFrame.minX+cap*0.7, y: maskFrame.minY+cap*0.7))
+        context.addQuadCurve(to: CGPoint(x: maskFrame.minX+cor, y: maskFrame.minY), control: CGPoint(x: maskFrame.minX+cap*0.8, y: maskFrame.minY+cap*0.8))
         context.addLine(to: CGPoint(x: maskFrame.maxX-cor, y: maskFrame.minY))
         //右上
-        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX, y: maskFrame.midY), control: CGPoint(x: maskFrame.maxX-cap*0.5, y: maskFrame.minY+cap*0.5))
+        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX, y: maskFrame.midY), control: CGPoint(x: maskFrame.maxX-cap*0.8, y: maskFrame.minY+cap*0.8))
         context.addLine(to: CGPoint(x: maskFrame.maxX, y: maskFrame.midY))
         //右下
-        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX+cor, y: maskFrame.maxY), control: CGPoint(x: maskFrame.maxX+cap*0.5, y: maskFrame.maxY-cap*0.5))
+        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX+cor, y: maskFrame.maxY), control: CGPoint(x: maskFrame.maxX+cap*0.8, y: maskFrame.maxY-cap*0.8))
         
         context.addLine(to: CGPoint(x: contentSize.width, y: maskFrame.maxY))
         context.addLine(to: CGPoint(x: contentSize.width, y: 0))
@@ -360,9 +381,8 @@ class BKCategroyBarScrollView: UIScrollView {
 
 public class BKCategroyBarSelectedView: UIView{
     public enum Style {
-        case inset
-        case size
-        case auto
+        case inset(inset:UIEdgeInsets)
+        case size(size:CGSize)
     }
     public enum AnimationCurve {
         case easeInOut
@@ -372,10 +392,49 @@ public class BKCategroyBarSelectedView: UIView{
         case spring
         case none
     }
-    public var image:UIImage?
-    public var style:Style = .auto
-    public var inset:UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-    public var lineSize:CGSize = CGSize(width: 0, height: 2)
+    private var imageView = UIImageView()
+    public var image:UIImage?{
+        didSet{
+            imageView.image=image
+            if image == nil {
+                imageView.isHidden=true
+            }else{
+                imageView.isHidden=false
+            }
+        }
+    }
+    //提供内部访问的存储属性，类似于oc直接访问 _xxx 成员变量一样，避免调用调用set导致死循环
+    internal var _style:Style = .inset(inset: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
+//    internal var _inset:UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+//    internal var _lineSize:CGSize = CGSize(width: 0, height: 2)
+    //供外部访问的计算和存储属性，等价于oc的调用setter getter
+    public var style:Style {
+        set{
+            _style=newValue
+            self.updateFrame()
+        }
+        get{
+            return _style
+        }
+    }
+//    public var inset:UIEdgeInsets {
+//        set{
+//            _inset=newValue
+//            self.updateFrame()
+//        }
+//        get{
+//            return _inset
+//        }
+//    }
+//    public var lineSize:CGSize {
+//        set{
+//            _lineSize=newValue
+//            self.updateFrame()
+//        }
+//        get{
+//            return _lineSize
+//        }
+//    }
     fileprivate var selectedBtn:BKCategroyBarButton?{
         didSet{
             oldValue?.removeObserver(self, forKeyPath: "center")
@@ -384,9 +443,18 @@ public class BKCategroyBarSelectedView: UIView{
             self.updateFrame()
         }
     }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .red
+        self.clipsToBounds=true
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds=true
+        self.addSubview(imageView)
+        imageView.isHidden=true;
+        imageView.snp.makeConstraints { (make) in
+            make.left.right.bottom.top.equalToSuperview()
+        }
     }
     deinit {
         selectedBtn?.removeObserver(self, forKeyPath: "center")
@@ -395,7 +463,11 @@ public class BKCategroyBarSelectedView: UIView{
         fatalError("init(coder:) has not been implemented")
     }
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        updateFrame()
+        if keyPath == "cornerRadius" {
+            imageView.layer.cornerRadius = self.layer.cornerRadius;
+        }else{
+            updateFrame()
+        }
     }
     open func updateFrame()  {
         
@@ -411,32 +483,45 @@ public class BKCategroyBarLine: BKCategroyBarSelectedView {
         let btnWidth:CGFloat = (selectedBtn?.width ?? 0)
         var x:CGFloat = 0
         var y:CGFloat = 0
-        if (self.style == .auto) {
-            width=btnWidth-inset.left-inset.right;
-            lineSize.width=width
-            x=(selectedBtn?.minX ?? 0)+inset.left
-            y = (superview?.height ?? 0)-lineSize.width-inset.bottom
-        }else if (self.style == .size){
-            width=lineSize.width;
+        var height:CGFloat = 2
+        //这里访问成员变量时需要使用内部私有变量访问，避免造成死循环
+        switch _style {
+        case .size(let _lineSize):
+            width=_lineSize.width
+            height=_lineSize.height
             x = (selectedBtn?.minX ?? 0)+btnWidth/2-width/2
-            y = (superview?.height ?? 0)-lineSize.height
-        }else{
-            width=btnWidth-inset.left-inset.right;
-            lineSize.width=width
-            x=(selectedBtn?.minX ?? 0)+inset.left
-            y = (superview?.height ?? 0)-lineSize.height-inset.bottom
-        }
+            y = (superview?.height ?? 0)-_lineSize.height
 
-        let rect = CGRect(x:x, y: y, width: width, height: lineSize.height)
+        case .inset(let _inset):
+            width=btnWidth-_inset.left-_inset.right;
+            x=(selectedBtn?.minX ?? 0)+_inset.left
+            height = height - _inset.bottom - _inset.top
+            if height < 0{
+                height = 0
+            }
+            y = (superview?.height ?? 0)-height-_inset.bottom
+        }
+//        if (_style == .size){
+//            width=_lineSize.width;
+//            x = (selectedBtn?.minX ?? 0)+btnWidth/2-width/2
+//            y = (superview?.height ?? 0)-_lineSize.height
+//        }else{
+//            width=btnWidth-_inset.left-_inset.right;
+//            _lineSize.width=width
+//            x=(selectedBtn?.minX ?? 0)+_inset.left
+//            y = (superview?.height ?? 0)-_lineSize.height-_inset.bottom
+//        }
+
+        let rect = CGRect(x:x, y: y, width: width, height: height)
         self.frame = rect
     }
 }
 public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
     var humpFillColor:UIColor = .white
-    
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        inset = UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10)
+//        _inset = UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10)
+        _style = .inset(inset: UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10))
     }
     
     required init?(coder: NSCoder) {
@@ -450,56 +535,35 @@ public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
         let btnHeight:CGFloat = (selectedBtn?.height ?? 0)
         var x:CGFloat = 0
         var y:CGFloat = 0
-
-        if (self.style == .auto) {
-            width=btnWidth-inset.left-inset.right;
-            height=btnHeight-inset.top-inset.bottom;
-            lineSize.height=height
-            lineSize.width=width
-            x=(selectedBtn?.minX ?? 0)+inset.left
-            y=inset.top
-        }else if (self.style == .size){
-            width=lineSize.width;
-            height=lineSize.height
+        //这里访问成员变量时需要使用内部私有变量访问，避免造成死循环
+        switch _style {
+        case .size(let _lineSize):
+            width=_lineSize.width;
+            height=_lineSize.height
             x = (selectedBtn?.minX ?? 0)+btnWidth/2-width/2
-            y=btnHeight/2-lineSize.height/2;
-        }else{
-            width=btnWidth-inset.left-inset.right;
-            height=btnHeight-inset.top-inset.bottom
-            lineSize.height=height
-            lineSize.width=width
-            x=(selectedBtn?.minX ?? 0)+inset.left
-            y=inset.top
+            y=btnHeight/2-_lineSize.height/2;
+        case .inset(let _inset):
+            width=btnWidth-_inset.left-_inset.right;
+            height=btnHeight-_inset.top-_inset.bottom
+            x=(selectedBtn?.minX ?? 0)+_inset.left
+            y=_inset.top
         }
-        let rect = CGRect(x:x, y: y, width: width, height: lineSize.height)
-        self.layer.cornerRadius = lineSize.height/2
+//         if (_style == .size){
+//            width=_lineSize.width;
+//            height=_lineSize.height
+//            x = (selectedBtn?.minX ?? 0)+btnWidth/2-width/2
+//            y=btnHeight/2-_lineSize.height/2;
+//        }else{
+//            width=btnWidth-_inset.left-_inset.right;
+//            height=btnHeight-_inset.top-_inset.bottom
+//            _lineSize.height=height
+//            _lineSize.width=width
+//            x=(selectedBtn?.minX ?? 0)+_inset.left
+//            y=_inset.top
+//        }
+        let rect = CGRect(x:x, y: y, width: width, height: height)
+        self.layer.cornerRadius = height/2
         self.frame = rect
-    }
-}
-public class Item: NSObject{
-    
-    public var title:String?
-    public var selectedTitle:String?
-    
-    public var image:UIImage?
-    public var selectedImage:UIImage?
-    
-    fileprivate var badgeText:String = ""
-    
-    fileprivate var fonts:[UInt:UIFont] = [UIControl.State.normal.rawValue:UIFont.systemFont(ofSize: 14),UIControl.State.selected.rawValue:UIFont.systemFont(ofSize: 14)]
-    fileprivate var titleColors:[UInt:UIColor] = [UIControl.State.normal.rawValue:UIColor.black,UIControl.State.selected.rawValue:UIColor.red,UIControl.State.highlighted.rawValue:UIColor.red]
-    fileprivate var backgroundColors:[UInt:UIColor] = [:]
-    fileprivate var backgroundImages:[UInt:UIImage] = [:]
-
-    public init(title:String?,selectedTitle:String? = nil) {
-        super.init()
-        self.title=title
-        self.selectedTitle=selectedTitle
-    }
-    public init(image:UIImage?,selectedImage:UIImage? = nil) {
-        super.init()
-        self.image=image
-        self.selectedImage=selectedImage
     }
 }
 class BKCategroyBarButton: UIButton {
