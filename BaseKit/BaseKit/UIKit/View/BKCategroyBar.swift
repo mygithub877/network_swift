@@ -68,11 +68,15 @@ public class BKCategroyBar: UIView {
     }
     public var badgeInsets:UIEdgeInsets = .zero
     public var badgeTintColor:UIColor = .red
+    public var didSelectedHandle:((_ index:Int)->())?
     public private(set) var selectedMaskView:BKCategroyBarSelectedView?
     
     private var scrollView:BKCategroyBarScrollView = BKCategroyBarScrollView()
     private var buttons:[BKCategroyBarButton] = Array<BKCategroyBarButton>()
     //MARK: - functions
+    public func setDidSelectedHandle(_ handle:@escaping ((_ index:Int)->())) {
+       self.didSelectedHandle = handle
+    }
     public func setFont(_ font:UIFont,state:UIControl.State,index:Int? = nil){
         guard self.items != nil else {
             return
@@ -206,7 +210,7 @@ private extension BKCategroyBar{
         }
     }
     private func resetItems() {
-        self.scrollView.removeAllSubViews()
+        self.scrollView.removeAllSubviews()
         buttons.removeAll()
         guard (self.items?.isEmpty ?? true) == false else {
             return
@@ -287,7 +291,10 @@ private extension BKCategroyBar{
         guard sender.isSelected == false else {
             return
         }
-        self.selectedIndex = sender.tag        
+        self.selectedIndex = sender.tag
+        if self.didSelectedHandle != nil {
+            self.didSelectedHandle!(sender.tag)
+        }
     }
     func updateSelectedIndex() {
         guard buttons.count > selectedIndex else {
@@ -310,10 +317,11 @@ private extension BKCategroyBar{
         var oldOffset=self.scrollView.contentOffset
         let selectedCenter:CGFloat = (self.selectedMaskView?.selectedBtn?.center.x ?? 0) - oldOffset.x
         oldOffset.x =  oldOffset.x+(selectedCenter-self.scrollView.width/2)
+        if (oldOffset.x+self.scrollView.width)>self.scrollView.contentSize.width{
+            oldOffset.x = self.scrollView.contentSize.width-self.scrollView.width
+        }
         if oldOffset.x<0 {
             oldOffset.x=0
-        }else if (oldOffset.x+self.scrollView.width)>self.scrollView.contentSize.width{
-            oldOffset.x = self.scrollView.contentSize.width-self.scrollView.width
         }
         self.scrollView.setContentOffset(oldOffset, animated: true)
     }
@@ -352,7 +360,11 @@ class BKCategroyBarScrollView: UIScrollView {
         maskFrame.origin.y -= cap;
         maskFrame.size.width += 2*cap;
         maskFrame.size.height += cap;
-        
+        var maxwidth = contentSize.width
+        if maxwidth < self.frame.width {
+            maxwidth = self.frame.width
+        }
+
         //左下
         context.move(to: CGPoint(x: maskFrame.minX-cor, y: maskFrame.maxY))
         context.addQuadCurve(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY), control: CGPoint(x: maskFrame.minX-cap*0.8, y: maskFrame.maxY-cap*0.8))
@@ -366,8 +378,8 @@ class BKCategroyBarScrollView: UIScrollView {
         //右下
         context.addQuadCurve(to: CGPoint(x: maskFrame.maxX+cor, y: maskFrame.maxY), control: CGPoint(x: maskFrame.maxX+cap*0.8, y: maskFrame.maxY-cap*0.8))
         
-        context.addLine(to: CGPoint(x: contentSize.width, y: maskFrame.maxY))
-        context.addLine(to: CGPoint(x: contentSize.width, y: 0))
+        context.addLine(to: CGPoint(x: maxwidth, y: maskFrame.maxY))
+        context.addLine(to: CGPoint(x: maxwidth, y: 0))
         context.addLine(to: CGPoint(x: 0, y: 0))
         context.addLine(to: CGPoint(x: 0, y: maskFrame.maxY))
         context.addLine(to: CGPoint(x: maskFrame.minX-cor, y: maskFrame.maxY))

@@ -89,7 +89,7 @@ extension UIView{
             return responder as! UIViewController
         }
     }
-    public func removeAllSubViews() {
+    public func removeAllSubviews() {
         self.subviews.forEach { (view) in
             view.removeFromSuperview()
         }
