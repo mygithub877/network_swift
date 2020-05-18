@@ -17,6 +17,7 @@
 		3887031824667B9300D01AD3 /* UINavigationItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887031724667B9300D01AD3 /* UINavigationItemExtension.swift */; };
 		3887031B2466B1E000D01AD3 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887031A2466B1E000D01AD3 /* UIColorExtension.swift */; };
 		3887031D2466BC3500D01AD3 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887031C2466BC3500D01AD3 /* UIImageExtension.swift */; };
+		38C2653424728F2B00AEDDF0 /* BKPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2653324728F2B00AEDDF0 /* BKPopoverViewController.swift */; };
 		E01C8926EFF12EA0C641ABCD /* Pods_BaseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4A57FD649F1A328D79F2569 /* Pods_BaseKit.framework */; };
 		EDA7F570245FEB120027A569 /* BKNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */; };
 		EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7F571245FEB4B0027A569 /* BKNavigationBar.swift */; };
@@ -56,6 +57,7 @@
 		3887031724667B9300D01AD3 /* UINavigationItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationItemExtension.swift; sourceTree = "<group>"; };
 		3887031A2466B1E000D01AD3 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		3887031C2466BC3500D01AD3 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
+		38C2653324728F2B00AEDDF0 /* BKPopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKPopoverViewController.swift; sourceTree = "<group>"; };
 		C37D5F775FBE32C65F7A1554 /* Pods-BaseKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BaseKit.debug.xcconfig"; path = "Target Support Files/Pods-BaseKit/Pods-BaseKit.debug.xcconfig"; sourceTree = "<group>"; };
 		E4A57FD649F1A328D79F2569 /* Pods_BaseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BaseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDA7F56F245FEB120027A569 /* BKNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKNavigationViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		386A165F245AA39800616BAB /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				38C2653224728EE500AEDDF0 /* Popover */,
 				EDD98F0024683DD5003672E3 /* TransitionAnimation */,
 				386A1662245AA3C400616BAB /* Web */,
 				386A1661245AA3BB00616BAB /* Base */,
@@ -202,6 +205,14 @@
 				3887031724667B9300D01AD3 /* UINavigationItemExtension.swift */,
 			);
 			path = Navigation;
+			sourceTree = "<group>";
+		};
+		38C2653224728EE500AEDDF0 /* Popover */ = {
+			isa = PBXGroup;
+			children = (
+				38C2653324728F2B00AEDDF0 /* BKPopoverViewController.swift */,
+			);
+			path = Popover;
 			sourceTree = "<group>";
 		};
 		5F67349E2DD50A10D964F1D0 /* Pods */ = {
@@ -370,6 +381,7 @@
 				EDD98EE32467DF29003672E3 /* UIResponderExtension.swift in Sources */,
 				EDD98EFD24683D91003672E3 /* BKDownloadProgressView.swift in Sources */,
 				EDD98F0724683E76003672E3 /* BKKeyChainManager.swift in Sources */,
+				38C2653424728F2B00AEDDF0 /* BKPopoverViewController.swift in Sources */,
 				EDD98EFF24683D9F003672E3 /* BKBlurView.swift in Sources */,
 				EDD98EF324683D15003672E3 /* BKDashedView.swift in Sources */,
 				EDD98EFB24683D6A003672E3 /* BKTextView.swift in Sources */,

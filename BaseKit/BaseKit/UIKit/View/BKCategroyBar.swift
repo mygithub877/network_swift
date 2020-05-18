@@ -7,7 +7,7 @@
 //
 
 import UIKit
-public class Item: NSObject{
+public class BKCategroyItem: NSObject{
     public var title:String?
     public var selectedTitle:String?
     public var image:UIImage?
@@ -56,7 +56,7 @@ public class BKCategroyBar: UIView {
             resetItems()
         }
     }
-    public var items:[Item]?{
+    public var items:[BKCategroyItem]?{
         didSet{
             resetItems()
         }
@@ -182,11 +182,21 @@ public class BKCategroyBar: UIView {
             }
         }
     }
+//    public func insert(item:BKCategroyItem,index:Int){
+//        items?.insert(item, at: index)
+//
+//    }
+//    public func delete(index:Int){
+//
+//    }
+//    public func move(from:Int,to:Int){
+//
+//    }
     public override init(frame: CGRect) {
         super.init(frame:frame)
         setupInit()
     }
-    public init(items:[Item]) {
+    public init(items:[BKCategroyItem]) {
         super.init(frame:.zero)
         setupInit()
         self.items=items
@@ -391,7 +401,7 @@ class BKCategroyBarScrollView: UIScrollView {
 
 
 
-public class BKCategroyBarSelectedView: UIView{
+public class BKCategroyBarSelectedView: UIView,NSCopying{
     public enum Style {
         case inset(inset:UIEdgeInsets)
         case size(size:CGSize)
@@ -417,8 +427,6 @@ public class BKCategroyBarSelectedView: UIView{
     }
     //提供内部访问的存储属性，类似于oc直接访问 _xxx 成员变量一样，避免调用调用set导致死循环
     internal var _style:Style = .inset(inset: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
-//    internal var _inset:UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-//    internal var _lineSize:CGSize = CGSize(width: 0, height: 2)
     //供外部访问的计算和存储属性，等价于oc的调用setter getter
     public var style:Style {
         set{
@@ -429,24 +437,6 @@ public class BKCategroyBarSelectedView: UIView{
             return _style
         }
     }
-//    public var inset:UIEdgeInsets {
-//        set{
-//            _inset=newValue
-//            self.updateFrame()
-//        }
-//        get{
-//            return _inset
-//        }
-//    }
-//    public var lineSize:CGSize {
-//        set{
-//            _lineSize=newValue
-//            self.updateFrame()
-//        }
-//        get{
-//            return _lineSize
-//        }
-//    }
     fileprivate var selectedBtn:BKCategroyBarButton?{
         didSet{
             oldValue?.removeObserver(self, forKeyPath: "center")
@@ -456,7 +446,7 @@ public class BKCategroyBarSelectedView: UIView{
         }
     }
     
-    public override init(frame: CGRect) {
+    public required override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .red
         self.clipsToBounds=true
@@ -473,6 +463,14 @@ public class BKCategroyBarSelectedView: UIView{
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let newobj = type(of: self).init(frame: self.frame)
+        newobj.image = self.image
+        newobj.style = self.style
+        newobj.selectedBtn = self.selectedBtn
+        newobj.backgroundColor = self.backgroundColor
+        return newobj
     }
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "cornerRadius" {
@@ -530,7 +528,7 @@ public class BKCategroyBarLine: BKCategroyBarSelectedView {
 }
 public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
     var humpFillColor:UIColor = .white
-    public override init(frame: CGRect) {
+    public required init(frame: CGRect) {
         super.init(frame: frame)
 //        _inset = UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10)
         _style = .inset(inset: UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10))
@@ -538,6 +536,11 @@ public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let newobjc = super.copy(with: zone) as! BKCategroyBarBackgroundView
+        newobjc.humpFillColor = self.humpFillColor
+        return newobjc
     }
     override public func updateFrame()  {
         super.updateFrame()
@@ -580,7 +583,7 @@ public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
 }
 class BKCategroyBarButton: UIButton {
     //MARK: - Property
-    var item:Item?{
+    var item:BKCategroyItem?{
         didSet{
             self.badgeLabel.text=item?.badgeText
             setTitle(item?.title, for: .normal)

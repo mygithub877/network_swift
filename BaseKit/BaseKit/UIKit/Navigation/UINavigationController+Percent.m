@@ -20,5 +20,6 @@
     if ([self.customView isKindOfClass:UIButton.class]) {
         [(UIButton *)self.customView setTitleColor:tintColor forState:UIControlStateNormal];
     }
+    
 }
 @end

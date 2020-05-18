@@ -15,20 +15,20 @@ class CategoryViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .Hex("a7a7f7")
         // Do any additional setup after loading the view.
-        let item1 = Item(title: "纯文字")
-        let item2 = Item(title: "普通状态",selectedTitle: "选中状态")
-        let item3 = Item(image: UIImage(named: "contact_icon_sex"))
-        let item4 = Item(image: UIImage(named: "contact_icon_sex"),selectedImage:UIImage(named: "contact_icon_male"))
+        let item1 = BKCategroyItem(title: "纯文字")
+        let item2 = BKCategroyItem(title: "普通状态",selectedTitle: "选中状态")
+        let item3 = BKCategroyItem(image: UIImage(named: "contact_icon_sex"))
+        let item4 = BKCategroyItem(image: UIImage(named: "contact_icon_sex"),selectedImage:UIImage(named: "contact_icon_male"))
         
-        let item5 = Item(title: "文字+图片")
+        let item5 = BKCategroyItem(title: "文字+图片")
         item5.image = UIImage(named: "contact_icon_sex")
         
-        let item6 = Item(title: "普通状态文字+图片",selectedTitle: "选中状态文字+图片")
+        let item6 = BKCategroyItem(title: "普通状态文字+图片",selectedTitle: "选中状态文字+图片")
         item6.image = UIImage(named: "contact_icon_sex")
         item6.selectedImage = UIImage(named: "contact_icon_male")
 
-        let item7 = Item(title: "分类7")
-        let item8 = Item(title: "分类8")
+        let item7 = BKCategroyItem(title: "分类7")
+        let item8 = BKCategroyItem(title: "分类8")
 
         bar = BKCategroyBar(items: [item1,item2,item3,item4,item5,item6,item7,item8])
         bar.backgroundColor = .clear
