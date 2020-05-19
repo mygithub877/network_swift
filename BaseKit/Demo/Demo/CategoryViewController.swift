@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BaseKit
 class CategoryViewController: UIViewController {
     var bar = BKCategroyBar()
     

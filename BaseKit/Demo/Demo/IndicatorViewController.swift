@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BaseKit
 class IndicatorViewController: UIViewController {
     var style:BKActivityIndicatorLoadView.Style = .horizontal
     

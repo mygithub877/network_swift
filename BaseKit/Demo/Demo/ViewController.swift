@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BaseKit
 let colors:[UIColor] = [UIColor.systemBlue,UIColor.systemTeal,UIColor.systemOrange,UIColor.systemYellow,UIColor.clear]
 let barItemTintColors:[UIColor] = [UIColor.white,UIColor.white,UIColor.white,UIColor.red,UIColor.black]
 

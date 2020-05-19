@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BaseKit
 class GradientViewController: UIViewController {
 
     override func viewDidLoad() {

@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import BaseKit
-
 class NoDataViewController: UIViewController {
     var isNetworkError:Bool = false
     

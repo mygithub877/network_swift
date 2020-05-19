@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BaseKit
 class DashViewController: UIViewController {
 
     override func viewDidLoad() {

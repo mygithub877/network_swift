@@ -9,6 +9,7 @@ public struct SCREEN {
     public static let WIDTH = UIScreen.main.bounds.width
     public static let HEIGHT = UIScreen.main.bounds.height
     public static let SAFE_BOTTOM = isIPhoneXX() ? 34.0 : 0
+    public static let SAFE_TOP = isIPhoneXX() ? UIApplication.shared.statusBarFrame.height : 0
     public static let STATUS_BAR = UIApplication.shared.statusBarFrame.height
     public static let NAV_BAR = UIApplication.shared.statusBarFrame.height + 44
     init() {

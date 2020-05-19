@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UINavigationController (Percent)
+//系统内部私有方法，不可改名
 - (void)_updateInteractiveTransition:(CGFloat)percent;
 @end
 @interface UIBarButtonItem (Tint)
