@@ -55,9 +55,10 @@ class BKPopoverViewController: UIViewController {
     var selectedColor:UIColor = UIColor(white: 230.0/255.0, alpha: 1)
     var style:Style = .auto(rowHeight: 44.0, minWidth: 100.0)
     var arrowStyle:ArrowStyle = .isosceles(size: CGSize(width: 24, height: 15))
-    private var backgroundView = _BKPopoverBackgroundView()
-    private var transition:BKTransition = BKTransition()
-    private var popoverSize:CGSize = .zero
+    fileprivate var backgroundView = _BKPopoverBackgroundView()
+    fileprivate var transition:BKTransition = BKTransition()
+    fileprivate var popoverSize:CGSize = .zero
+    fileprivate var targetRect:CGRect = .zero
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -72,6 +73,7 @@ class BKPopoverViewController: UIViewController {
     }
     func show(inController:UIViewController,rect:CGRect) {
         updateContentRect(target: rect)
+        self.targetRect = rect
         self.transitioningDelegate = self.transition;
         self.modalPresentationStyle = .custom;
         inController.present(self, animated: true, completion: nil)
@@ -79,7 +81,7 @@ class BKPopoverViewController: UIViewController {
     func updateContentRect(target:CGRect) {
         var rect = CGRect(x: 0, y: 0, width: popoverSize.width, height: popoverSize.height)
         switch self.direction {
-        case .vertical(_):
+        case .vertical(let arrow):
             if target.maxY+popoverSize.height < SCREEN.HEIGHT {
                 rect.origin.y = target.maxY
             }else if target.minY - popoverSize.height > 0 {
@@ -88,7 +90,8 @@ class BKPopoverViewController: UIViewController {
                 rect.origin.y = target.maxY
                 rect.size.height = SCREEN.HEIGHT-target.maxY
             }
-        case .horizontal(_):
+            rect.origin.x = updateVerticalX(arrow: arrow, target: target)
+        case .horizontal(let arrow):
             if target.maxX+popoverSize.width < SCREEN.WIDTH {
                 rect.origin.x = target.maxX
             }else if target.minX - popoverSize.width > 0 {
@@ -96,6 +99,48 @@ class BKPopoverViewController: UIViewController {
             }else{
                 rect.origin.x = target.maxX
                 rect.size.width = SCREEN.WIDTH - target.maxX
+            }
+            rect.origin.y = updateHorizontalY(arrow: arrow, target: target)
+        }
+        transition.presentRect = rect
+    }
+    func updateVerticalX(arrow:BKPopoverViewController.Direction.Arrow,target:CGRect) -> CGFloat {
+        switch arrow {
+        case .left:
+            //
+            return target.midX-popoverSize.width*1/4.0
+        case .right:
+            //
+            return target.midX-popoverSize.width*3/4.0
+        case .center:
+            return target.midX-popoverSize.width/2
+        default:
+            if target.midX-popoverSize.width/2 < 10 {
+                return updateVerticalX(arrow: .left, target: target)
+            }else if target.midX+popoverSize.width/2 > SCREEN.WIDTH-10{
+                return updateVerticalX(arrow: .right, target: target)
+            }else{
+                return updateVerticalX(arrow: .center, target: target)
+            }
+        }
+    }
+    func updateHorizontalY(arrow:BKPopoverViewController.Direction.Arrow,target:CGRect) -> CGFloat {
+        switch arrow {
+        case .top:
+            //
+            return target.midY-popoverSize.height*1/4.0
+        case .bottom:
+            //
+            return target.midY-popoverSize.height*3/4.0
+        case .center:
+            return target.midY-popoverSize.height/2
+        default:
+            if target.midY-popoverSize.height/2 < 10 {
+                return updateHorizontalY(arrow: .top, target: target)
+            }else if target.midY+popoverSize.height/2 > SCREEN.HEIGHT-10{
+                return updateHorizontalY(arrow: .bottom, target: target)
+            }else{
+                return updateHorizontalY(arrow: .center, target: target)
             }
         }
     }
@@ -134,6 +179,7 @@ class BKPopoverViewController: UIViewController {
 }
 class _BKPopoverBackgroundView: UIView {
     weak var controller:BKPopoverViewController?
+    var arrowRadius:CGFloat = 2
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .clear
@@ -155,57 +201,256 @@ class _BKPopoverBackgroundView: UIView {
         case .oblique(let size):
             _drawOblique(context: context,arrowSize: size)
         }
-//        //左下
-//        context.move(to: CGPoint(x: maskFrame.minX-cor, y: maskFrame.maxY))
-//        context.addQuadCurve(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY), control: CGPoint(x: maskFrame.minX-cap*0.8, y: maskFrame.maxY-cap*0.8))
-//        context.addLine(to: CGPoint(x: maskFrame.minX, y: maskFrame.midY))
-//        //左上
-//        context.addQuadCurve(to: CGPoint(x: maskFrame.minX+cor, y: maskFrame.minY), control: CGPoint(x: maskFrame.minX+cap*0.8, y: maskFrame.minY+cap*0.8))
-//        context.addLine(to: CGPoint(x: maskFrame.maxX-cor, y: maskFrame.minY))
-//        //右上
-//        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX, y: maskFrame.midY), control: CGPoint(x: maskFrame.maxX-cap*0.8, y: maskFrame.minY+cap*0.8))
-//        context.addLine(to: CGPoint(x: maskFrame.maxX, y: maskFrame.midY))
-//        //右下
-//        context.addQuadCurve(to: CGPoint(x: maskFrame.maxX+cor, y: maskFrame.maxY), control: CGPoint(x: maskFrame.maxX+cap*0.8, y: maskFrame.maxY-cap*0.8))
-//
-//        context.addLine(to: CGPoint(x: maxwidth, y: maskFrame.maxY))
-//        context.addLine(to: CGPoint(x: maxwidth, y: 0))
-//        context.addLine(to: CGPoint(x: 0, y: 0))
-//        context.addLine(to: CGPoint(x: 0, y: maskFrame.maxY))
-//        context.addLine(to: CGPoint(x: maskFrame.minX-cor, y: maskFrame.maxY))
-        
-        
         context.setFillColor(controller!.backgroundColor.cgColor)
         context.fillPath()
 
     }
+    /// 等腰直角
     func _drawIsosceles(context:CGContext, arrowSize:CGSize) {
         switch controller!.direction {
-        case .horizontal(let arrow):
-            _drawIsoscelesHor(arrow: arrow)
-        case .vertical(let arrow):
-            _drawIsoscelesVer(arrow: arrow)
+        case .horizontal(_):
+            _drawIsoscelesHor(context: context,arrowSize: arrowSize)
+        case .vertical(_):
+            _drawIsoscelesVer(context: context,arrowSize: arrowSize)
         }
     }
-    func _drawIsoscelesHor(arrow:BKPopoverViewController.Direction.Arrow) {
-        
+    func _drawIsoscelesHor(context:CGContext,arrowSize:CGSize) {
+        let cornerRadius = self.layer.cornerRadius
+        if controller!.targetRect.minX > controller!.transition.presentRect.maxX {//右
+            let arrowRect = CGRect(x: self.bounds.maxX-arrowSize.height, y: controller!.targetRect.midY-controller!.transition.presentRect.minY-arrowSize.height/2, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.midY+arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.midY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.midY))
+            //三角上边角
+            context.addLine(to: CGPoint(x: arrowRect.minX+arrowRadius , y: arrowRect.minY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX, y: arrowRect.minY-arrowRadius), control: CGPoint(x: arrowRect.minY, y: arrowRect.minX))
+            //边框右上角
+            context.addLine(to: CGPoint(x: arrowRect.minX, y: cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX-cornerRadius, y:0 ), control: CGPoint(x: arrowRect.minY, y:0 ))
+            //边框左上角
+            context.addLine(to: CGPoint(x: cornerRadius, y: 0))
+            context.addQuadCurve(to: CGPoint(x: 0, y: cornerRadius), control: CGPoint(x: 0, y: 0))
+            //边框左下角
+            context.addLine(to: CGPoint(x: 0, y: self.bounds.maxY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: cornerRadius, y: self.bounds.maxY), control: CGPoint(x: 0, y: self.bounds.maxY))
+            //边框右下角
+            context.addLine(to: CGPoint(x: arrowRect.minX-cornerRadius , y: self.bounds.maxY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX, y:self.bounds.maxY-cornerRadius), control: CGPoint(x:arrowRect.minX , y: self.bounds.maxY))
+            //三角下边角
+            context.addLine(to: CGPoint(x: arrowRect.minX, y: arrowRect.maxY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.minX, y: arrowRect.maxY))
+            //最后连起来
+            context.addLine(to: start)
+
+        }else{//左
+            let arrowRect = CGRect(x: 0, y: controller!.targetRect.midY-controller!.transition.presentRect.minY-arrowSize.height/2, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.midY+arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.midY-arrowRadius), control: CGPoint(x: arrowRect.minX, y: arrowRect.midY))
+            //三角上边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.minY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX, y: arrowRect.minY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.minY))
+            //边框左上角
+            context.addLine(to: CGPoint(x: arrowRect.maxX, y: cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX+cornerRadius, y: 0), control: CGPoint(x: arrowRect.maxX, y: 0))
+            //边框右上角
+            context.addLine(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: 0))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX, y: cornerRadius), control: CGPoint(x: self.bounds.maxX, y: 0))
+            //边框右下角
+            context.addLine(to: CGPoint(x: self.bounds.maxX , y: self.bounds.maxY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX-cornerRadius , y:self.bounds.maxY ), control: CGPoint(x: self.bounds.maxX, y: self.bounds.maxY))
+            //边框左下角
+            context.addLine(to: CGPoint(x: arrowRect.maxX+cornerRadius , y:self.bounds.maxY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX, y: self.bounds.maxY-cornerRadius), control: CGPoint(x: arrowRect.maxX , y: self.bounds.maxY))
+            //三角下边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX, y: arrowRect.maxY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.maxY))
+            //最后连起来
+            context.addLine(to: start)
+
+        }
     }
-    func _drawIsoscelesVer(arrow:BKPopoverViewController.Direction.Arrow) {
-        
+    func _drawIsoscelesVer(context:CGContext,arrowSize:CGSize) {
+        let cornerRadius = self.layer.cornerRadius
+        if controller!.targetRect.minY > controller!.transition.presentRect.maxY {//上
+            let arrowRect = CGRect(x: controller!.targetRect.midX-controller!.transition.presentRect.minX-arrowSize.width/2, y: self.bounds.maxY-arrowSize.height, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.midX+arrowRadius, y: arrowRect.maxY-arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.midX-arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.midX, y: arrowRect.maxY))
+            //三角左边角
+            context.addLine(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.minY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX-arrowRadius, y: arrowRect.minY), control: CGPoint(x: arrowRect.minX, y: arrowRect.minY))
+            //边框左下角
+            context.addLine(to: CGPoint(x: cornerRadius, y: arrowRect.minY))
+            context.addQuadCurve(to: CGPoint(x: 0, y: arrowRect.minY-cornerRadius), control: CGPoint(x: 0, y: arrowRect.minY))
+            //边框左上角
+            context.addLine(to: CGPoint(x: 0, y: cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: cornerRadius, y: 0), control: CGPoint(x: 0, y: 0))
+            //边框右上角
+            context.addLine(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: 0))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX, y: cornerRadius), control: CGPoint(x: self.bounds.maxX, y: 0))
+            //边框右下角
+            context.addLine(to: CGPoint(x: self.bounds.maxX, y: arrowRect.minY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: arrowRect.minY), control: CGPoint(x: self.bounds.maxX, y: arrowRect.minY))
+            //三角右边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX+arrowRadius, y: arrowRect.minY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.minY+arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.minY))
+            //最后连起来
+            context.addLine(to: start)
+
+        }else{//下
+            let arrowRect = CGRect(x: controller!.targetRect.midX-controller!.transition.presentRect.minX-arrowSize.width/2, y: 0, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.midX+arrowRadius, y: arrowRect.minY+arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.midX-arrowRadius, y: arrowRect.minY+arrowRadius), control: CGPoint(x: arrowRect.midX, y: arrowRect.minY))
+            //三角左边角
+            context.addLine(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.maxY-arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX-arrowRadius, y: arrowRect.maxY), control: CGPoint(x: arrowRect.minX, y: arrowRect.maxY))
+            //边框左上角
+            context.addLine(to: CGPoint(x: cornerRadius, y: arrowRect.maxY))
+            context.addQuadCurve(to: CGPoint(x: 0, y: arrowRect.maxY+cornerRadius), control: CGPoint(x: 0, y: arrowRect.maxY))
+            //边框左下角
+            context.addLine(to: CGPoint(x: 0, y: self.bounds.maxY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: cornerRadius, y: self.bounds.maxY), control: CGPoint(x: 0, y: self.bounds.maxY))
+            //边框右下角
+            context.addLine(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: self.bounds.maxY))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX, y: self.bounds.maxY-cornerRadius), control: CGPoint(x: self.bounds.maxX, y: self.bounds.maxY))
+            //边框右上角
+            context.addLine(to: CGPoint(x: self.bounds.maxX, y: arrowRect.maxY+cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: self.bounds.maxY), control: CGPoint(x: self.bounds.maxX, y: arrowRect.maxY))
+            //三角右边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX+arrowRadius, y: arrowRect.maxY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.maxY))
+            //最后连起来
+            context.addLine(to: start)
+        }
     }
-    
+    //斜角
     func _drawOblique(context:CGContext, arrowSize:CGSize) {
         switch controller!.direction {
         case .horizontal(let arrow):
-            _drawObliqueHor(arrow: arrow)
+            _drawObliqueHor(arrow: arrow,context: context,arrowSize: arrowSize)
         case .vertical(let arrow):
-            _drawObliqueVer(arrow: arrow)
+            _drawObliqueVer(arrow: arrow,context: context,arrowSize: arrowSize)
         }
     }
-    func _drawObliqueHor(arrow:BKPopoverViewController.Direction.Arrow) {
-        
+    func _drawObliqueHor(arrow:BKPopoverViewController.Direction.Arrow,context:CGContext,arrowSize:CGSize) {
+        let cornerRadius = self.layer.cornerRadius
+        if controller!.targetRect.minX > controller!.transition.presentRect.maxX {//右
+            let arrowRect = CGRect(x: self.bounds.maxX-arrowSize.height, y: controller!.targetRect.midY-controller!.transition.presentRect.minY-arrowSize.height/2, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.midY+arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.midY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.midY))
+            //三角上边角
+            context.addLine(to: CGPoint(x: arrowRect.minX+arrowRadius , y: arrowRect.minY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX, y: arrowRect.minY-arrowRadius), control: CGPoint(x: arrowRect.minY, y: arrowRect.minX))
+            //边框右上角
+            context.addLine(to: CGPoint(x: arrowRect.minX, y: cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX-cornerRadius, y:0 ), control: CGPoint(x: arrowRect.minY, y:0 ))
+            //边框左上角
+            context.addLine(to: CGPoint(x: cornerRadius, y: 0))
+            context.addQuadCurve(to: CGPoint(x: 0, y: cornerRadius), control: CGPoint(x: 0, y: 0))
+            //边框左下角
+            context.addLine(to: CGPoint(x: 0, y: self.bounds.maxY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: cornerRadius, y: self.bounds.maxY), control: CGPoint(x: 0, y: self.bounds.maxY))
+            //边框右下角
+            context.addLine(to: CGPoint(x: arrowRect.minX-cornerRadius , y: self.bounds.maxY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX, y:self.bounds.maxY-cornerRadius), control: CGPoint(x:arrowRect.minX , y: self.bounds.maxY))
+            //三角下边角
+            context.addLine(to: CGPoint(x: arrowRect.minX, y: arrowRect.maxY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.minX, y: arrowRect.maxY))
+            //最后连起来
+            context.addLine(to: start)
+
+        }else{//左
+            let arrowRect = CGRect(x: 0, y: controller!.targetRect.midY-controller!.transition.presentRect.minY-arrowSize.height/2, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.midY+arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.midY-arrowRadius), control: CGPoint(x: arrowRect.minX, y: arrowRect.midY))
+            //三角上边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.minY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX, y: arrowRect.minY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.minY))
+            //边框左上角
+            context.addLine(to: CGPoint(x: arrowRect.maxX, y: cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX+cornerRadius, y: 0), control: CGPoint(x: arrowRect.maxX, y: 0))
+            //边框右上角
+            context.addLine(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: 0))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX, y: cornerRadius), control: CGPoint(x: self.bounds.maxX, y: 0))
+            //边框右下角
+            context.addLine(to: CGPoint(x: self.bounds.maxX , y: self.bounds.maxY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX-cornerRadius , y:self.bounds.maxY ), control: CGPoint(x: self.bounds.maxX, y: self.bounds.maxY))
+            //边框左下角
+            context.addLine(to: CGPoint(x: arrowRect.maxX+cornerRadius , y:self.bounds.maxY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX, y: self.bounds.maxY-cornerRadius), control: CGPoint(x: arrowRect.maxX , y: self.bounds.maxY))
+            //三角下边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX, y: arrowRect.maxY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.maxY))
+            //最后连起来
+            context.addLine(to: start)
+
+        }
     }
-    func _drawObliqueVer(arrow:BKPopoverViewController.Direction.Arrow) {
-        
+    func _drawObliqueVer(arrow:BKPopoverViewController.Direction.Arrow,context:CGContext,arrowSize:CGSize) {
+        let cornerRadius = self.layer.cornerRadius
+        if controller!.targetRect.minY > controller!.transition.presentRect.maxY {//上
+            let arrowRect = CGRect(x: controller!.targetRect.midX-controller!.transition.presentRect.minX-arrowSize.width/2, y: self.bounds.maxY-arrowSize.height, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.midX+arrowRadius, y: arrowRect.maxY-arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.midX-arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.midX, y: arrowRect.maxY))
+            //三角左边角
+            context.addLine(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.minY+arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX-arrowRadius, y: arrowRect.minY), control: CGPoint(x: arrowRect.minX, y: arrowRect.minY))
+            //边框左下角
+            context.addLine(to: CGPoint(x: cornerRadius, y: arrowRect.minY))
+            context.addQuadCurve(to: CGPoint(x: 0, y: arrowRect.minY-cornerRadius), control: CGPoint(x: 0, y: arrowRect.minY))
+            //边框左上角
+            context.addLine(to: CGPoint(x: 0, y: cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: cornerRadius, y: 0), control: CGPoint(x: 0, y: 0))
+            //边框右上角
+            context.addLine(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: 0))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX, y: cornerRadius), control: CGPoint(x: self.bounds.maxX, y: 0))
+            //边框右下角
+            context.addLine(to: CGPoint(x: self.bounds.maxX, y: arrowRect.minY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: arrowRect.minY), control: CGPoint(x: self.bounds.maxX, y: arrowRect.minY))
+            //三角右边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX+arrowRadius, y: arrowRect.minY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.minY+arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.minY))
+            //最后连起来
+            context.addLine(to: start)
+
+        }else{//下
+            let arrowRect = CGRect(x: controller!.targetRect.midX-controller!.transition.presentRect.minX-arrowSize.width/2, y: 0, width: arrowSize.width, height: arrowSize.height)
+            //三角顶角
+            let start = CGPoint(x: arrowRect.midX+arrowRadius, y: arrowRect.minY+arrowRadius)
+            context.move(to: start)
+            context.addQuadCurve(to: CGPoint(x: arrowRect.midX-arrowRadius, y: arrowRect.minY+arrowRadius), control: CGPoint(x: arrowRect.midX, y: arrowRect.minY))
+            //三角左边角
+            context.addLine(to: CGPoint(x: arrowRect.minX+arrowRadius, y: arrowRect.maxY-arrowRadius))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.minX-arrowRadius, y: arrowRect.maxY), control: CGPoint(x: arrowRect.minX, y: arrowRect.maxY))
+            //边框左上角
+            context.addLine(to: CGPoint(x: cornerRadius, y: arrowRect.maxY))
+            context.addQuadCurve(to: CGPoint(x: 0, y: arrowRect.maxY+cornerRadius), control: CGPoint(x: 0, y: arrowRect.maxY))
+            //边框左下角
+            context.addLine(to: CGPoint(x: 0, y: self.bounds.maxY-cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: cornerRadius, y: self.bounds.maxY), control: CGPoint(x: 0, y: self.bounds.maxY))
+            //边框右下角
+            context.addLine(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: self.bounds.maxY))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX, y: self.bounds.maxY-cornerRadius), control: CGPoint(x: self.bounds.maxX, y: self.bounds.maxY))
+            //边框右上角
+            context.addLine(to: CGPoint(x: self.bounds.maxX, y: arrowRect.maxY+cornerRadius))
+            context.addQuadCurve(to: CGPoint(x: self.bounds.maxX-cornerRadius, y: self.bounds.maxY), control: CGPoint(x: self.bounds.maxX, y: arrowRect.maxY))
+            //三角右边角
+            context.addLine(to: CGPoint(x: arrowRect.maxX+arrowRadius, y: arrowRect.maxY))
+            context.addQuadCurve(to: CGPoint(x: arrowRect.maxX-arrowRadius, y: arrowRect.maxY-arrowRadius), control: CGPoint(x: arrowRect.maxX, y: arrowRect.maxY))
+            //最后连起来
+            context.addLine(to: start)
+        }
     }
 }
