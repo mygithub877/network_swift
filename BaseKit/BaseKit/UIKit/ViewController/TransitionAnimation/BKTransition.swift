@@ -13,6 +13,11 @@ public class BKTransition: NSObject {
     public var containerBackgroundColor:UIColor = .init(white: 0, alpha: 0.33)
     public var animateDuration:TimeInterval = 0.35
     public var containerBackgroundHitTestEvent:((_ view:UIView,_ point:CGPoint,_ event:UIEvent)->UIView)?
+    public var dismissWhenTouch:Bool = false{
+        didSet{
+            _presentController?.dismissWhenTouch=dismissWhenTouch
+        }
+    }
     public var orientation:UIInterfaceOrientation?
     public var presentAnimation:((_ transitionContext:UIViewControllerContextTransitioning)->Void)?
     public var dismissAnimation:((_ transitionContext:UIViewControllerContextTransitioning)->Void)?
@@ -28,6 +33,7 @@ extension BKTransition:UIViewControllerTransitioningDelegate{
     
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presentVC = _BKPresentController(presentedViewController: presented, presenting: presenting)
+        presentVC.dismissWhenTouch=dismissWhenTouch
         presentVC.presentRect=presentRect;
         presentVC.containerBackgroundColor=containerBackgroundColor;
         presentVC.containerBackgroundHitTestEvent = self.containerBackgroundHitTestEvent;
@@ -91,12 +97,50 @@ extension BKTransition :UIViewControllerAnimatedTransitioning{
     
 }
 class _BKPresentController:UIPresentationController{
+    var dismissWhenTouch:Bool = false
     var presentRect:CGRect = .zero
-    var containerBackgroundColor:UIColor = .init(white: 0, alpha: 0.33)
-    var containerBackgroundHitTestEvent:((_ view:UIView,_ point:CGPoint,_ event:UIEvent)->UIView)?
-    var backgroundView:_BKPresentContainerBackground?
-    var landscapView:UIView?
+    var containerBackgroundColor:UIColor = .init(white: 0, alpha: 0.33){
+        didSet{
+            self.backgroundView.backgroundColor=containerBackgroundColor
+        }
+    }
+    var containerBackgroundHitTestEvent:((_ view:UIView,_ point:CGPoint,_ event:UIEvent)->UIView)?{
+        didSet{
+            self.backgroundView.containerBackgroundHitTestEvent=containerBackgroundHitTestEvent
+        }
+    }
+    var backgroundView=_BKPresentContainerBackground()
+    var landscapView:UIView = UIView()
     var orientation:UIInterfaceOrientation?
+    override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
+        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+        self.landscapView.frame=UIScreen.main.bounds
+        self.backgroundView.frame=UIScreen.main.bounds
+        self.backgroundView.backgroundColor=containerBackgroundColor
+        self.backgroundView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backgroundTapAction)))
+    }
+    @objc func backgroundTapAction(_ sender:UITapGestureRecognizer) {
+        if dismissWhenTouch {
+            self.presentedViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    override func containerViewWillLayoutSubviews() {
+        self.presentedView?.frame = self.presentRect;
+        self.containerView?.insertSubview(self.landscapView, at: 0)
+        self.landscapView.insertSubview(self.backgroundView, at: 0)
+        if self.orientation?.isLandscape ?? false {
+            let transform = CGAffineTransform(rotationAngle: CGFloat(Float.pi*0.5))
+            landscapView.frame = CGRect(x: SCREEN.WIDTH/2-SCREEN.HEIGHT/2, y: SCREEN.HEIGHT/2-SCREEN.WIDTH/2, width: SCREEN.HEIGHT, height: SCREEN.WIDTH)
+            landscapView.transform=transform
+            self.backgroundView.frame=CGRect(x: 0, y: 0, width: SCREEN.HEIGHT, height: SCREEN.WIDTH)
+        }
+    }
+    override func containerViewDidLayoutSubviews() {
+        let subviews = self.containerView?.subviews
+        if subviews?.count == 2 && self.presentedView != nil{
+            self.landscapView.addSubview(self.presentedView!)
+        }
+    }
 }
 class _BKPresentContainerBackground:UIView{
     var containerBackgroundHitTestEvent:((_ view:UIView,_ point:CGPoint,_ event:UIEvent)->UIView)?

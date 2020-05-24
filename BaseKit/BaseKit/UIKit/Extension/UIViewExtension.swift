@@ -65,7 +65,6 @@ extension UIView{
             var view:UIView? = self
             var i = 0
             while view != nil {
-                view = view?.superview
                 x += view?.minX ?? 0;
                 y += view?.minY ?? 0;
                 if view is UIScrollView {
@@ -75,6 +74,7 @@ extension UIView{
                         y -= scrollView.contentOffset.y;
                     }
                 }
+                view = view?.superview
                 i += 1
             }
             return CGRect(x: x, y: y, width: self.width, height: self.height)

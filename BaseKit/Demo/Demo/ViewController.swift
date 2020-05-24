@@ -179,6 +179,11 @@ extension ViewController{
             self.navigationController?.pushViewController(vc, animated: true)
         })
         self.dataSource.append(item20)
+        let item21: UITableViewCellItem = (title:"BKPopoverViewController",subtitle:"popover", action:{() in
+            let vc = PopoverViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        self.dataSource.append(item21)
 
     }
 }

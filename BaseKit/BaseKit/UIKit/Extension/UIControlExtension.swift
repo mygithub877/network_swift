@@ -142,7 +142,7 @@ private class _BKControlWrapper : NSObject {
     var callBack:UIControlEventHandle?
     @objc func invoke(_ sender:Any) {
         if self.callBack != nil {
-            self.callBack!(self)
+            self.callBack!(sender)
         }
     }
 }
