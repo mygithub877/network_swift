@@ -48,6 +48,8 @@ extension UIBarButtonItem{
             return objc_getAssociatedObject(self, AssociatedKey.badgeText) as? String
         }
     }
+    
+    /// 导航栏Item系统UIControl
     public var barButton:UIControl?{
         set{
             if (self.barButton != nil && newValue == nil) {

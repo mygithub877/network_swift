@@ -10,25 +10,54 @@ import UIKit
 public class BKPopoverItem{
     public var title:String?
     public var image:UIImage?
+    
+    /// 默认行高
+    /// 如果设置为 -1 (UITableView.automaticDimension) 则自适应高度(custom情况下有效，和UITableViewCell自适应一样)
+    public var cellHeight:CGFloat = 44.0  //
+    /// tag
     public var tag:Int?
+    
+    /// 选项点击回调
     public var actionHandle:((_ item:BKPopoverItem)->Void)?
+    
+    ///默认标题选项颜色
+    public var titleColor:UIColor = .darkText
+    
+    /// 默认标题选中颜色
+    public var selectedColor:UIColor = UIColor(white: 230.0/255.0, alpha: 1)
+    
+    /// 标题字体
+    public var titleFont:UIFont = UIFont.systemFont(ofSize: 14)
+    
+    /// 选中字体
+    public var selectedTitleFont:UIFont = UIFont.systemFont(ofSize: 14)
+
+    /// 自定义视图，如果为空则按默认样式布局
+    public var custom:((_ contentView:UIView)->Void)?
+    
     public init(title:String?,image:UIImage?) {
         self.title=title
         self.image=image
     }
 }
 public class BKPopoverViewController: UIViewController {
+//MARK: - enum
+    
+    /// popover弹出方向
     public enum Direction {
+        
+        /// 箭头位置方向
         public enum Arrow {
             case auto,left,right,top,bottom,center
         }
         case vertical(arrow:Arrow)//auto,left,right,center
         case horizontal(arrow:Arrow)//auto,top,bottom,center
     }
+    
+    /// 箭头样式、大小
     public enum ArrowStyle {
         case isosceles(size:CGSize) //等腰
         case oblique(size:CGSize) //斜角
-        
         var size:CGSize{
             switch self {
             case .isosceles(let size):
@@ -38,30 +67,45 @@ public class BKPopoverViewController: UIViewController {
             }
         }
     }
+    
+    /// popover样式
     public enum Style {
-        case auto(rowHeight:CGFloat,minWidth:CGFloat) // 固定行高 宽度高度自适应（大于最小宽度）
+        case auto(minWidth:CGFloat) // 宽度高度自适应（大于最小宽度）
         case size(size:CGSize) // 宽高固定大小
     }
+//MARK: - var
+    
+    /// 需要显示的选项集合
     public var items:[BKPopoverItem] = []{
         didSet{
             updateContentSize()
         }
     }
-    //vertical: x position,horizontal:y position
+    //箭头偏移量-> vertical: x position,horizontal:y position
     public var arrowInset:CGFloat = 0{
         didSet{
             backgroundView.arrowInset=arrowInset
         }
     }
     
+    /// 弹出方向
     public var direction:Direction = .vertical(arrow: .auto)
-    public private(set) var tableView:UITableView = UITableView()
+    
+    public private(set) var tableView:UITableView = UITableView(frame: .zero, style: .plain)
+    
+    /// 背景颜色
     public var backgroundColor:UIColor = .white
-    public var titleColor:UIColor = .darkText
+    
+    /// 方向
     public var orientation:UIInterfaceOrientation = .portrait
-    public var selectedColor:UIColor = UIColor(white: 230.0/255.0, alpha: 1)
-    public var style:Style = .auto(rowHeight: 44.0, minWidth: 100.0)
+    
+    /// 样式
+    public var style:Style = .auto(minWidth: 100.0)
+    
+    /// 箭头样式
     public var arrowStyle:ArrowStyle = .isosceles(size: CGSize(width: 24, height: 15))
+    
+//MARK: - private var
     fileprivate var backgroundView = _BKPopoverBackgroundView()
     fileprivate lazy var transition: BKTransition = {
         let trans=BKTransition()
@@ -99,6 +143,8 @@ public class BKPopoverViewController: UIViewController {
     fileprivate var popoverSize:CGSize = .zero
     fileprivate var targetRect:CGRect = .zero
     fileprivate var anchorPoint:CGPoint = .zero
+    fileprivate var contentRect:CGRect = .zero
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -107,7 +153,22 @@ public class BKPopoverViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         backgroundView.controller=self
+        
+        self.tableView.backgroundColor = .clear
+        self.tableView.delegate=self
+        self.tableView.dataSource=self
+        self.tableView.layer.cornerRadius = backgroundView.layer.cornerRadius
+        self.tableView.clipsToBounds = true
+        self.tableView.register(BKPopoverCell.self, forCellReuseIdentifier: "cell")
+        self.view.addSubview(tableView)
+        tableView.snp.makeConstraints { (make) in
+            make.left.equalToSuperview().offset(contentRect.minX)
+            make.top.equalToSuperview().offset(contentRect.minY)
+            make.width.equalTo(contentRect.width)
+            make.height.equalTo(contentRect.height)
+        }
     }
+//MARK: - show 弹出显示方法
     public func show(inController:UIViewController,target:UIView) {
         let frameInWindow = target.screenFrame
         show(inController: inController, rect: frameInWindow)
@@ -125,6 +186,7 @@ public class BKPopoverViewController: UIViewController {
     public func show(inController: UIViewController, item: UIBarButtonItem) {
         
     }
+//MARK: - update position and size
     func updateContentRect(target:CGRect) {
         var rect = CGRect(x: 0, y: 0, width: popoverSize.width, height: popoverSize.height)
         switch self.direction {
@@ -133,13 +195,16 @@ public class BKPopoverViewController: UIViewController {
             if target.maxY+popoverSize.height < SCREEN.HEIGHT {
                 rect.origin.y = target.maxY
                 anchorPoint=CGPoint(x: (target.midX+arrowInset-rect.minX)/popoverSize.width, y: 0)
+                contentRect = CGRect(x: 0, y: self.arrowStyle.size.height, width: rect.width, height: rect.height-self.arrowStyle.size.height)
             }else if target.minY - popoverSize.height > 0 {
                 rect.origin.y = target.minY - popoverSize.height
                 anchorPoint=CGPoint(x: (target.midX+arrowInset-rect.minX)/popoverSize.width, y: 1)
+                contentRect = CGRect(x: 0, y: 0, width: rect.width, height: rect.height-self.arrowStyle.size.height)
             }else{
                 rect.origin.y = target.maxY
                 rect.size.height = SCREEN.HEIGHT-target.maxY
                 anchorPoint=CGPoint(x: (target.midX+arrowInset-rect.minX)/popoverSize.width, y: 0)
+                contentRect = CGRect(x: 0, y: self.arrowStyle.size.height, width: rect.width, height: rect.height-self.arrowStyle.size.height)
             }
             
         case .horizontal(let arrow):
@@ -147,13 +212,16 @@ public class BKPopoverViewController: UIViewController {
             if target.maxX+popoverSize.width < SCREEN.WIDTH {
                 rect.origin.x = target.maxX
                 anchorPoint=CGPoint(x: 0, y: (target.midY+arrowInset-rect.minY)/popoverSize.height)
+                contentRect = CGRect(x: self.arrowStyle.size.width, y: 0, width: rect.width-self.arrowStyle.size.width, height: rect.height)
             }else if target.minX - popoverSize.width > 0 {
                 rect.origin.x = target.minX - popoverSize.width
                 anchorPoint=CGPoint(x: 1, y: (target.midY+arrowInset-rect.minY)/popoverSize.height)
+                contentRect = CGRect(x: 0, y: 0, width: rect.width-self.arrowStyle.size.width, height: rect.height)
             }else{
                 rect.origin.x = target.maxX
                 rect.size.width = SCREEN.WIDTH - target.maxX
                 anchorPoint=CGPoint(x: 0, y: (target.midY+arrowInset-rect.minY)/popoverSize.height)
+                contentRect = CGRect(x: self.arrowStyle.size.width, y: 0, width: rect.width-self.arrowStyle.size.width, height: rect.height)
             }
         }
         transition.presentRect = rect
@@ -219,8 +287,12 @@ public class BKPopoverViewController: UIViewController {
         }
         maxTextWidth += 10
         switch self.style {
-        case .auto(let rowHeight, let minWidth):
-         height = rowHeight * CGFloat(self.items.count)+self.arrowStyle.size.height;
+        case .auto(let minWidth):
+            var rowsHeight:CGFloat = 0
+            self.items.forEach { (item) in
+                rowsHeight += item.cellHeight
+            }
+            height = rowsHeight+self.arrowStyle.size.height;
          if maxTextWidth<minWidth {
             maxTextWidth=minWidth
          }
@@ -231,6 +303,26 @@ public class BKPopoverViewController: UIViewController {
         popoverSize = CGSize(width: maxTextWidth, height: height)
     }
 }
+extension BKPopoverViewController : UITableViewDataSource{
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       return self.items.count
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! BKPopoverCell
+        cell.item=self.items[indexPath.row]
+        return cell
+    }
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return self.items[indexPath.row].cellHeight
+    }
+    
+}
+extension BKPopoverViewController : UITableViewDelegate{
+    
+}
+
+//MARK: - BackgroundView
 class _BKPopoverBackgroundView: UIView {
     weak var controller:BKPopoverViewController?
     var arrowInset:CGFloat = 0 //vertical: x position,horizontal:y position
@@ -509,4 +601,35 @@ class _BKPopoverBackgroundView: UIView {
             context.addLine(to: start)
         }
     }
+}
+
+class BKPopoverCell: UITableViewCell {
+    var item:BKPopoverItem?{
+        didSet{
+            self.imageView?.image = item?.image
+            self.textLabel?.text = item?.title
+            self.textLabel?.font = item?.titleFont
+            self.textLabel?.textColor = item?.titleColor
+        }
+    }
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        backgroundColor = .clear
+    }
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        if selected {
+            self.textLabel?.font = item?.selectedTitleFont
+            self.textLabel?.textColor = item?.selectedColor
+        }else{
+            self.textLabel?.font = item?.titleFont
+            self.textLabel?.textColor = item?.titleColor
+        }
+    }
+    
 }

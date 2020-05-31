@@ -87,11 +87,28 @@ class PopoverViewController: UIViewController {
     }
     @objc func rightItemAction() {
         let item1 = BKPopoverItem(title: "row1", image: nil)
+        item1.titleColor = .white
+        item1.selectedColor = .yellow
         let item2 = BKPopoverItem(title: "row2", image: nil)
+        item2.titleColor = .white
+        item2.selectedColor = .yellow
+
         let item3 = BKPopoverItem(title: "row3", image: nil)
+        item3.titleColor = .white
+        item3.selectedColor = .yellow
+
         let item4 = BKPopoverItem(title: "row4", image: nil)
+        item4.titleColor = .white
+        item4.selectedColor = .yellow
+
         let item5 = BKPopoverItem(title: "row5", image: nil)
+        item5.titleColor = .white
+        item5.selectedColor = .yellow
+
         let item6 = BKPopoverItem(title: "row6", image: nil)
+        item6.titleColor = .white
+        item6.selectedColor = .yellow
+
         let popover = BKPopoverViewController()
         popover.items = [item1,item2,item3,item4,item5,item6]
         popover.arrowInset = 5
@@ -107,7 +124,7 @@ class PopoverViewController: UIViewController {
         let item6 = BKPopoverItem(title: "row6", image: nil)
         let popover = BKPopoverViewController()
         popover.items = [item1,item2,item3,item4,item5,item6]
-        popover.backgroundColor = .black
+        popover.backgroundColor = .white
         popover.direction = .vertical(arrow: .center)
         popover.show(inController: self, point: CGPoint(x: self.view.width/2, y: SCREEN.NAV_BAR))
     }
@@ -132,7 +149,7 @@ class PopoverViewController: UIViewController {
         let item6 = BKPopoverItem(title: "row6", image: nil)
         let popover = BKPopoverViewController()
         popover.items = [item1,item2,item3,item4,item5,item6]
-        popover.backgroundColor = .black
+        popover.backgroundColor = .white
         popover.direction = .horizontal(arrow: .center)
         popover.arrowStyle = .isosceles(size: CGSize(width: 15, height: 24))
         popover.show(inController: self, target: sender)
@@ -146,7 +163,7 @@ class PopoverViewController: UIViewController {
         let item6 = BKPopoverItem(title: "row6", image: nil)
         let popover = BKPopoverViewController()
         popover.items = [item1,item2,item3,item4,item5,item6]
-        popover.backgroundColor = .black
+        popover.backgroundColor = .white
         popover.direction = .horizontal(arrow: .top)
         popover.arrowStyle = .isosceles(size: CGSize(width: 15, height: 24))
         popover.show(inController: self, target: sender)

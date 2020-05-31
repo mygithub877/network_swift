@@ -1,0 +1,20 @@
+//
+//  Config.Beta.xcconfig
+//  NetworkKit
+//
+//  Created by liuwenjie on 2020/5/31.
+//  Copyright © 2020 iloc.cc. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+#include "Pods/Target Support Files/Pods-NetworkKit/Pods-NetworkKit.beta.xcconfig"
+
+MOF_HTTP_SCHEME= "https"
+MOF_REST_HOST = "beta-restful.moftech.net"
+
+LOG_API_OPEN = true
+
+DEBUG = false
+
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) MOF_DOMIN='$(MOF_HTTP_SCHEME)":/""/"$(MOF_REST_HOST)"/"' LOG_API_OPEN='$(LOG_API_OPEN)' DEBUG='$(DEBUG)'

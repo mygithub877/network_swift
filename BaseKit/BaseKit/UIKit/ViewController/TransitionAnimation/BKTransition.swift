@@ -8,25 +8,44 @@
 
 import UIKit
 
+/// 自定义模态动画代理类
 public class BKTransition: NSObject {
+    
+    /// 模态显示Rect
     public var presentRect:CGRect = .zero
+    
+    /// 模态容器背景颜色（非模态视图背景）
     public var containerBackgroundColor:UIColor = .init(white: 0, alpha: 0.33)
+    
+    /// 动画时间
     public var animateDuration:TimeInterval = 0.35
+    
+    /// 背景视图响应事件HitTest回调
     public var containerBackgroundHitTestEvent:((_ view:UIView,_ point:CGPoint,_ event:UIEvent)->UIView)?
+    
+    /// 点击背景时是否dismiss
     public var dismissWhenTouch:Bool = false{
         didSet{
             _presentController?.dismissWhenTouch=dismissWhenTouch
         }
     }
+    
+    /// 屏幕方向
     public var orientation:UIInterfaceOrientation?
+    
+    /// 自定义弹出动画
     public var presentAnimation:((_ transitionContext:UIViewControllerContextTransitioning)->Void)?
+    
+    /// 自定义消失动画
     public var dismissAnimation:((_ transitionContext:UIViewControllerContextTransitioning)->Void)?
 
-    private weak var _presentController:_BKPresentController?
-    private var _isPresent:Bool = false
+    /// 背景视图
     public var containerBackgroundView:UIView?{
         return _presentController?.backgroundView
     }
+    private weak var _presentController:_BKPresentController?
+    private var _isPresent:Bool = false
+    
     
 }
 extension BKTransition:UIViewControllerTransitioningDelegate{

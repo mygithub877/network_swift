@@ -12,11 +12,14 @@ import SnapKit
 
 public class BKWebViewController: UIViewController{
     
+    /// 进度条
     private lazy var progressView: UIProgressView = {
         let prgv=UIProgressView()
         prgv.progressViewStyle = .bar;
         return prgv
     }()
+    
+    /// 等待加载菊花
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let act=UIActivityIndicatorView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 88, height: 88)))
         act.center=CGPoint(x: self.view.center.x, y: self.view.center.y-22)
@@ -25,9 +28,15 @@ public class BKWebViewController: UIViewController{
         return act
     }()
     
+    /// 网页链接
     open var url:URL?
+    
+    /// 网页HTML
     open var html:String?
+    
+    /// request对象
     open var request:URLRequest?
+    
     private(set) var currentURL: String?
     
     open lazy var wkWebView: WKWebView = {

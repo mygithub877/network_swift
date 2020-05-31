@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		38C9A7EB245554E600D28C83 /* NetworkKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 38C9A7E9245554E600D28C83 /* NetworkKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EDCA917C248401E700F08FE4 /* NKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917B248401E700F08FE4 /* NKError.swift */; };
+		EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917D2484020500F08FE4 /* NKFile.swift */; };
+		EDCA91802484023000F08FE4 /* NKClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917F2484023000F08FE4 /* NKClient.swift */; };
+		EDCA9184248402D600F08FE4 /* NKBaseSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA9183248402D600F08FE4 /* NKBaseSession.swift */; };
 		F2CABDED3B5BFF8BDD48972A /* Pods_NetworkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED848A173E7C670827950C0 /* Pods_NetworkKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -20,6 +24,14 @@
 		DDB1D2433E3BA80593163A0C /* Pods-NetworkKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NetworkKit.debug.xcconfig"; path = "Target Support Files/Pods-NetworkKit/Pods-NetworkKit.debug.xcconfig"; sourceTree = "<group>"; };
 		DDEDDD41B51F2AE3AA943CCD /* Pods-NetworkKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NetworkKit.release.xcconfig"; path = "Target Support Files/Pods-NetworkKit/Pods-NetworkKit.release.xcconfig"; sourceTree = "<group>"; };
 		E7EE437FA35C61A37F5AEAEA /* Pods-NetworkKit.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NetworkKit.beta.xcconfig"; path = "Target Support Files/Pods-NetworkKit/Pods-NetworkKit.beta.xcconfig"; sourceTree = "<group>"; };
+		EDCA917724838BB600F08FE4 /* Config.Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.Debug.xcconfig; sourceTree = "<group>"; };
+		EDCA917824838BC500F08FE4 /* Config.Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.Release.xcconfig; sourceTree = "<group>"; };
+		EDCA917924838BD400F08FE4 /* Config.Beta.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.Beta.xcconfig; sourceTree = "<group>"; };
+		EDCA917A24838BE400F08FE4 /* Config.DebugProd.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.DebugProd.xcconfig; sourceTree = "<group>"; };
+		EDCA917B248401E700F08FE4 /* NKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKError.swift; sourceTree = "<group>"; };
+		EDCA917D2484020500F08FE4 /* NKFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKFile.swift; sourceTree = "<group>"; };
+		EDCA917F2484023000F08FE4 /* NKClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKClient.swift; sourceTree = "<group>"; };
+		EDCA9183248402D600F08FE4 /* NKBaseSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKBaseSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,10 +75,58 @@
 		38C9A7E8245554E600D28C83 /* NetworkKit */ = {
 			isa = PBXGroup;
 			children = (
+				EDCA91822484025F00F08FE4 /* Public */,
+				EDCA91812484024D00F08FE4 /* Private */,
+				EDCA917524838B4B00F08FE4 /* Config */,
 				38C9A7E9245554E600D28C83 /* NetworkKit.h */,
 				38C9A7EA245554E600D28C83 /* Info.plist */,
 			);
 			path = NetworkKit;
+			sourceTree = "<group>";
+		};
+		EDCA917324838AFC00F08FE4 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				EDCA9183248402D600F08FE4 /* NKBaseSession.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		EDCA917424838B2500F08FE4 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				EDCA917B248401E700F08FE4 /* NKError.swift */,
+				EDCA917D2484020500F08FE4 /* NKFile.swift */,
+				EDCA917F2484023000F08FE4 /* NKClient.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		EDCA917524838B4B00F08FE4 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				EDCA917724838BB600F08FE4 /* Config.Debug.xcconfig */,
+				EDCA917824838BC500F08FE4 /* Config.Release.xcconfig */,
+				EDCA917924838BD400F08FE4 /* Config.Beta.xcconfig */,
+				EDCA917A24838BE400F08FE4 /* Config.DebugProd.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		EDCA91812484024D00F08FE4 /* Private */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Private;
+			sourceTree = "<group>";
+		};
+		EDCA91822484025F00F08FE4 /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				EDCA917424838B2500F08FE4 /* Base */,
+				EDCA917324838AFC00F08FE4 /* Core */,
+			);
+			path = Public;
 			sourceTree = "<group>";
 		};
 		FCBB43BBD75C12F720110066 /* Pods */ = {
@@ -124,6 +184,7 @@
 				TargetAttributes = {
 					38C9A7E5245554E600D28C83 = {
 						CreatedOnToolsVersion = 11.4;
+						LastSwiftMigration = 1140;
 					};
 				};
 			};
@@ -185,6 +246,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDCA91802484023000F08FE4 /* NKClient.swift in Sources */,
+				EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */,
+				EDCA9184248402D600F08FE4 /* NKBaseSession.swift in Sources */,
+				EDCA917C248401E700F08FE4 /* NKError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,8 +382,9 @@
 		};
 		38C9A7EF245554E600D28C83 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DDB1D2433E3BA80593163A0C /* Pods-NetworkKit.debug.xcconfig */;
+			baseConfigurationReference = EDCA917724838BB600F08FE4 /* Config.Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 34H5DXRWJF;
@@ -335,6 +401,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = iloc.cc.NetworkKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -342,8 +409,9 @@
 		};
 		38C9A7F0245554E600D28C83 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DDEDDD41B51F2AE3AA943CCD /* Pods-NetworkKit.release.xcconfig */;
+			baseConfigurationReference = EDCA917824838BC500F08FE4 /* Config.Release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 34H5DXRWJF;
@@ -432,8 +500,9 @@
 		};
 		38C9A7F5245556C200D28C83 /* DebugProd */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 471D3A3D71B8844D90BEEB29 /* Pods-NetworkKit.debugprod.xcconfig */;
+			baseConfigurationReference = EDCA917A24838BE400F08FE4 /* Config.DebugProd.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 34H5DXRWJF;
@@ -450,6 +519,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = iloc.cc.NetworkKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -516,8 +586,9 @@
 		};
 		38C9A7F7245556DB00D28C83 /* Beta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E7EE437FA35C61A37F5AEAEA /* Pods-NetworkKit.beta.xcconfig */;
+			baseConfigurationReference = EDCA917924838BD400F08FE4 /* Config.Beta.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 34H5DXRWJF;

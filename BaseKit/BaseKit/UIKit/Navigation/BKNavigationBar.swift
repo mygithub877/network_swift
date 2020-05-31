@@ -163,6 +163,7 @@ public class BKNavigationBar: UINavigationBar {
         }
 
     }
+    ///处理透明区域响应事件，传递至下一层
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let v = super.hitTest(point, with: event)
         let acls: AnyClass? = NSClassFromString("_UINavigationBarContentView")//swiftClassFromString(className: "_UINavigationBarContentView")
