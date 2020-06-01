@@ -12,6 +12,7 @@
 		EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917D2484020500F08FE4 /* NKFile.swift */; };
 		EDCA91802484023000F08FE4 /* NKClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917F2484023000F08FE4 /* NKClient.swift */; };
 		EDCA9184248402D600F08FE4 /* NKBaseSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA9183248402D600F08FE4 /* NKBaseSession.swift */; };
+		EDF64837248549DF009ED71E /* NKUIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF64836248549DF009ED71E /* NKUIDeviceExtension.swift */; };
 		F2CABDED3B5BFF8BDD48972A /* Pods_NetworkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED848A173E7C670827950C0 /* Pods_NetworkKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		EDCA917D2484020500F08FE4 /* NKFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKFile.swift; sourceTree = "<group>"; };
 		EDCA917F2484023000F08FE4 /* NKClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKClient.swift; sourceTree = "<group>"; };
 		EDCA9183248402D600F08FE4 /* NKBaseSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKBaseSession.swift; sourceTree = "<group>"; };
+		EDF64836248549DF009ED71E /* NKUIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKUIDeviceExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 		EDCA91812484024D00F08FE4 /* Private */ = {
 			isa = PBXGroup;
 			children = (
+				EDF64835248549AB009ED71E /* Extension */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -127,6 +130,14 @@
 				EDCA917324838AFC00F08FE4 /* Core */,
 			);
 			path = Public;
+			sourceTree = "<group>";
+		};
+		EDF64835248549AB009ED71E /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				EDF64836248549DF009ED71E /* NKUIDeviceExtension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		FCBB43BBD75C12F720110066 /* Pods */ = {
@@ -179,6 +190,7 @@
 		38C9A7DD245554E600D28C83 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = NK;
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = iloc.cc;
 				TargetAttributes = {
@@ -248,6 +260,7 @@
 			files = (
 				EDCA91802484023000F08FE4 /* NKClient.swift in Sources */,
 				EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */,
+				EDF64837248549DF009ED71E /* NKUIDeviceExtension.swift in Sources */,
 				EDCA9184248402D600F08FE4 /* NKBaseSession.swift in Sources */,
 				EDCA917C248401E700F08FE4 /* NKError.swift in Sources */,
 			);

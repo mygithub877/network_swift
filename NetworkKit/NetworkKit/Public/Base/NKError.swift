@@ -7,3 +7,23 @@
 //
 
 import Foundation
+enum NKError {
+    case notConnectedToInternet
+    case timeout
+    case cannotConnectToHost
+    case other
+    var statusCode:Int{
+        return 200
+    }
+    var errorDescription:String{
+        return ""
+    }
+    var isNetworkError:Bool{
+        return false
+    }
+    var isHTTPError:Bool{
+        return false
+    }
+    
+    
+}
