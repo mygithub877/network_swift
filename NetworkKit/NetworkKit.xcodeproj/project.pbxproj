@@ -13,6 +13,10 @@
 		EDCA91802484023000F08FE4 /* NKClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917F2484023000F08FE4 /* NKClient.swift */; };
 		EDCA9184248402D600F08FE4 /* NKBaseSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA9183248402D600F08FE4 /* NKBaseSession.swift */; };
 		EDF64837248549DF009ED71E /* NKUIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF64836248549DF009ED71E /* NKUIDeviceExtension.swift */; };
+		EDF6483A24892F62009ED71E /* NKHostDomin.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6483924892F62009ED71E /* NKHostDomin.swift */; };
+		EDF648402489361C009ED71E /* NKAuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6483F2489361C009ED71E /* NKAuthSession.swift */; };
+		EDF648422489366E009ED71E /* NKAuthURLConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF648412489366E009ED71E /* NKAuthURLConstant.swift */; };
+		EDF6484424893929009ED71E /* NKBaseURLConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6484324893929009ED71E /* NKBaseURLConstant.swift */; };
 		F2CABDED3B5BFF8BDD48972A /* Pods_NetworkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED848A173E7C670827950C0 /* Pods_NetworkKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +38,10 @@
 		EDCA917F2484023000F08FE4 /* NKClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKClient.swift; sourceTree = "<group>"; };
 		EDCA9183248402D600F08FE4 /* NKBaseSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKBaseSession.swift; sourceTree = "<group>"; };
 		EDF64836248549DF009ED71E /* NKUIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKUIDeviceExtension.swift; sourceTree = "<group>"; };
+		EDF6483924892F62009ED71E /* NKHostDomin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKHostDomin.swift; sourceTree = "<group>"; };
+		EDF6483F2489361C009ED71E /* NKAuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKAuthSession.swift; sourceTree = "<group>"; };
+		EDF648412489366E009ED71E /* NKAuthURLConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKAuthURLConstant.swift; sourceTree = "<group>"; };
+		EDF6484324893929009ED71E /* NKBaseURLConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKBaseURLConstant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +126,7 @@
 		EDCA91812484024D00F08FE4 /* Private */ = {
 			isa = PBXGroup;
 			children = (
+				EDF6483824892EF7009ED71E /* URLConstant */,
 				EDF64835248549AB009ED71E /* Extension */,
 			);
 			path = Private;
@@ -128,6 +137,7 @@
 			children = (
 				EDCA917424838B2500F08FE4 /* Base */,
 				EDCA917324838AFC00F08FE4 /* Core */,
+				EDF6483E248935E2009ED71E /* Session */,
 			);
 			path = Public;
 			sourceTree = "<group>";
@@ -138,6 +148,24 @@
 				EDF64836248549DF009ED71E /* NKUIDeviceExtension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		EDF6483824892EF7009ED71E /* URLConstant */ = {
+			isa = PBXGroup;
+			children = (
+				EDF6483924892F62009ED71E /* NKHostDomin.swift */,
+				EDF6484324893929009ED71E /* NKBaseURLConstant.swift */,
+				EDF648412489366E009ED71E /* NKAuthURLConstant.swift */,
+			);
+			path = URLConstant;
+			sourceTree = "<group>";
+		};
+		EDF6483E248935E2009ED71E /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				EDF6483F2489361C009ED71E /* NKAuthSession.swift */,
+			);
+			path = Session;
 			sourceTree = "<group>";
 		};
 		FCBB43BBD75C12F720110066 /* Pods */ = {
@@ -258,10 +286,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDF6484424893929009ED71E /* NKBaseURLConstant.swift in Sources */,
 				EDCA91802484023000F08FE4 /* NKClient.swift in Sources */,
+				EDF648402489361C009ED71E /* NKAuthSession.swift in Sources */,
+				EDF648422489366E009ED71E /* NKAuthURLConstant.swift in Sources */,
 				EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */,
 				EDF64837248549DF009ED71E /* NKUIDeviceExtension.swift in Sources */,
 				EDCA9184248402D600F08FE4 /* NKBaseSession.swift in Sources */,
+				EDF6483A24892F62009ED71E /* NKHostDomin.swift in Sources */,
 				EDCA917C248401E700F08FE4 /* NKError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
