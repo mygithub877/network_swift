@@ -24,9 +24,7 @@ class REST {
         static let USER_TRANSFER = USER(path: "/mobile")
         static let PHONE_CHECK = USER(path: "/exist")
         static let AGROAL_TOKEN = USER(path: "/agora/token")
-        
         static let AGROAL_RTMTOKEN = USER(path: "/agora/rtm/token")
-        
         static func APP_VERSION(platform:Int,app:Int) -> USER{
             return USER(path: "/versions/new/\(platform)/\(app)")
         }

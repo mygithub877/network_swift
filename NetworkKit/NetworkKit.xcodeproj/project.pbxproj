@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38383B8424C02A10001306BA /* NKResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38383B8324C02A10001306BA /* NKResponse.swift */; };
 		38C9A7EB245554E600D28C83 /* NetworkKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 38C9A7E9245554E600D28C83 /* NetworkKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EDCA917C248401E700F08FE4 /* NKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917B248401E700F08FE4 /* NKError.swift */; };
 		EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917D2484020500F08FE4 /* NKFile.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		2ED848A173E7C670827950C0 /* Pods_NetworkKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NetworkKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		38383B8324C02A10001306BA /* NKResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKResponse.swift; sourceTree = "<group>"; };
 		38C9A7E6245554E600D28C83 /* NetworkKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetworkKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38C9A7E9245554E600D28C83 /* NetworkKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkKit.h; sourceTree = "<group>"; };
 		38C9A7EA245554E600D28C83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				EDCA917B248401E700F08FE4 /* NKError.swift */,
 				EDCA917D2484020500F08FE4 /* NKFile.swift */,
 				EDCA917F2484023000F08FE4 /* NKClient.swift */,
+				38383B8324C02A10001306BA /* NKResponse.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				EDF6484424893929009ED71E /* NKBaseURLConstant.swift in Sources */,
 				EDCA91802484023000F08FE4 /* NKClient.swift in Sources */,
 				EDF648402489361C009ED71E /* NKAuthSession.swift in Sources */,
+				38383B8424C02A10001306BA /* NKResponse.swift in Sources */,
 				EDF648422489366E009ED71E /* NKAuthURLConstant.swift in Sources */,
 				EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */,
 				EDF64837248549DF009ED71E /* NKUIDeviceExtension.swift in Sources */,

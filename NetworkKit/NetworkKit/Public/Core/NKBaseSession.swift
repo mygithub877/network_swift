@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 class NKBaseSession: NSObject {
-    typealias NKSessionCompletion = (NSDictionary?,NKError?)->()
+    typealias NKSessionCompletion = (NKResponse)->()
     func GET(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) {
         let aheaders: HTTPHeaders = [
             .authorization(username: "Username", password: "Password"),
@@ -18,8 +18,35 @@ class NKBaseSession: NSObject {
         ]
         
        let request = AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: aheaders, interceptor: nil, requestModifier: nil)
-        request.response { (data) in
+        request.responseJSON { (data) in
             DLog("\(data.debugDescription)")
+            if data.value != nil {
+                let response = NKResponse.deserialize(from: data.value as? NSDictionary)
+                if response != nil {
+                    if response?.code == 0 {
+                        response?.success=true
+                    }else{
+                        let desc=String(describing: response?.response)
+                        response?.error = .server(code: response?.code, err: desc)
+                    }
+                }else{
+                    response?.error = .other(err: "解析失敗，無效的數據", detailErr: nil)
+                }
+                if completion != nil {
+                    completion!(response!);
+                }
+            }else{
+                let response = NKResponse()
+                let statusCode = data.response?.statusCode
+                if data.response != nil &&  statusCode != 200 {
+                    response.error = .http(statusCode: statusCode!)
+                }else{
+                    response.error = NKError(err: data.error)
+                }
+                if completion != nil {
+                    completion!(response);
+                }
+            }
         }
     }
     
