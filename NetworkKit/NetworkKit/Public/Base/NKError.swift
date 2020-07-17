@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-enum NKError:Equatable {
+public enum NKError:Equatable {
     case notConnectedToInternet
     case timeout
     case cannotConnectToHost
@@ -69,7 +69,7 @@ enum NKError:Equatable {
             return false
         }
     }
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs,rhs) {
         case (.notConnectedToInternet,.notConnectedToInternet):
             return true;

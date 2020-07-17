@@ -42,6 +42,6 @@ let MOF_STOCK_DOMIN = "\(MOF_HTTP_SCHEME)://\(MOF_STOCK_HOST)"
 public func DLog(_ item: Any..., file : String = #file, lineNum : Int = #line) {
     if LOG_API_OPEN {
          let fileName = (file as NSString).lastPathComponent
-         print ("#FILE:\(fileName)[LINE:\(lineNum)] \(item)")
+         print("#FILE:\(fileName)[LINE:\(lineNum)] \(item)")
     }
 }

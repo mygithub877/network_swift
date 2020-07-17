@@ -9,22 +9,27 @@
 import UIKit
 import Alamofire
 
-class NKBaseSession: NSObject {
-    typealias NKSessionCompletion = (NKResponse)->()
-    func GET(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) {
+public class NKBaseSession: NSObject {
+    public typealias NKSessionCompletion = (NKResponse)->()
+    public func request(url:String,method: HTTPMethod = .get,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) {
         let aheaders: HTTPHeaders = [
             .authorization(username: "Username", password: "Password"),
             .userAgent(userAgent())
         ]
         
-       let request = AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: aheaders, interceptor: nil, requestModifier: nil)
+       let request = AF.request(url, method: method, parameters: parameters, encoding: URLEncoding.default, headers: aheaders, interceptor: nil, requestModifier: nil)
         request.responseJSON { (data) in
-            DLog("\(data.debugDescription)")
+            DLog(data.value ?? "")
             if data.value != nil {
                 let response = NKResponse.deserialize(from: data.value as? NSDictionary)
+                response?.data=data;
+                response?.statusCode = data.response?.statusCode;
+                response?.method = data.request?.method?.rawValue;
+                response?.header = (data.response?.allHeaderFields ?? [:]) as NSDictionary;
+                response?.URL = data.request?.url
                 if response != nil {
                     if response?.code == 0 {
-                        response?.success=true
+                        response?.isSuccess=true
                     }else{
                         let desc=String(describing: response?.response)
                         response?.error = .server(code: response?.code, err: desc)
@@ -37,7 +42,12 @@ class NKBaseSession: NSObject {
                 }
             }else{
                 let response = NKResponse()
+                response.data=data;
                 let statusCode = data.response?.statusCode
+                response.statusCode=statusCode;
+                response.method = data.request?.method?.rawValue;
+                response.header = (data.response?.allHeaderFields ?? [:]) as NSDictionary;
+                response.URL = data.request?.url
                 if data.response != nil &&  statusCode != 200 {
                     response.error = .http(statusCode: statusCode!)
                 }else{
@@ -48,6 +58,9 @@ class NKBaseSession: NSObject {
                 }
             }
         }
+    }
+    public func GET(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) {
+        request(url: url,method: .get,parameters: parameters, headers: headers, completion: completion)
     }
     
     
