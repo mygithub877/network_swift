@@ -22,4 +22,16 @@ public class NKAuthSession: NKBaseSession {
             }
         }
     }
+    public func sendCaptcha(phone:String,code:String,completion:NKSessionCompletion?)  {
+        let url = REST.USER.CAPTCHA_SEND.URL
+        
+        self.POST_SEC(url: url,parameters: ["mobile":phone,"code":code,"deviceId":"udid","type":"user:login"]) { (response) in
+            if !response.isSuccess {
+                DLog("\(String(describing: response.error?.errorDescription))")
+            }
+            if completion != nil{
+                completion!(response);
+            }
+        }
+    }
 }

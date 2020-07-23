@@ -10,6 +10,7 @@ target 'NetworkKit' do
 	pod 'Alamofire'
   pod 'SwiftyJSON'
   pod 'HandyJSON'
+  pod 'SwiftyRSA'
 
 end
 target 'Demo' do
@@ -21,4 +22,6 @@ target 'Demo' do
   pod 'Alamofire'
   pod 'SwiftyJSON'
   pod 'HandyJSON'
+  pod 'SwiftyRSA'
+
 end

@@ -38,7 +38,11 @@ extension ViewController{
         self.dataSource.append(item0)
         
         let item1: UITableViewCellItem = (title:"获取验证码",subtitle:"GET", action:{() in
-            
+            NKAuthSession.default.sendCaptcha(phone: "123456789", code: "886") { (response) in
+                let vc = ResponseViewController()
+                vc.response=response
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
         })
         self.dataSource.append(item1)
         let item2: UITableViewCellItem = (title:"登入",subtitle:"GET", action:{() in

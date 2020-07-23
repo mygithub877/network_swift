@@ -15,14 +15,21 @@ public class NKResponse: HandyJSON {
     public var response:Any?
     public var error:NKError?
     
-    public var URL:URL?
-    public var method:String?
-    public var header:NSDictionary?
-    public var statusCode:Int?;
+    public private(set) var URL:URL?
+    public private(set) var method:String?
+    public private(set) var header:NSDictionary?
+    public private(set) var statusCode:Int?;
     
     required public init() {}
 
-    internal var data:AFDataResponse<Any>?
+    internal var data:AFDataResponse<Any>?{
+        didSet{
+            self.URL=self.data?.request?.url;
+            self.method=self.data?.request?.method?.rawValue;
+            self.header=(self.data?.response?.allHeaderFields ?? [:]) as NSDictionary;
+            self.statusCode=self.data?.response?.statusCode;
+        }
+    }
     public var description: String {
         return data?.description ?? "";
     }

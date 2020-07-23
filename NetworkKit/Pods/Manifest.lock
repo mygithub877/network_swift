@@ -2,23 +2,29 @@ PODS:
   - Alamofire (5.1.0)
   - HandyJSON (5.0.1)
   - SwiftyJSON (5.0.0)
+  - SwiftyRSA (1.5.0):
+    - SwiftyRSA/ObjC (= 1.5.0)
+  - SwiftyRSA/ObjC (1.5.0)
 
 DEPENDENCIES:
   - Alamofire
   - HandyJSON
   - SwiftyJSON
+  - SwiftyRSA
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - HandyJSON
     - SwiftyJSON
+    - SwiftyRSA
 
 SPEC CHECKSUMS:
   Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
   HandyJSON: d45b8415c501e3affc59ca9762c1197ff0feb646
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+  SwiftyRSA: 6e528fb1b1a87d5111c48081083b141d6d65f1cf
 
-PODFILE CHECKSUM: 634cd8afb950569731fd4b860f9d69940a7cdc7c
+PODFILE CHECKSUM: 30baefad4c4a65b00612d56184a5b1433d505bc8
 
 COCOAPODS: 1.9.3
