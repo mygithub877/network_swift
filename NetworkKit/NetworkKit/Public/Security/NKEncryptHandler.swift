@@ -26,12 +26,14 @@ class NKEncryptHandler: NSObject {
         if Date().timeIntervalSince1970-time > 24*3600 {
             base64Keydata=nil;
         }
+        let adata = "data".data(using: .utf8)!;
+        let td=rsa_encrypt(data: adata)
         if base64Keydata == nil {
             var bytes = [UInt8](repeating: 0, count: 16)
             let result=SecRandomCopyBytes(kSecRandomDefault, 16, &bytes)
             if result == errSecSuccess {
                 key=Data(bytes: bytes, count: 16);
-                enc_key=try? rsa_encrypt(data: key!)
+                enc_key=rsa_encrypt(data: key!)
                 base64Keydata=key?.base64EncodedString()
                 UserDefaults.standard.set(base64Keydata, forKey: _SEC_AES_KEY)
                 UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: _SEC_AES_TIME)
@@ -59,7 +61,7 @@ class NKEncryptHandler: NSObject {
             UserDefaults.standard.set(base64Keydata, forKey: _SEC_AES_KEY)
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: _SEC_AES_TIME)
             UserDefaults.standard.synchronize()
-            enc_key=try? rsa_encrypt(data: key!)
+            enc_key=rsa_encrypt(data: key!)
         }else{
             print("Problem generating random bytes")
         }
@@ -126,12 +128,17 @@ class NKEncryptHandler: NSObject {
         }
         return nil;
     }
-    func rsa_encrypt(data:Data) throws -> Data {
-        let publicKey = try PublicKey(pemNamed: _SEC_RSA_PUB_KEY)
-        let clear = ClearMessage(data: data)
-        let encrypted = try clear.encrypted(with: publicKey, padding: .PKCS1)
-        // Then you can use:
-        let data = encrypted.data
-        return data;
+    func rsa_encrypt(data:Data) -> Data? {
+        do {
+            let publicKey = try PublicKey(data: Data(base64Encoded: _SEC_RSA_PUB_KEY)!)
+            let clear = ClearMessage(data: data)
+            let encrypted = try clear.encrypted(with: publicKey, padding: .PKCS1)
+            // Then you can use:
+            let ndata = encrypted.data
+            return ndata;
+        } catch  {
+            print(error)
+        }
+        return nil
     }
 }

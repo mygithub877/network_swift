@@ -14,15 +14,18 @@ public class NKBaseSession: NSObject {
     public typealias NKSessionCompletion = (NKResponse)->()
     
     @discardableResult
-    public func request(url:String,method: HTTPMethod ,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,encoding:ParameterEncoding = URLEncoding.default,completion:NKSessionCompletion?) -> URLSessionDataTask? {
-        let aheaders: HTTPHeaders = [
+    public func request(url:String,method: HTTPMethod ,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,encoding:ParameterEncoding = URLEncoding.default,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+        var aheaders: HTTPHeaders = [
             .authorization(username: "Username", password: "Password"),
             .userAgent(userAgent())
         ]
+        headers?.forEach({ (k,v) in
+            aheaders.add(name: k, value: v)
+        })
        let request = AF.request(url, method: method, parameters: parameters, encoding: encoding, headers: aheaders)
         request.responseJSON { (data) in
             let value = (data.value as? NSDictionary) ?? NSDictionary()
-            DLog("\(data.request?.httpMethod ?? "") \(data.request?.url?.description ?? "") \n\(value)")
+            DLog("\(data.request?.httpMethod ?? "") \(data.request?.url?.description ?? "") \n参数:\(String(describing: parameters))\n******RESPONSE\n\(value)\n******RESPONSE")
             
             if data.value != nil {
                 let response = NKResponse.deserialize(from: data.value as? NSDictionary)
@@ -69,19 +72,19 @@ public class NKBaseSession: NSObject {
         return true
     }
     @discardableResult
-    public func GET(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func GET(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         return request(url: url,method: .get,parameters: parameters, headers: headers, completion: completion)
     }
     @discardableResult
-    public func DELETE(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func DELETE(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         return request(url: url,method: .delete,parameters: parameters, headers: headers, completion: completion)
     }
     @discardableResult
-    public func POST(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func POST(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         return request(url: url,method: .post,parameters: parameters, headers: headers, completion: completion)
     }
     @discardableResult
-    public func POST_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func POST_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         var task:URLSessionDataTask?
         task = request(url: url, method: .post, parameters: parameters, headers: headers,encoding: EncryptURLEncoding.default){ (response) in
             if task == UpdatingAESKeyTask {
@@ -101,11 +104,11 @@ public class NKBaseSession: NSObject {
         return task
     }
     @discardableResult
-    public func PUT(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func PUT(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         return request(url: url,method: .put,parameters: parameters, headers: headers, completion: completion)
     }
     @discardableResult
-    public func PUT_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func PUT_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         var task:URLSessionDataTask?
         task = request(url: url, method: .put, parameters: parameters, headers: headers, encoding: EncryptURLEncoding.default){ (response) in
             if task == UpdatingAESKeyTask {
@@ -125,11 +128,11 @@ public class NKBaseSession: NSObject {
         return task
     }
     @discardableResult
-    public func POST_JSON(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func POST_JSON(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         return request(url: url,method: .post,parameters: parameters, headers: headers,encoding: JSONEncoding.default, completion: completion)
     }
     @discardableResult
-    public func POST_JSON_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func POST_JSON_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         var task:URLSessionDataTask?
         task = request(url: url, method: .post, parameters: parameters, headers: headers,encoding: EncryptJSONEncoding.default){ (response) in
             if task == UpdatingAESKeyTask {
@@ -149,11 +152,11 @@ public class NKBaseSession: NSObject {
         return task
     }
     @discardableResult
-    public func PUT_JSON(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func PUT_JSON(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         return request(url: url,method: .put,parameters: parameters, headers: headers,encoding: JSONEncoding.default, completion: completion)
     }
     @discardableResult
-    public func PUT_JSON_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:Encodable]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
+    public func PUT_JSON_SEC(url:String,parameters:[String:Encodable]?=nil,headers:[String:String]?=nil,completion:NKSessionCompletion?) -> URLSessionDataTask? {
         var task:URLSessionDataTask?
         task = request(url: url, method: .put, parameters: parameters, headers: headers,encoding: EncryptJSONEncoding.default){ (response) in
             if task == UpdatingAESKeyTask {
