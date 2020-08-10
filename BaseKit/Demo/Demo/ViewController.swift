@@ -34,7 +34,7 @@ class ViewController: UIViewController {
 //        self.view.backgroundColor = UIColor.RGB(r: 230, g: 230, b: 230, alpha: 1)
 //        self.view.backgroundColor = UIColor.RGB(r: 230, g: 230, b: 230)
 //        self.view.backgroundColor = .Hex("f7f7f7", alpha: 1)
-        self.view.backgroundColor = .Hex("f7f7f7")
+        self.view.backgroundColor = .hex("f7f7f7")
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem?.tintColor = barItemTintColors[index]

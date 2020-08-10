@@ -12,7 +12,7 @@ class PopoverViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("a7a7f7")
+        self.view.backgroundColor = .hex("a7a7f7")
         
         // Do any additional setup after loading the view.
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(rightItemAction))

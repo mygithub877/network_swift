@@ -144,7 +144,6 @@ extension BKWebViewController: WKNavigationDelegate{
         activityIndicator.stopAnimating()
         progressView.isHidden = true;
         progressView.progress = 0.0;
-        NSError
     }
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         print("HTTPHeader:\(String(describing: navigationAction.request.allHTTPHeaderFields))");

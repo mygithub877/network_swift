@@ -195,7 +195,8 @@ public struct EncryptURLEncoding: ParameterEncoding {
 
     public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters);
-        urlRequest.httpBody = NKEncryptHandler.default.encrypt(httpBody: urlRequest.httpBody)
+        urlRequest.httpBody = NKAESProvider.default().aes_decrypt(urlRequest.httpBody)
+//            NKEncryptHandler.default.encrypt(httpBody: urlRequest.httpBody)
         return urlRequest
     }
 }
@@ -210,7 +211,8 @@ public struct EncryptJSONEncoding: ParameterEncoding {
     // MARK: Encoding
     public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try JSONEncoding.default.encode(urlRequest, with: parameters);
-        urlRequest.httpBody = NKEncryptHandler.default.encrypt(httpBody: urlRequest.httpBody)
+        urlRequest.httpBody = NKAESProvider.default().aes_decrypt(urlRequest.httpBody)
+//            NKEncryptHandler.default.encrypt(httpBody: urlRequest.httpBody)
         return urlRequest
     }
     /// Encodes any JSON compatible object into a `URLRequest`.
@@ -223,7 +225,8 @@ public struct EncryptJSONEncoding: ParameterEncoding {
     /// - Throws:       Any `Error` produced during encoding.
     public func encode(_ urlRequest: URLRequestConvertible, withJSONObject jsonObject: Any? = nil) throws -> URLRequest {
         var urlRequest = try JSONEncoding.default.encode(urlRequest, withJSONObject: jsonObject);
-        urlRequest.httpBody = NKEncryptHandler.default.encrypt(httpBody: urlRequest.httpBody)
+        urlRequest.httpBody = NKAESProvider.default().aes_decrypt(urlRequest.httpBody)
+        //NKEncryptHandler.default.encrypt(httpBody: urlRequest.httpBody)
         return urlRequest
     }
 }

@@ -12,7 +12,7 @@ class CategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("a7a7f7")
+        self.view.backgroundColor = .hex("a7a7f7")
         // Do any additional setup after loading the view.
         let item1 = BKCategroyItem(title: "纯文字")
         let item2 = BKCategroyItem(title: "普通状态",selectedTitle: "选中状态")

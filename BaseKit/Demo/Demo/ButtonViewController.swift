@@ -11,7 +11,7 @@ class ButtonViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("f7f7f7")
+        self.view.backgroundColor = .hex("f7f7f7")
         // Do any additional setup after loading the view.
         let btn1=BKButton(style: .horizontal)
         btn1.setImage(UIImage(named: "share_but_facebook"), for: .normal)

@@ -196,7 +196,7 @@ public class BKCategroyBar: UIView {
         super.init(frame:frame)
         setupInit()
     }
-    public init(items:[BKCategroyItem]) {
+    @objc public init(items:[BKCategroyItem]) {
         super.init(frame:.zero)
         setupInit()
         self.items=items
@@ -647,12 +647,16 @@ class BKCategroyBarButton: UIButton {
     }
     override func imageRect(forContentRect contentRect: CGRect) -> CGRect {
         var rect = super.imageRect(forContentRect: contentRect)
-        rect.origin.x -= 2.5
+        if (self.currentTitle?.isEmpty ?? false) == false {
+            rect.origin.x -= 2.5
+        }
         return rect
     }
     override func titleRect(forContentRect contentRect: CGRect) -> CGRect {
         var rect = super.titleRect(forContentRect: contentRect)
-        rect.origin.x += 2.5
+        if self.currentImage != nil {
+            rect.origin.x += 2.5
+        }
         return rect
     }
     override func layoutSubviews() {

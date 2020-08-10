@@ -17,3 +17,11 @@ target 'Demo' do
   # Pods for BaseKit
   pod 'SnapKit'
 end
+target 'Demo-Objc' do
+  project 'Demo-Objc/Demo-Objc.xcodeproj'
+  # Comment the next line if you don't want to use dynamic framework
+  use_frameworks!
+
+  # Pods for BaseKit
+  pod 'Masonry'
+end

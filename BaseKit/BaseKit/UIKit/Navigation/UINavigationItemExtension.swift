@@ -44,7 +44,7 @@ extension UINavigationItem{
     }
     
     /// 设置单个页面导航栏背景色
-    public var barColor:UIColor?{
+    @objc public var barColor:UIColor?{
        set{
             objc_setAssociatedObject(self, AssociatedKey.barColor, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             objc_setAssociatedObject(self, AssociatedKey.gradientColors, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC);

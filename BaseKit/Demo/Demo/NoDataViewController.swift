@@ -12,7 +12,7 @@ class NoDataViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("f7f7f7")
+        self.view.backgroundColor = .hex("f7f7f7")
         self.navigationItem.barColor = UIColor.systemOrange
         // Do any additional setup after loading the view.
         if isNetworkError {
