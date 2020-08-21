@@ -24,7 +24,7 @@
 		EDD98EE32467DF29003672E3 /* UIResponderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */; };
 		EDD98EE52467E3E9003672E3 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */; };
 		EDD98EE924682DD3003672E3 /* BKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EE824682DD3003672E3 /* BKConstants.swift */; };
-		EDD98EEB24683C2F003672E3 /* BKCategroyBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EEA24683C2F003672E3 /* BKCategroyBar.swift */; };
+		EDD98EEB24683C2F003672E3 /* BKCategoryBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EEA24683C2F003672E3 /* BKCategoryBar.swift */; };
 		EDD98EED24683C54003672E3 /* BKNoDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EEC24683C54003672E3 /* BKNoDataView.swift */; };
 		EDD98EEF24683CE2003672E3 /* BKButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EEE24683CE2003672E3 /* BKButton.swift */; };
 		EDD98EF124683CFC003672E3 /* BKSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98EF024683CFC003672E3 /* BKSearchBar.swift */; };
@@ -65,7 +65,7 @@
 		EDD98EE22467DF29003672E3 /* UIResponderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIResponderExtension.swift; sourceTree = "<group>"; };
 		EDD98EE42467E3E9003672E3 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		EDD98EE824682DD3003672E3 /* BKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKConstants.swift; sourceTree = "<group>"; };
-		EDD98EEA24683C2F003672E3 /* BKCategroyBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKCategroyBar.swift; sourceTree = "<group>"; };
+		EDD98EEA24683C2F003672E3 /* BKCategoryBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKCategoryBar.swift; sourceTree = "<group>"; };
 		EDD98EEC24683C54003672E3 /* BKNoDataView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BKNoDataView.swift; sourceTree = "<group>"; };
 		EDD98EEE24683CE2003672E3 /* BKButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKButton.swift; sourceTree = "<group>"; };
 		EDD98EF024683CFC003672E3 /* BKSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BKSearchBar.swift; sourceTree = "<group>"; };
@@ -164,7 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				EDD98EEC24683C54003672E3 /* BKNoDataView.swift */,
-				EDD98EEA24683C2F003672E3 /* BKCategroyBar.swift */,
+				EDD98EEA24683C2F003672E3 /* BKCategoryBar.swift */,
 				EDD98EEE24683CE2003672E3 /* BKButton.swift */,
 				EDD98EF024683CFC003672E3 /* BKSearchBar.swift */,
 				EDD98EF224683D15003672E3 /* BKDashedView.swift */,
@@ -373,7 +373,7 @@
 				386A1666245ABA8C00616BAB /* UIViewControllerExtension.swift in Sources */,
 				EDD98EF124683CFC003672E3 /* BKSearchBar.swift in Sources */,
 				386A1664245AA3F900616BAB /* BKWebViewController.swift in Sources */,
-				EDD98EEB24683C2F003672E3 /* BKCategroyBar.swift in Sources */,
+				EDD98EEB24683C2F003672E3 /* BKCategoryBar.swift in Sources */,
 				383594E324693F5D00BB334E /* UIControlExtension.swift in Sources */,
 				EDA7F572245FEB4B0027A569 /* BKNavigationBar.swift in Sources */,
 				EDD98F0924683E81003672E3 /* BKLocationManager.swift in Sources */,

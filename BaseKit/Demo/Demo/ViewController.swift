@@ -174,7 +174,7 @@ extension ViewController{
         })
         self.dataSource.append(item19)
 
-        let item20: UITableViewCellItem = (title:"BKCategroyBar",subtitle:"category", action:{() in
+        let item20: UITableViewCellItem = (title:"BKCategoryBar",subtitle:"category", action:{() in
             let vc = CategoryViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         })

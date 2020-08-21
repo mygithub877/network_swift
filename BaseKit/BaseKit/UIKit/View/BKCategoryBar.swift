@@ -1,5 +1,5 @@
 //
-//  BKCategroyBar.swift
+//  BKCategoryBar.swift
 //  BaseKit
 //
 //  Created by liuwenjie on 2020/5/10.
@@ -7,16 +7,17 @@
 //
 
 import UIKit
-public class BKCategroyItem: NSObject{
+public class BKCategoryItem: NSObject{
     public var title:String?
     public var selectedTitle:String?
     public var image:UIImage?
     public var selectedImage:UIImage?
+    
     fileprivate var badgeText:String = ""
-    fileprivate var fonts:[UInt:UIFont] = [UIControl.State.normal.rawValue:UIFont.systemFont(ofSize: 14),UIControl.State.selected.rawValue:UIFont.systemFont(ofSize: 14)]
-    fileprivate var titleColors:[UInt:UIColor] = [UIControl.State.normal.rawValue:UIColor.black,UIControl.State.selected.rawValue:UIColor.red,UIControl.State.highlighted.rawValue:UIColor.red]
-    fileprivate var backgroundColors:[UInt:UIColor] = [:]
-    fileprivate var backgroundImages:[UInt:UIImage] = [:]
+    fileprivate var fonts:[UInt:UIFont]?
+    fileprivate var titleColors:[UInt:UIColor]?
+    fileprivate var backgroundColors:[UInt:UIColor]?
+    fileprivate var backgroundImages:[UInt:UIImage]?
 
     public init(title:String?,selectedTitle:String? = nil) {
         super.init()
@@ -30,7 +31,7 @@ public class BKCategroyItem: NSObject{
     }
 }
 
-public class BKCategroyBar: UIView {
+public class BKCategoryBar: UIView {
     public enum Style {
         case fit
         case full
@@ -38,8 +39,8 @@ public class BKCategroyBar: UIView {
     public enum SelectedStyle {
         case line
         case backgroundView
-        case humpBackground(color:UIColor)
-        case without
+        case humpBackground
+        case none
     }
     public var selectedIndex:Int = 0{
         didSet{
@@ -56,9 +57,28 @@ public class BKCategroyBar: UIView {
             resetItems()
         }
     }
-    public var items:[BKCategroyItem]?{
+    public var items:[BKCategoryItem]?{
         didSet{
-            resetItems()
+            if oldValue?.count != items?.count {
+                items?.forEach({ (item) in
+                    item.fonts=self.fonts
+                    item.titleColors=self.titleColors
+                    item.backgroundColors=self.backgroundColors
+                    item.backgroundImages=self.backgroundImages
+                })
+                resetItems()
+                resetSelectMaskView()
+            }else{
+                var idx=0
+                items?.forEach({ (item) in
+                    item.fonts=oldValue?[idx].fonts
+                    item.titleColors=oldValue?[idx].titleColors
+                    item.backgroundColors=oldValue?[idx].backgroundColors
+                    item.backgroundImages=oldValue?[idx].backgroundImages
+                    idx+=1
+                })
+                self.setNeedsLayout()
+            }
         }
     }
     public var selectedMaskStyle:SelectedStyle = .line {
@@ -69,120 +89,92 @@ public class BKCategroyBar: UIView {
     public var badgeInsets:UIEdgeInsets = .zero
     public var badgeTintColor:UIColor = .red
     public var didSelectedHandle:((_ index:Int)->())?
-    public private(set) var selectedMaskView:BKCategroyBarSelectedView?
+    public private(set) var selectedMaskView:BKCategoryBarSelectedView?
+
+    private var scrollView:BKCategoryBarScrollView = BKCategoryBarScrollView()
+    private var buttons:[BKCategoryBarButton] = Array<BKCategoryBarButton>()
+    fileprivate var fonts:[UInt:UIFont] = [UIControl.State.normal.rawValue:UIFont.systemFont(ofSize: 14),UIControl.State.selected.rawValue:UIFont.systemFont(ofSize: 14)]
+    fileprivate var titleColors:[UInt:UIColor] = [UIControl.State.normal.rawValue:UIColor.black,UIControl.State.selected.rawValue:UIColor.red,UIControl.State.highlighted.rawValue:UIColor.red]
+    fileprivate var backgroundColors:[UInt:UIColor] = [:]
+    fileprivate var backgroundImages:[UInt:UIImage] = [:]
+
     
-    private var scrollView:BKCategroyBarScrollView = BKCategroyBarScrollView()
-    private var buttons:[BKCategroyBarButton] = Array<BKCategroyBarButton>()
     //MARK: - functions
     public func setDidSelectedHandle(_ handle:@escaping ((_ index:Int)->())) {
        self.didSelectedHandle = handle
     }
-    public func setFont(_ font:UIFont,state:UIControl.State,index:Int? = nil){
+    public func setFont(_ font:UIFont,state:UIControl.State){
         guard self.items != nil else {
             return
         }
         guard state != .highlighted else {
             return
         }
-        if index == nil{
-            var idx = 0
-            self.items!.forEach({ (item) in
-                item.fonts[state.rawValue]=font
-                if buttons.count > idx {
-                    buttons[idx].item=item
-                }
-                idx += 1
-            })
-        }else{
-            guard self.items!.count > index! else {
-                return
+        self.fonts[state.rawValue]=font;
+        var idx = 0
+        self.items!.forEach({ (item) in
+            item.fonts?[state.rawValue]=font
+            if buttons.count > idx {
+                buttons[idx].item=item
+                buttons[idx].sizeToFit()
             }
-            self.items![index!].fonts[state.rawValue]=font;
-            if buttons.count > index! {
-                buttons[index!].item=self.items![index!]
-            }
+            idx += 1
+        })
+        self.setNeedsLayout()
+    }
+    public func setTitleColor(_ color:UIColor,state:UIControl.State){
+        guard self.items != nil else {
+            return
         }
+        guard state != .highlighted else {
+            return
+        }
+        self.titleColors[state.rawValue]=color;
+        var idx = 0
+        self.items!.forEach({ (item) in
+            item.titleColors?[state.rawValue]=color
+            if buttons.count > idx {
+                buttons[idx].item=item
+            }
+            idx += 1
+        })
+    }
+    public func setBackgroundColor(_ color:UIColor?,state:UIControl.State){
+        guard self.items != nil else {
+            return
+        }
+        guard state != .highlighted else {
+            return
+        }
+        self.backgroundColors[state.rawValue]=color
+        var idx = 0
+        self.items!.forEach({ (item) in
+            item.backgroundColors?[state.rawValue]=color
+            if buttons.count > idx {
+                buttons[idx].item=item
+            }
+            idx += 1
+        })
         
     }
-    public func setTitleColor(_ color:UIColor,state:UIControl.State,index:Int? = nil){
+    public func setBackgroundImage(_ image:UIImage?,state:UIControl.State){
         guard self.items != nil else {
             return
         }
         guard state != .highlighted else {
             return
         }
-        if index == nil{
-            var idx = 0
-            self.items!.forEach({ (item) in
-                item.titleColors[state.rawValue]=color
-                if buttons.count > idx {
-                    buttons[idx].item=item
-                }
-                idx += 1
-            })
-        }else{
-            guard self.items!.count > index! else {
-                return
+        self.backgroundImages[state.rawValue]=image
+        var idx = 0
+        self.items!.forEach({ (item) in
+            item.backgroundImages?[state.rawValue]=image
+            if buttons.count > idx {
+                buttons[idx].item=item
             }
-            self.items![index!].titleColors[state.rawValue]=color;
-            if buttons.count > index! {
-                buttons[index!].item=self.items![index!]
-            }
-        }
+            idx += 1
+        })
     }
-    public func setBackgroundColor(_ color:UIColor?,state:UIControl.State,index:Int? = nil){
-        guard self.items != nil else {
-            return
-        }
-        guard state != .highlighted else {
-            return
-        }
-        if index == nil{
-            var idx = 0
-            self.items!.forEach({ (item) in
-                item.backgroundColors[state.rawValue]=color
-                if buttons.count > idx {
-                    buttons[idx].item=item
-                }
-                idx += 1
-            })
-        }else{
-            guard self.items!.count > index! else {
-                return
-            }
-            self.items![index!].backgroundColors[state.rawValue]=color;
-            if buttons.count > index! {
-                buttons[index!].item=self.items![index!]
-            }
-        }
-    }
-    public func setBackgroundImage(_ image:UIImage?,state:UIControl.State,index:Int? = nil){
-        guard self.items != nil else {
-            return
-        }
-        guard state != .highlighted else {
-            return
-        }
-        if index == nil{
-            var idx = 0
-            self.items!.forEach({ (item) in
-                item.backgroundImages[state.rawValue]=image
-                if buttons.count > idx {
-                    buttons[idx].item=item
-                }
-                idx += 1
-            })
-        }else{
-            guard self.items!.count > index! else {
-                return
-            }
-            self.items![index!].backgroundImages[state.rawValue]=image;
-            if buttons.count > index! {
-                buttons[index!].item=self.items![index!]
-            }
-        }
-    }
-//    public func insert(item:BKCategroyItem,index:Int){
+//    public func insert(item:BKCategoryItem,index:Int){
 //        items?.insert(item, at: index)
 //
 //    }
@@ -196,7 +188,7 @@ public class BKCategroyBar: UIView {
         super.init(frame:frame)
         setupInit()
     }
-    @objc public init(items:[BKCategroyItem]) {
+    @objc public init(items:[BKCategoryItem]) {
         super.init(frame:.zero)
         setupInit()
         self.items=items
@@ -207,7 +199,7 @@ public class BKCategroyBar: UIView {
         setupInit()
     }
 }
-private extension BKCategroyBar{
+private extension BKCategoryBar{
     private func setupInit() {
         self.backgroundColor = .white
         scrollView.showsVerticalScrollIndicator=false;
@@ -225,21 +217,22 @@ private extension BKCategroyBar{
         guard (self.items?.isEmpty ?? true) == false else {
             return
         }
-        resetSelectMaskView()
         var totalWidth:CGFloat = 0
         let offset=titleWidthOffset
         var index = 0
         self.items?.forEach({ (item) in
-            let btn=BKCategroyBarButton()
+            let btn=BKCategoryBarButton()
             btn.tag=index;
             btn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
             btn.item=item
+            btn.badgeLabel.backgroundColor = self.badgeTintColor;
             scrollView.addSubview(btn)
             buttons.append(btn)
             btn.sizeToFit()
             totalWidth += (btn.width+offset)
             if index == self.selectedIndex{
                 btn.isSelected=true;
+//                self.selectedContainerView.backgroundColor=self.backgroundColors[UIControl.State.selected.rawValue]
                 selectedMaskView?.selectedBtn=btn;
             }
             index += 1
@@ -251,7 +244,7 @@ private extension BKCategroyBar{
             let wset=(totalWidth-self.width)/CGFloat(items!.count);
             offset_full=offset-wset;
         }
-        var preBtn:BKCategroyBarButton?
+        var preBtn:BKCategoryBarButton?
         buttons.forEach({ (btn) in
             if self.style == .fit {
                 btn.maiginOffset = offset
@@ -272,18 +265,19 @@ private extension BKCategroyBar{
         preBtn!.snp.makeConstraints { (make) in
             make.right.equalToSuperview()
         }
+        resetSelectMaskView()
+
     }
     func resetSelectMaskView() {
         self.selectedMaskView?.removeFromSuperview()
         scrollView.selectedView=nil
         switch self.selectedMaskStyle {
         case .line:
-            self.selectedMaskView = BKCategroyBarLine()
+            self.selectedMaskView = BKCategoryBarSelectedLineView()
         case .backgroundView:
-            self.selectedMaskView = BKCategroyBarBackgroundView()
-        case .humpBackground(let color):
-            let v = BKCategroyBarBackgroundView()
-            v.humpFillColor = color
+            self.selectedMaskView = BKCategoryBarSelectedBackgroundView()
+        case .humpBackground:
+            let v = BKCategoryBarSelectedBackgroundView()
             scrollView.selectedView=v
             self.selectedMaskView = v
         default:
@@ -297,7 +291,7 @@ private extension BKCategroyBar{
         }
 
     }
-    @objc func buttonAction(_ sender:BKCategroyBarButton) {
+    @objc func buttonAction(_ sender:BKCategoryBarButton) {
         guard sender.isSelected == false else {
             return
         }
@@ -316,7 +310,7 @@ private extension BKCategroyBar{
         }
         updateSelectButton(btn)
     }
-    func updateSelectButton(_ btn:BKCategroyBarButton) {
+    func updateSelectButton(_ btn:BKCategoryBarButton) {
         btn.isSelected=true
         selectedMaskView?.selectedBtn?.isSelected=false;
         selectedMaskView?.selectedBtn=btn
@@ -337,16 +331,20 @@ private extension BKCategroyBar{
     }
 }
 
-class BKCategroyBarScrollView: UIScrollView {
-    var selectedView:BKCategroyBarBackgroundView?{
+class BKCategoryBarScrollView: UIScrollView {
+    var selectedView:BKCategoryBarSelectedBackgroundView?{
         didSet{
             oldValue?.removeObserver(self, forKeyPath: "frame")
+            oldValue?.removeObserver(self, forKeyPath: "humpFillColor")
+            
             self.selectedView?.addObserver(self, forKeyPath: "frame", options: .new, context: nil)
+            self.selectedView?.addObserver(self, forKeyPath: "humpFillColor", options: .new, context: nil)
             setNeedsDisplay()
         }
     }
     deinit {
         selectedView?.removeObserver(self, forKeyPath: "frame")
+        selectedView?.removeObserver(self, forKeyPath: "humpFillColor")
     }
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         setNeedsDisplay()
@@ -401,7 +399,7 @@ class BKCategroyBarScrollView: UIScrollView {
 
 
 
-public class BKCategroyBarSelectedView: UIView,NSCopying{
+public class BKCategoryBarSelectedView: UIView,NSCopying{
     public enum Style {
         case inset(inset:UIEdgeInsets)
         case size(size:CGSize)
@@ -437,12 +435,13 @@ public class BKCategroyBarSelectedView: UIView,NSCopying{
             return _style
         }
     }
-    fileprivate var selectedBtn:BKCategroyBarButton?{
+    fileprivate var selectedBtn:BKCategoryBarButton?{
         didSet{
             oldValue?.removeObserver(self, forKeyPath: "center")
             self.selectedBtn?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-            
-            self.updateFrame()
+            UIView.animate(withDuration: 0.15) {
+                self.updateFrame()
+            }
         }
     }
     
@@ -483,9 +482,8 @@ public class BKCategroyBarSelectedView: UIView,NSCopying{
         
     }
 }
- 
 
-public class BKCategroyBarLine: BKCategroyBarSelectedView {
+public class BKCategoryBarSelectedLineView: BKCategoryBarSelectedView {
     
     override public func updateFrame()  {
         super.updateFrame()
@@ -511,26 +509,14 @@ public class BKCategroyBarLine: BKCategroyBarSelectedView {
             }
             y = (superview?.height ?? 0)-height-_inset.bottom
         }
-//        if (_style == .size){
-//            width=_lineSize.width;
-//            x = (selectedBtn?.minX ?? 0)+btnWidth/2-width/2
-//            y = (superview?.height ?? 0)-_lineSize.height
-//        }else{
-//            width=btnWidth-_inset.left-_inset.right;
-//            _lineSize.width=width
-//            x=(selectedBtn?.minX ?? 0)+_inset.left
-//            y = (superview?.height ?? 0)-_lineSize.height-_inset.bottom
-//        }
-
         let rect = CGRect(x:x, y: y, width: width, height: height)
         self.frame = rect
     }
 }
-public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
-    var humpFillColor:UIColor = .white
+public class BKCategoryBarSelectedBackgroundView: BKCategoryBarSelectedView {
+    public var humpFillColor:UIColor = .white
     public required init(frame: CGRect) {
         super.init(frame: frame)
-//        _inset = UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10)
         _style = .inset(inset: UIEdgeInsets(top: 12.5, left: 10, bottom: 12.5, right: 10))
     }
     
@@ -538,7 +524,7 @@ public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
         fatalError("init(coder:) has not been implemented")
     }
     public override func copy(with zone: NSZone? = nil) -> Any {
-        let newobjc = super.copy(with: zone) as! BKCategroyBarBackgroundView
+        let newobjc = super.copy(with: zone) as! BKCategoryBarSelectedBackgroundView
         newobjc.humpFillColor = self.humpFillColor
         return newobjc
     }
@@ -581,9 +567,9 @@ public class BKCategroyBarBackgroundView: BKCategroyBarSelectedView {
         self.frame = rect
     }
 }
-class BKCategroyBarButton: UIButton {
+class BKCategoryBarButton: UIButton {
     //MARK: - Property
-    var item:BKCategroyItem?{
+    var item:BKCategoryItem?{
         didSet{
             self.badgeLabel.text=item?.badgeText
             setTitle(item?.title, for: .normal)
@@ -671,19 +657,19 @@ class BKCategroyBarButton: UIButton {
     }
     //MARK: - UI
     func updateUI() {
-        self.item?.titleColors.forEach({ (key, value) in
+        self.item?.titleColors?.forEach({ (key, value) in
             let st=UIControl.State(rawValue: key)
             setTitleColor(value, for: st)
         })
-        self.item?.backgroundImages.forEach({ (key,value) in
+        self.item?.backgroundImages?.forEach({ (key,value) in
             setBackgroundImage(value, for: UIControl.State(rawValue: key))
         })
-        var font = self.item?.fonts[self.state.rawValue]
+        var font = self.item?.fonts?[self.state.rawValue]
         if font == nil {
-            font = self.item?.fonts[UIControl.State.normal.rawValue]
+            font = self.item?.fonts?[UIControl.State.normal.rawValue]
         }
         self.titleLabel?.font = font;
-        let backgroundColor = self.item?.backgroundColors[self.state.rawValue]
+        let backgroundColor = self.item?.backgroundColors?[self.state.rawValue]
         self.backgroundColor = backgroundColor
     }
     

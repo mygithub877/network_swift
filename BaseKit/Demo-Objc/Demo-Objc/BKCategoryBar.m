@@ -8,9 +8,30 @@
 
 #import "BKCategoryBar.h"
 #import <Masonry/Masonry.h>
+@interface BKCategoryBarItem()
+@property (nonatomic, strong) NSDictionary<NSNumber *,UIFont *> *fonts;
+@property (nonatomic, strong) NSDictionary<NSNumber *,UIColor *> *titleColors;
+@property (nonatomic, strong) NSDictionary<NSNumber *,UIColor *> *backgroundColors;
+@property (nonatomic, strong) NSDictionary<NSNumber *,UIImage *> *backgroundImages;
+@end
+@interface BKCategoryBarScrollView : UIScrollView
+@property (nonatomic, strong, nullable) BKCategoryBarSelectedBackgroundView *selectedView;
+@end
+@interface BKCategoryBarSelectedView ()
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) BKCategoryBarButton *selectedButton;
+@property (nonatomic, strong) UIView *selectedContainerView;
+@end
 @interface BKCategoryBar ()
-@property (nonatomic, copy) NSArray <BKCategroyBarButton *> *buttons;//
-@property (nonatomic, strong) BKCategroyBarScrollView *scrollView;//
+@property (nonatomic, copy) NSArray <BKCategoryBarButton *> *buttons;//
+@property (nonatomic, strong) BKCategoryBarScrollView *scrollView;//
+@property (nonatomic, strong) UIView *selectedContainerView;//
+
+@property (nonatomic, strong) NSMutableDictionary <NSNumber *, UIFont *> *fonts;
+@property (nonatomic, strong) NSMutableDictionary <NSNumber *, UIColor *> *titleColors;
+@property (nonatomic, strong) NSMutableDictionary <NSNumber *, UIColor *> *backgroundColors;
+@property (nonatomic, strong) NSMutableDictionary <NSNumber *, UIImage *> *backgroundImages;
+
 @end
 @implementation BKCategoryBar
 - (instancetype)initWithFrame:(CGRect)frame
@@ -19,7 +40,7 @@
     if (self) {
         _titleWidthOffset=20;
         _badgeTintColor=UIColor.redColor;
-        self.scrollView=[[BKCategroyBarScrollView alloc] init];
+        self.scrollView=[[BKCategoryBarScrollView alloc] init];
         self.backgroundColor = UIColor.whiteColor;
         self.scrollView.showsVerticalScrollIndicator=false;
         self.scrollView.showsHorizontalScrollIndicator=false;
@@ -29,6 +50,38 @@
         [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.bottom.right.top.equalTo(@0);
         }];
+        self.selectedContainerView=UIView.alloc.init;
+        _fonts=@{@(UIControlStateNormal):[UIFont systemFontOfSize:14],@(UIControlStateSelected):[UIFont systemFontOfSize:14]}.mutableCopy;
+        _titleColors=@{@(UIControlStateNormal):[UIColor colorWithHexString:@"999999"],@(UIControlStateSelected):[UIColor mainThemeColor]}.mutableCopy;
+
+    }
+    return self;
+}
+- (instancetype)initWithTitles:(NSArray <NSString *> *)titles{
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        _titleWidthOffset=20;
+        _badgeTintColor=UIColor.redColor;
+        self.scrollView=[[BKCategoryBarScrollView alloc] init];
+        self.backgroundColor = UIColor.whiteColor;
+        self.scrollView.showsVerticalScrollIndicator=false;
+        self.scrollView.showsHorizontalScrollIndicator=false;
+        self.scrollView.bounces=false;
+        self.scrollView.backgroundColor = UIColor.clearColor;
+        [self addSubview:self.scrollView];
+        [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.bottom.right.top.equalTo(@0);
+        }];
+        self.selectedContainerView=UIView.alloc.init;
+        _fonts=@{@(UIControlStateNormal):[UIFont systemFontOfSize:16],@(UIControlStateSelected):[UIFont systemFontOfSize:16]}.mutableCopy;
+        _titleColors=@{@(UIControlStateNormal):[UIColor colorWithHexString:@"999999"],@(UIControlStateSelected):[UIColor mainThemeColor]}.mutableCopy;
+
+        NSMutableArray *items=[NSMutableArray arrayWithCapacity:titles.count];
+        [titles enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            BKCategoryBarItem *item=[BKCategoryBarItem itemWithTitle:obj];
+            [items addObject:item];
+        }];
+        self.items=items;
     }
     return self;
 }
@@ -36,7 +89,7 @@
     _selectedIndex=selectedIndex;
     [self updateSelectedIndex];
 }
--(void)setBarStyle:(BKCategroyBarStyle)barStyle{
+-(void)setBarStyle:(BKCategoryBarStyle)barStyle{
     _barStyle=barStyle;
     [self resetItems];
 }
@@ -44,110 +97,186 @@
     _titleWidthOffset=titleWidthOffset;
     [self resetItems];
 }
--(void)setItems:(NSArray<BKCategoryBarItem *> *)items{
-    _items=items;
-    [self resetItems];
-    [self resetSelectMaskView];
+-(void)setBadgeTintColor:(UIColor *)badgeTintColor{
+    _badgeTintColor=badgeTintColor;
+    [self.buttons enumerateObjectsUsingBlock:^(BKCategoryBarButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.badgeLabel.backgroundColor=badgeTintColor;
+    }];
 }
--(void)setSelectedMaskStyle:(BKCategroyBarSelectionStyle)selectedMaskStyle{
+-(void)setItems:(NSArray<BKCategoryBarItem *> *)items{
+    if (items.count!=_items.count) {
+        [items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj.fonts=self.fonts.copy;
+            obj.titleColors=self.titleColors.copy;
+            obj.backgroundColors=self.backgroundColors.copy;
+            obj.backgroundImages=self.backgroundImages.copy;
+        }];
+        _items=items;
+        [self resetItems];
+        [self setSelectedMaskStyle:self.selectedMaskStyle];
+    }else{
+        [items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj.fonts=_items[idx].fonts.copy;
+            obj.titleColors=_items[idx].titleColors.copy;
+            obj.backgroundColors=_items[idx].backgroundColors.copy;
+            obj.backgroundImages=_items[idx].backgroundImages.copy;
+            self.buttons[idx].item=obj;
+            [self.buttons[idx] sizeToFit];
+        }];
+        _items=items;
+        [self setNeedsLayout];
+    }
+}
+-(void)setSelectedMaskStyle:(BKCategoryBarSelectionStyle)selectedMaskStyle{
     _selectedMaskStyle=selectedMaskStyle;
     [self resetSelectMaskView];
 }
-- (void)setFont:(UIFont *)font state:(UIControlState)state index:(NSInteger)index{
+- (void)setFont:(UIFont *)font state:(UIControlState)state{
     if (self.items==nil) {
         return;
     }
     if (state==UIControlStateHighlighted) {
         return;
     }
-    if (index<0) {
-        [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSMutableDictionary *tmp=item.fonts.mutableCopy;
+    if (self.fonts==nil) {
+        self.fonts=NSMutableDictionary.dictionary;
+    }
+    self.fonts[@(state)]=font;
+    [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSMutableDictionary *tmp=item.fonts.mutableCopy;
+        if (tmp==nil) {
+            tmp=self.fonts.copy;
+        }else{
             tmp[@(state)]=font;
-            item.fonts=tmp;
-            self.buttons[idx].item=item;
-        }];
-    }else{
-        if (self.items.count<=index) {
-            return;
         }
-        NSMutableDictionary *tmp=self.items[index].fonts.mutableCopy;
-        tmp[@(state)]=font;
-        self.items[index].fonts=tmp;
-        self.buttons[index].item=self.items[index];
-    }
+        item.fonts=tmp;
+        self.buttons[idx].item=item;
+        [self.buttons[idx] sizeToFit];
+    }];
+    [self setNeedsLayout];
 }
-- (void)setTitleColor:(UIColor *)color state:(UIControlState)state index:(NSInteger)index{
+- (void)setTitleColor:(UIColor *)color state:(UIControlState)state{
     if (self.items==nil) {
         return;
     }
     if (state==UIControlStateHighlighted) {
         return;
     }
-    if (index<0) {
-        [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSMutableDictionary *tmp=item.titleColors.mutableCopy;
+    if (self.titleColors==nil) {
+        self.titleColors=NSMutableDictionary.dictionary;
+    }
+    self.titleColors[@(state)]=color;
+    [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSMutableDictionary *tmp=item.titleColors.mutableCopy;
+        if (tmp==nil) {
+            tmp=self.titleColors.copy;
+        }else{
             tmp[@(state)]=color;
-            item.titleColors=tmp;
-            self.buttons[idx].item=item;
-        }];
-    }else{
-        if (self.items.count<=index) {
-            return;
         }
-        NSMutableDictionary *tmp=self.items[index].titleColors.mutableCopy;
-        tmp[@(state)]=color;
-        self.items[index].titleColors=tmp;
-        self.buttons[index].item=self.items[index];
-    }
+        item.titleColors=tmp;
+        self.buttons[idx].item=item;
+    }];
 }
-- (void)setBackgroundColor:(UIColor *)color state:(UIControlState)state index:(NSInteger)index{
+- (void)setBackgroundColor:(UIColor *)color state:(UIControlState)state{
     if (self.items==nil) {
         return;
     }
     if (state==UIControlStateHighlighted) {
         return;
     }
-    if (index<0) {
-        [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSMutableDictionary *tmp=item.backgroundColors.mutableCopy;
+    if (self.backgroundColors==nil) {
+        self.backgroundColors=NSMutableDictionary.dictionary;
+    }
+    self.backgroundColors[@(state)]=color;
+    [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSMutableDictionary *tmp=item.backgroundColors.mutableCopy;
+        if (tmp==nil) {
+            tmp=self.backgroundColors.copy;
+        }else{
             tmp[@(state)]=color;
-            item.backgroundColors=tmp;
-            self.buttons[idx].item=item;
-        }];
-    }else{
-        if (self.items.count<=index) {
-            return;
         }
-        NSMutableDictionary *tmp=self.items[index].backgroundColors.mutableCopy;
-        tmp[@(state)]=color;
-        self.items[index].backgroundColors=tmp;
-        self.buttons[index].item=self.items[index];
-    }
+        item.backgroundColors=tmp.copy;
+        self.buttons[idx].item=item;
+    }];
+    
 }
-- (void)setBackgroundImage:(UIImage *)image state:(UIControlState)state index:(NSInteger)index{
+- (void)setBackgroundImage:(UIImage *)image state:(UIControlState)state{
     if (self.items==nil) {
         return;
     }
     if (state==UIControlStateHighlighted) {
         return;
     }
-    if (index<0) {
-        [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSMutableDictionary *tmp=item.backgroundImages.mutableCopy;
+    if (self.backgroundImages==nil) {
+        self.backgroundImages=NSMutableDictionary.dictionary;
+    }
+    self.backgroundImages[@(state)]=image;
+    [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSMutableDictionary *tmp=item.backgroundImages.mutableCopy;
+        if (tmp==nil) {
+            tmp=self.backgroundImages.copy;
+        }else{
             tmp[@(state)]=image;
-            item.backgroundImages=tmp;
-            self.buttons[idx].item=item;
-        }];
-    }else{
-        if (self.items.count<=index) {
-            return;
         }
-        NSMutableDictionary *tmp=self.items[index].backgroundImages.mutableCopy;
-        tmp[@(state)]=image;
-        self.items[index].backgroundImages=tmp;
-        self.buttons[index].item=self.items[index];
+        item.backgroundImages=tmp;
+        self.buttons[idx].item=item;
+    }];
+}
+- (void)setBadgeText:(NSString *)badge index:(NSInteger)index{
+    self.items[index].badgeText=badge;
+    self.buttons[index].item=self.items[index];
+}
+- (void)updateItem:(BKCategoryBarItem *)item index:(NSInteger)index{
+    BKCategoryBarItem *oldItem=index>=_items.count?nil:_items[index];
+    if (oldItem) {
+        oldItem.title=item.title;
+        oldItem.image=item.image;
+        oldItem.badgeText=item.badgeText;
+        oldItem.selectedTitle=item.selectedTitle;
+        oldItem.selectedImage=item.selectedImage;
+        self.buttons[index].item=oldItem;
+        [self.buttons[index] sizeToFit];
     }
+    [self setNeedsLayout];
+}
+- (BKCategoryBarButton *)buttonForIndex:(NSInteger)index{
+    return self.buttons[index];
+}
+-(void)layoutSubviews{
+    [super layoutSubviews];
+    __block CGFloat totalWidth= 0;
+    CGFloat offset=self.titleWidthOffset;
+    [self.buttons enumerateObjectsUsingBlock:^(BKCategoryBarButton * _Nonnull btn, NSUInteger index, BOOL * _Nonnull stop) {
+        totalWidth += (btn.frame.size.width+offset);
+    }];
+    CGFloat offset_full = 0;
+    if (totalWidth<self.frame.size.width) {
+        offset_full=ceilf((self.frame.size.width-totalWidth)/self.items.count)+offset;
+    }else{
+        CGFloat wset=ceilf((totalWidth-self.frame.size.width)/self.items.count);
+        offset_full=ceilf(offset-wset);
+    }
+    __block BKCategoryBarButton *preBtn=nil;
+    [self.buttons enumerateObjectsUsingBlock:^(BKCategoryBarButton * _Nonnull btn, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (self.barStyle == BKCategoryBarStyleFit) {
+            btn.marginOffset = offset;
+        }else{
+            btn.marginOffset = offset_full;
+        }
+        [btn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(@0);
+            make.height.equalTo(btn.superview.mas_height);
+            if (preBtn == nil){
+                make.left.equalTo(@(btn.marginOffset/2));
+            }else{
+                make.left.equalTo(preBtn.mas_right).offset(btn.marginOffset/2+preBtn.marginOffset/2);
+            }
+            if (btn==self.buttons.lastObject) {
+                make.right.equalTo(@(-btn.marginOffset/2));
+            }
+        }];
+        preBtn=btn;
+    }];
 }
 - (void)resetItems{
     [self.scrollView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -157,71 +286,103 @@
     if (self.items==nil) {
         return;
     }
-    [self resetSelectMaskView];
     __block CGFloat totalWidth= 0;
     CGFloat offset=self.titleWidthOffset;
     NSMutableArray *tmp=NSMutableArray.array;
     [self.items enumerateObjectsUsingBlock:^(BKCategoryBarItem * _Nonnull item, NSUInteger index, BOOL * _Nonnull stop) {
-        BKCategroyBarButton *btn=[BKCategroyBarButton.alloc init];
+        BKCategoryBarButton *btn=[BKCategoryBarButton.alloc init];
         btn.tag=index;
         btn.item=item;
+        btn.badgeLabel.backgroundColor=self.badgeTintColor;
         [btn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.scrollView addSubview:btn];
         [tmp addObject:btn];
-        [btn sizeToFit];
-        totalWidth += (btn.frame.size.width+offset);
         if (index == self.selectedIndex){
             btn.selected=true;
+            self.selectedContainerView.backgroundColor=self.backgroundColors[@(UIControlStateSelected)];
             self.selectedMaskView.selectedButton=btn;
         }
+        [btn sizeToFit];
+        totalWidth += (btn.frame.size.width+offset);
     }];
     self.buttons=tmp;
     CGFloat offset_full = 0;
     if (totalWidth<self.frame.size.width) {
-        offset_full=(self.frame.size.width-totalWidth)/self.items.count+offset;
+        offset_full=ceilf((self.frame.size.width-totalWidth)/self.items.count)+offset;
     }else{
-        CGFloat wset=(totalWidth-self.frame.size.width)/self.items.count;
-        offset_full=offset-wset;
+        CGFloat wset=ceilf((totalWidth-self.frame.size.width)/self.items.count);
+        offset_full=ceilf(offset-wset);
     }
-    __block BKCategroyBarButton *preBtn=nil;
-    [self.buttons enumerateObjectsUsingBlock:^(BKCategroyBarButton * _Nonnull btn, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (self.barStyle == BKCategroyBarStyleFit) {
-            btn.maiginOffset = offset;
+    __block BKCategoryBarButton *preBtn=nil;
+    [self.buttons enumerateObjectsUsingBlock:^(BKCategoryBarButton * _Nonnull btn, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (self.barStyle == BKCategoryBarStyleFit) {
+            btn.marginOffset = offset;
         }else{
-            btn.maiginOffset = offset_full;
+            btn.marginOffset = offset_full;
         }
-        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+        [btn mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.equalTo(@0);
             make.height.equalTo(btn.superview.mas_height);
             if (preBtn == nil){
-                make.left.equalTo(@0);
+                make.left.equalTo(@(btn.marginOffset/2));
             }else{
-                make.left.equalTo(preBtn.mas_right);
+                make.left.equalTo(preBtn.mas_right).offset(btn.marginOffset/2+preBtn.marginOffset/2);
+            }
+            if (btn==self.buttons.lastObject) {
+                make.right.equalTo(@(-btn.marginOffset/2));
             }
         }];
         preBtn=btn;
     }];
-    [preBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(@0);
-    }];
+    [self setSelectedMaskStyle:self.selectedMaskStyle];
 }
 - (void)resetSelectMaskView{
     [self.selectedMaskView removeFromSuperview];
+    [self.selectedContainerView removeFromSuperview];
     self.scrollView.selectedView=nil;
+    BOOL ishidden=_selectedMaskView.hidden;
     switch (self.selectedMaskStyle) {
-        case BKCategroyBarSelectionStyleLine:{
-            _selectedMaskView = BKCategroyBarLine.alloc.init;
+        case BKCategoryBarSelectionStyleLine:{
+            BKCategoryBarSelectedLineView *newView=BKCategoryBarSelectedLineView.alloc.init;
+            if (_selectedMaskView) {
+                newView.style=_selectedMaskView.style;
+                newView.image = _selectedMaskView.image;
+                newView.style = _selectedMaskView.style;
+                newView.maskInset = _selectedMaskView.maskInset;
+                newView.maskSize = _selectedMaskView.maskSize;
+                newView.backgroundColor = _selectedMaskView.backgroundColor;
+            }
+            _selectedMaskView = newView;
         }
             break;
-        case BKCategroyBarSelectionStyleBackgroundView:{
-            _selectedMaskView = BKCategroyBarBackgroundView.alloc.init;
+        case BKCategoryBarSelectionStyleBackgroundView:{
+            BKCategoryBarSelectedBackgroundView *newView = BKCategoryBarSelectedBackgroundView.alloc.init;
+            if (_selectedMaskView) {
+                newView.style=_selectedMaskView.style;
+                newView.image = _selectedMaskView.image;
+                newView.style = _selectedMaskView.style;
+                newView.maskInset = _selectedMaskView.maskInset;
+                newView.maskSize = _selectedMaskView.maskSize;
+                newView.backgroundColor = _selectedMaskView.backgroundColor;
+            }
+            _selectedMaskView = newView;
         }
             break;
-        case BKCategroyBarSelectionStyleHumpBackground:{
-            BKCategroyBarBackgroundView *v = BKCategroyBarBackgroundView.alloc.init;
-            v.humpFillColor = self.humpFillColor;
-            self.scrollView.selectedView=v;
-            _selectedMaskView = v;
+        case BKCategoryBarSelectionStyleHumpBackground:{
+            BKCategoryBarSelectedBackgroundView *newView = BKCategoryBarSelectedBackgroundView.alloc.init;
+            if (_selectedMaskView) {
+                newView.style=_selectedMaskView.style;
+                newView.image = _selectedMaskView.image;
+                newView.style = _selectedMaskView.style;
+                newView.maskInset = _selectedMaskView.maskInset;
+                newView.maskSize = _selectedMaskView.maskSize;
+                if ([_selectedMaskView isKindOfClass:BKCategoryBarSelectedBackgroundView.class]) {
+                    newView.humpFillColor=((BKCategoryBarSelectedBackgroundView *)_selectedMaskView).humpFillColor;
+                }
+                newView.backgroundColor = _selectedMaskView.backgroundColor;
+            }
+            self.scrollView.selectedView=newView;
+            _selectedMaskView = newView;
         }
             break;
         default:
@@ -229,7 +390,10 @@
             break;
     }
     if (self.selectedMaskView != nil) {
+        _selectedMaskView.hidden=ishidden;
         [self.scrollView insertSubview:self.selectedMaskView atIndex:0];
+        [self.scrollView insertSubview:self.selectedContainerView atIndex:0];
+        self.selectedMaskView.selectedContainerView=self.selectedContainerView;
         if (self.buttons.count > self.selectedIndex) {
             self.selectedMaskView.selectedButton=self.buttons[self.selectedIndex];
         }
@@ -240,7 +404,7 @@
     if (self.buttons.count<=self.selectedIndex) {
         return;
     }
-    BKCategroyBarButton *btn = self.buttons[self.selectedIndex];
+    BKCategoryBarButton *btn = self.buttons[self.selectedIndex];
     if (btn.selected) {
         return;
     }
@@ -258,7 +422,7 @@
     }
     [self.scrollView  setContentOffset:oldOffset animated:YES];
 }
-- (void)buttonAction:(BKCategroyBarButton *)sender{
+- (void)buttonAction:(BKCategoryBarButton *)sender{
     if (sender.selected) {
         return;
     }
@@ -277,64 +441,70 @@
         }
     }
 }
-- (void)updateSelectButton:(BKCategroyBarButton *)btn{
+- (void)updateSelectButton:(BKCategoryBarButton *)btn{
     btn.selected=true;
     self.selectedMaskView.selectedButton.selected=false;
     self.selectedMaskView.selectedButton=btn;
     [self adjustScrollContentOffset];
-    [self.scrollView setNeedsDisplay];
+//    [self.scrollView setNeedsDisplay];
 }
 @end
-
 
 @implementation BKCategoryBarItem
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        _fonts=@{@(UIControlStateNormal):[UIFont systemFontOfSize:14],@(UIControlStateSelected):[UIFont systemFontOfSize:14]};
-        _titleColors=@{@(UIControlStateNormal):[UIColor blackColor],@(UIControlStateSelected):[UIColor systemBlueColor]};
+//        _fonts=@{@(UIControlStateNormal):[UIFont systemFontOfSize:14],@(UIControlStateSelected):[UIFont systemFontOfSize:14]};
+//        _titleColors=@{@(UIControlStateNormal):[UIColor blackColor],@(UIControlStateSelected):[UIColor systemBlueColor]};
     }
     return self;
 }
--(instancetype)initWithTitle:(NSString *)title selectedTitle:(NSString *)selectedTitle{
-    if (self=[super init]) {
-        self.title=title;
-        self.selectedTitle=selectedTitle;
-        _fonts=@{@(UIControlStateNormal):[UIFont systemFontOfSize:14],@(UIControlStateSelected):[UIFont systemFontOfSize:14]};
-        _titleColors=@{@(UIControlStateNormal):[UIColor blackColor],@(UIControlStateSelected):[UIColor systemBlueColor]};
-    }
-    return self;
++(instancetype)itemWithTitle:(nullable NSString *)title{
+    return [self itemWithTitle:title selectedTitle:nil];
 }
--(instancetype)initWithImage:(UIImage *)image selectedImage:(UIImage *)selectedImage{
-    if (self=[super init]) {
-        self.image=image;
-        self.selectedImage=selectedImage;
-        _fonts=@{@(UIControlStateNormal):[UIFont systemFontOfSize:14],@(UIControlStateSelected):[UIFont systemFontOfSize:14]};
-        _titleColors=@{@(UIControlStateNormal):[UIColor blackColor],@(UIControlStateSelected):[UIColor systemBlueColor]};
-    }
-    return self;
++(instancetype)itemWithTitle:(nullable NSString *)title selectedTitle:(nullable NSString *)selectedTitle{
+    BKCategoryBarItem *item=BKCategoryBarItem.alloc.init;
+    item.title=title;
+    item.selectedTitle=selectedTitle;
+    return item;
+}
++(instancetype)itemWithImage:(nullable UIImage *)image{
+    return [self itemWithImage:image selectedImage:nil];
 }
 
++(instancetype)itemWithImage:(nullable UIImage *)image selectedImage:(nullable UIImage *)selectedImage{
+    BKCategoryBarItem *item=BKCategoryBarItem.alloc.init;
+    item.image=image;
+    item.selectedImage=selectedImage;
+    return item;
+
+}
+
+
 @end
-@implementation BKCategroyBarScrollView
+@implementation BKCategoryBarScrollView
 -(void)dealloc{
     [_selectedView removeObserver:self forKeyPath:@"frame"];
+    [_selectedView removeObserver:self forKeyPath:@"humpFillColor"];
     _selectedView=nil;
 }
--(void)setSelectedView:(BKCategroyBarBackgroundView *)selectedView{
+
+-(void)setSelectedView:(BKCategoryBarSelectedBackgroundView *)selectedView{
     if (_selectedView) {
         [_selectedView removeObserver:self forKeyPath:@"frame"];
+        [_selectedView removeObserver:self forKeyPath:@"humpFillColor"];
     }
     _selectedView=selectedView;
     [_selectedView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+    [_selectedView addObserver:self forKeyPath:@"humpFillColor" options:NSKeyValueObservingOptionNew context:NULL];
 }
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
     
 }
 
 @end
-@implementation BKCategroyBarButton
+@implementation BKCategoryBarButton
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -345,12 +515,17 @@
 }
 -(void)setItem:(BKCategoryBarItem *)item{
     _item=item;
+    self.badgeLabel.hidden=(item.badgeText==nil);
     self.badgeLabel.text=item.badgeText;
     [self setTitle:item.title forState:UIControlStateNormal];
     [self setTitle:item.selectedTitle forState:UIControlStateSelected];
     [self setImage:item.image forState:UIControlStateNormal];
     [self setImage:item.selectedImage forState:UIControlStateSelected];
     [self updateUI];
+}
+-(void)setMarginOffset:(CGFloat)marginOffset{
+    _marginOffset=marginOffset;
+    [self sizeToFit];
 }
 -(UILabel *)badgeLabel{
     if (_badgeLabel==nil) {
@@ -365,11 +540,11 @@
     }
     return _badgeLabel;
 }
--(CGSize)intrinsicContentSize{
-    CGSize size=super.intrinsicContentSize;
-    size.width=size.width+self.maiginOffset*2;
-    return size;
-}
+//-(CGSize)intrinsicContentSize{
+//    CGSize size=super.intrinsicContentSize;
+//    size.width=size.width+self.marginOffset*2;
+//    return size;
+//}
 -(void)setSelected:(BOOL)selected{
     [super setSelected:selected];
     [self updateUI];
@@ -436,15 +611,18 @@
     }
     self.titleLabel.font=font;
     UIColor *backgroundColor=self.item.backgroundColors[@(self.state)];
-    self.backgroundColor=backgroundColor;
+    if (backgroundColor) {
+        BKCategoryBar *ssp=self.superview.superview;
+        ssp.selectedContainerView.backgroundColor=backgroundColor;
+    }
 }
 @end
-@implementation BKCategroyBarSelectedView
+@implementation BKCategoryBarSelectedView
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor=UIColor.systemBlueColor;
+        self.backgroundColor=[UIColor mainThemeColor];
         _imageView=UIImageView.alloc.init;
         _imageView.contentMode=UIViewContentModeScaleAspectFill;
         _imageView.clipsToBounds=YES;
@@ -453,13 +631,14 @@
         [_imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.top.equalTo(@0);
         }];
-        _style=BKCategroyBarSelectedViewStyleInset;
-        _maskInset=UIEdgeInsetsMake(0, 10, 0, 10);
+        _style=BKCategoryBarSelectedViewStyleInset;
+        _maskInset=UIEdgeInsetsMake(0, 8, 0, 8);
+        _maskSize=CGSizeMake(15, 3);
     }
     return self;
 }
 -(id)copyWithZone:(NSZone *)zone{
-    BKCategroyBarSelectedView *newobjc=[[self.class alloc] init];
+    BKCategoryBarSelectedView *newobjc=[[self.class alloc] init];
     newobjc.image = self.image;
     newobjc.style = self.style;
     newobjc.maskInset = self.maskInset;
@@ -473,7 +652,7 @@
     _imageView.image=image;
     _imageView.hidden=(image==nil);
 }
--(void)setStyle:(BKCategroyBarSelectedViewStyle)style{
+-(void)setStyle:(BKCategoryBarSelectedViewStyle)style{
     _style=style;
     [self updateFrame];
 }
@@ -485,7 +664,7 @@
     _maskSize=maskSize;
     [self updateFrame];
 }
--(void)setSelectedButton:(BKCategroyBarButton * _Nonnull)selectedButton{
+-(void)setSelectedButton:(BKCategoryBarButton * _Nonnull)selectedButton{
     if (_selectedButton) {
         [_selectedButton removeObserver:self forKeyPath:@"center"];
     }
@@ -501,23 +680,31 @@
     }
 }
 - (void)updateFrame{
-    
+    self.selectedContainerView.frame=CGRectMake(self.selectedButton.frame.origin.x-self.selectedButton.marginOffset/2, self.selectedButton.frame.origin.y, self.selectedButton.frame.size.width+self.selectedButton.marginOffset, self.selectedButton.frame.size.height);
 }
 -(void)dealloc{
     [_selectedButton removeObserver:self forKeyPath:@"center"];
 }
 @end
-@implementation BKCategroyBarLine
-
+@implementation BKCategoryBarSelectedLineView
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.layer.cornerRadius=1.5;
+        
+    }
+    return self;
+}
 -(void)updateFrame{
     [super updateFrame];
     CGFloat width=0;
     CGFloat btnWidth=self.selectedButton.frame.size.width;
     CGFloat x=0;
     CGFloat y=0;
-    CGFloat height=2;
+    CGFloat height=3;
     switch (self.style) {
-        case BKCategroyBarSelectedViewStyleInset:{
+        case BKCategoryBarSelectedViewStyleInset:{
             width=btnWidth-self.maskInset.left-self.maskInset.right;
             x=CGRectGetMinX(self.selectedButton.frame)+self.maskInset.left;
             height = height - self.maskInset.bottom - self.maskInset.top;
@@ -527,7 +714,7 @@
             y = self.superview.frame.size.height-height-self.maskInset.bottom;
         }
             break;
-        case BKCategroyBarSelectedViewStyleSize:{
+        case BKCategoryBarSelectedViewStyleSize:{
             width=self.maskSize.width;
             height=self.maskSize.height;
             x = CGRectGetMinX(self.selectedButton.frame)+btnWidth/2-width/2;
@@ -537,25 +724,37 @@
         default:
             break;
     }
-    self.frame=CGRectMake(x, y, width, height);
+    x=ceilf(x);y=ceilf(y);
+    if (self.frame.origin.y==y) {
+        [UIView animateWithDuration:0.15 animations:^{
+            self.frame=CGRectMake(x, y, width, height);
+        }];
+    }else{
+        self.frame=CGRectMake(x, y, width, height);
+    }
 }
 
 
 @end
-@implementation BKCategroyBarBackgroundView
+@implementation BKCategoryBarSelectedBackgroundView
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.style=BKCategroyBarSelectedViewStyleInset;
+        self.style=BKCategoryBarSelectedViewStyleInset;
         self.maskInset=UIEdgeInsetsMake(12.5, 10, 12.5, 10);
+        _humpFillColor=UIColor.whiteColor;
     }
     return self;
 }
 -(id)copyWithZone:(NSZone *)zone{
-    BKCategroyBarBackgroundView *newobj=[super copyWithZone:zone];
+    BKCategoryBarSelectedBackgroundView *newobj=[super copyWithZone:zone];
     newobj.humpFillColor=self.humpFillColor;
     return newobj;
+}
+-(void)setHumpFillColor:(UIColor *)humpFillColor{
+    _humpFillColor=humpFillColor;
+    
 }
 -(void)updateFrame{
     [super updateFrame];
@@ -566,14 +765,14 @@
     CGFloat y=0;
     CGFloat height=0;
     switch (self.style) {
-        case BKCategroyBarSelectedViewStyleInset:{
+        case BKCategoryBarSelectedViewStyleInset:{
             width=btnWidth-self.maskInset.left-self.maskInset.right;
             height=btnHeight-self.maskInset.top-self.maskInset.bottom;
             x=CGRectGetMinX(self.selectedButton.frame)+self.maskInset.left;
             y=self.maskInset.top;
         }
             break;
-        case BKCategroyBarSelectedViewStyleSize:{
+        case BKCategoryBarSelectedViewStyleSize:{
             width=self.maskSize.width;
             height=self.maskSize.height;
             x = CGRectGetMinX(self.selectedButton.frame)+btnWidth/2-width/2;
@@ -584,6 +783,13 @@
             break;
     }
     self.layer.cornerRadius = height/2;
-    self.frame=CGRectMake(x, y, width, height);
+    x=ceilf(x);y=ceilf(y);
+    if (self.frame.origin.y==y) {
+        [UIView animateWithDuration:0.15 animations:^{
+            self.frame=CGRectMake(x, y, width, height);
+        }];
+    }else{
+        self.frame=CGRectMake(x, y, width, height);
+    }
 }
 @end
