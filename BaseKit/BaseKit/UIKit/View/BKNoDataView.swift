@@ -75,7 +75,7 @@ public class BKNoDataView: UIView{
     }
     private func setupUI() {
         titleLabel.font = UIFont.systemFont(ofSize: 15)
-        titleLabel.textColor = .Hex("999999")
+        titleLabel.textColor = .hex("999999")
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
         titleLabel.preferredMaxLayoutWidth = SCREEN.WIDTH-20;
@@ -124,7 +124,7 @@ private class BKNoDataButton : UIButton{
         self.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         self.layer.cornerRadius = 45.0/2.0
         self.clipsToBounds = true
-        self.backgroundColor = .Hex("3a83e8")
+        self.backgroundColor = .hex("3a83e8")
     }
     
     required init?(coder: NSCoder) {

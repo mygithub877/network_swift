@@ -1,5 +1,6 @@
 # Uncomment the next line to define a global platform for your project
  platform :ios, '10.0'
+workspace 'NetworkKit.xcworkspace'
 
 target 'NetworkKit' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -9,5 +10,18 @@ target 'NetworkKit' do
 	pod 'Alamofire'
   pod 'SwiftyJSON'
   pod 'HandyJSON'
+  pod 'SwiftyRSA'
+
+end
+target 'Demo' do
+  project 'Demo/Demo.xcodeproj'
+  # Comment the next line if you don't want to use dynamic framework
+  use_frameworks!
+
+  # Pods for BaseKit
+  pod 'Alamofire'
+  pod 'SwiftyJSON'
+  pod 'HandyJSON'
+  pod 'SwiftyRSA'
 
 end

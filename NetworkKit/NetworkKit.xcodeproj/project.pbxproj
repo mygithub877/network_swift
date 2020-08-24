@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		380B3AC924C699CC00F29A7E /* NKEncryptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380B3AC824C699CC00F29A7E /* NKEncryptHandler.swift */; };
+		38383B8424C02A10001306BA /* NKResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38383B8324C02A10001306BA /* NKResponse.swift */; };
+		3895834024DAA56900CD66D6 /* NKAESProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 3895833E24DAA56900CD66D6 /* NKAESProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3895834124DAA56900CD66D6 /* NKAESProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3895833F24DAA56900CD66D6 /* NKAESProvider.m */; };
 		38C9A7EB245554E600D28C83 /* NetworkKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 38C9A7E9245554E600D28C83 /* NetworkKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EDCA917C248401E700F08FE4 /* NKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917B248401E700F08FE4 /* NKError.swift */; };
 		EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA917D2484020500F08FE4 /* NKFile.swift */; };
@@ -22,6 +26,10 @@
 
 /* Begin PBXFileReference section */
 		2ED848A173E7C670827950C0 /* Pods_NetworkKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NetworkKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		380B3AC824C699CC00F29A7E /* NKEncryptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKEncryptHandler.swift; sourceTree = "<group>"; };
+		38383B8324C02A10001306BA /* NKResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKResponse.swift; sourceTree = "<group>"; };
+		3895833E24DAA56900CD66D6 /* NKAESProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NKAESProvider.h; sourceTree = "<group>"; };
+		3895833F24DAA56900CD66D6 /* NKAESProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NKAESProvider.m; sourceTree = "<group>"; };
 		38C9A7E6245554E600D28C83 /* NetworkKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetworkKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38C9A7E9245554E600D28C83 /* NetworkKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkKit.h; sourceTree = "<group>"; };
 		38C9A7EA245554E600D28C83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -62,6 +70,16 @@
 				2ED848A173E7C670827950C0 /* Pods_NetworkKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		380B3AC324C6990400F29A7E /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				380B3AC824C699CC00F29A7E /* NKEncryptHandler.swift */,
+				3895833E24DAA56900CD66D6 /* NKAESProvider.h */,
+				3895833F24DAA56900CD66D6 /* NKAESProvider.m */,
+			);
+			path = Security;
 			sourceTree = "<group>";
 		};
 		38C9A7DC245554E600D28C83 = {
@@ -108,6 +126,7 @@
 				EDCA917B248401E700F08FE4 /* NKError.swift */,
 				EDCA917D2484020500F08FE4 /* NKFile.swift */,
 				EDCA917F2484023000F08FE4 /* NKClient.swift */,
+				38383B8324C02A10001306BA /* NKResponse.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -135,6 +154,7 @@
 		EDCA91822484025F00F08FE4 /* Public */ = {
 			isa = PBXGroup;
 			children = (
+				380B3AC324C6990400F29A7E /* Security */,
 				EDCA917424838B2500F08FE4 /* Base */,
 				EDCA917324838AFC00F08FE4 /* Core */,
 				EDF6483E248935E2009ED71E /* Session */,
@@ -186,6 +206,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3895834024DAA56900CD66D6 /* NKAESProvider.h in Headers */,
 				38C9A7EB245554E600D28C83 /* NetworkKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,7 +245,7 @@
 				TargetAttributes = {
 					38C9A7E5245554E600D28C83 = {
 						CreatedOnToolsVersion = 11.4;
-						LastSwiftMigration = 1140;
+						LastSwiftMigration = 1160;
 					};
 				};
 			};
@@ -289,12 +310,15 @@
 				EDF6484424893929009ED71E /* NKBaseURLConstant.swift in Sources */,
 				EDCA91802484023000F08FE4 /* NKClient.swift in Sources */,
 				EDF648402489361C009ED71E /* NKAuthSession.swift in Sources */,
+				380B3AC924C699CC00F29A7E /* NKEncryptHandler.swift in Sources */,
+				38383B8424C02A10001306BA /* NKResponse.swift in Sources */,
 				EDF648422489366E009ED71E /* NKAuthURLConstant.swift in Sources */,
 				EDCA917E2484020500F08FE4 /* NKFile.swift in Sources */,
 				EDF64837248549DF009ED71E /* NKUIDeviceExtension.swift in Sources */,
 				EDCA9184248402D600F08FE4 /* NKBaseSession.swift in Sources */,
 				EDF6483A24892F62009ED71E /* NKHostDomin.swift in Sources */,
 				EDCA917C248401E700F08FE4 /* NKError.swift in Sources */,
+				3895834124DAA56900CD66D6 /* NKAESProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,6 +470,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = iloc.cc.NetworkKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -473,6 +498,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = iloc.cc.NetworkKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -564,6 +590,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = iloc.cc.NetworkKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -650,6 +677,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = iloc.cc.NetworkKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

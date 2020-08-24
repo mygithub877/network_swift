@@ -11,7 +11,7 @@ class DashViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("f7f7f7")
+        self.view.backgroundColor = .hex("f7f7f7")
         let dash1 = BKDashedView()
         dash1.lineColor = .red
         dash1.lineWidth = 10

@@ -58,7 +58,7 @@ public class BKNavigationBar: UINavigationBar {
             self.titleTextAttributes?[NSAttributedString.Key.font]=titleFont
         }
     }
-    public var backItemImage:UIImage?
+    @objc public var backItemImage:UIImage?
     
     /// 设置导航栏渐变背景色
     public var gradientColors:[UIColor]?{

@@ -11,7 +11,7 @@ class GradientViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("f7f7f7")
+        self.view.backgroundColor = .hex("f7f7f7")
         // Do any additional setup after loading the view.
         let view = BKGradientView()
         self.view.addSubview(view)

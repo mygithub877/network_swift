@@ -14,92 +14,42 @@ class REST {
         init(path: String) {
             self.URL = _MOF_API_USER + path
         }
-    }
-    struct SOCIAL {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_SOCIAL + path
+        
+        static let CAPTCHA_SEND = USER(path: "/sms")
+        static let LOGIN = USER(path: "/login")
+        static let LOGOUT = USER(path: "/login/logout")
+        static let THIRD_CHECK = USER(path: "/login/third")
+        static let THIRD_BIND = USER(path: "/third")
+        static let LOGIN_SWITCH = USER(path: "/login/device")
+        static let USER_TRANSFER = USER(path: "/mobile")
+        static let PHONE_CHECK = USER(path: "/exist")
+        static let AGROAL_TOKEN = USER(path: "/agora/token")
+        static let AGROAL_RTMTOKEN = USER(path: "/agora/rtm/token")
+        static func APP_VERSION(platform:Int,app:Int) -> USER{
+            return USER(path: "/versions/new/\(platform)/\(app)")
         }
     }
-    struct MP {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_OMP + path
-        }
-    }
-    struct STOCK {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_STOCK + path
-        }
-    }
-    struct API {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_API + path
-        }
-    }
-    struct FILE {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_FILE + path
-        }
-    }
-    struct STICKER {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_API + path
-        }
-    }
-    struct ANALYTICS {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_TW_STOCK_INFO + path
-        }
-    }
-    struct TWSTOCK {
-        let URL: String
-        init(path: String) {
-            self.URL = _MOF_API_STOCK_TW + path
-        }
-    }
+    
 }
-extension REST.USER{
-    static let CAPTCHA_SEND = REST.USER(path: "/sms")
-    static let LOGIN = REST.USER(path: "/login")
-    static let LOGOUT = REST.USER(path: "/login/logout")
-    static let THIRD_CHECK = REST.USER(path: "/login/third")
-    static let THIRD_BIND = REST.USER(path: "/third")
-    static let LOGIN_SWITCH = REST.USER(path: "/login/device")
-    static let USER_TRANSFER = REST.USER(path: "/mobile")
-    static let PHONE_CHECK = REST.USER(path: "/exist")
-    static let AGROAL_TOKEN = REST.USER(path: "/agora/token")
-    static let AGROAL_RTMTOKEN = REST.USER(path: "/agora/rtm/token")
-    static func APP_VERSION(platform:Int,app:Int) -> REST.USER{
-        return REST.USER(path: "/versions/new/\(platform)/\(app)")
-    }
-}
-extension REST.SOCIAL{
 
-}
-extension REST.MP{
-
-}
-extension REST.STOCK{
-
-}
-extension REST.API{
-
-}
-extension REST.FILE{
-
-}
-extension REST.STICKER{
-
-}
-extension REST.ANALYTICS{
-
-}
-extension REST.TWSTOCK{
-
-}
+//let MOF_URL_CAPTCHA_SEND = _MOF_API_USER + "/sms"
+//
+//let MOF_URL_LOGIN = _MOF_API_USER + "/login"
+//
+//let MOF_URL_LOGOUT = _MOF_API_USER + "/login/logout"
+//
+//let MOF_URL_THIRD_CHECK = _MOF_API_USER + "/login/third"
+//
+//let MOF_URL_THIRD_BIND = _MOF_API_USER + "/third"
+//
+//let MOF_URL_LOGIN_SWITCH = _MOF_API_USER + "/login/device"
+//
+//let MOF_URL_USER_TRANSFER = _MOF_API_USER + "/mobile"
+//
+//let MOF_URL_PHONE_CHECK = _MOF_API_USER + "/exist"
+//
+//let MOF_URL_APP_VERSION = _MOF_API_USER + "/versions/new"
+//
+//let MOF_URL_AGROAL_TOKEN = _MOF_API_USER + "/agora/token"
+//
+//let MOF_URL_AGROAL_RTMTOKEN = _MOF_API_USER + "/agora/rtm/token"

@@ -8,6 +8,7 @@
 
 import UIKit
 
-class NKClient: NSObject {
-
+public class NKClient: NSObject {
+    public static var sharedInstance = NKClient()
+    public var udid:String?
 }

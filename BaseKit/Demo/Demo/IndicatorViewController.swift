@@ -12,7 +12,7 @@ class IndicatorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("f7f7f7")
+        self.view.backgroundColor = .hex("f7f7f7")
         self.navigationItem.barColor = UIColor.systemTeal
         self.view.activityIndicatorView.style = self.style
         self.view.showActivityIndicator()

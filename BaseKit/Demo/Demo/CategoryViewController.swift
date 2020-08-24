@@ -8,28 +8,28 @@
 
 import UIKit
 class CategoryViewController: UIViewController {
-    var bar = BKCategroyBar()
+    var bar = BKCategoryBar()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .Hex("a7a7f7")
+        self.view.backgroundColor = .hex("a7a7f7")
         // Do any additional setup after loading the view.
-        let item1 = BKCategroyItem(title: "纯文字")
-        let item2 = BKCategroyItem(title: "普通状态",selectedTitle: "选中状态")
-        let item3 = BKCategroyItem(image: UIImage(named: "contact_icon_sex"))
-        let item4 = BKCategroyItem(image: UIImage(named: "contact_icon_sex"),selectedImage:UIImage(named: "contact_icon_male"))
+        let item1 = BKCategoryItem(title: "纯文字")
+        let item2 = BKCategoryItem(title: "普通状态",selectedTitle: "选中状态")
+        let item3 = BKCategoryItem(image: UIImage(named: "contact_icon_sex"))
+        let item4 = BKCategoryItem(image: UIImage(named: "contact_icon_sex"),selectedImage:UIImage(named: "contact_icon_male"))
         
-        let item5 = BKCategroyItem(title: "文字+图片")
+        let item5 = BKCategoryItem(title: "文字+图片")
         item5.image = UIImage(named: "contact_icon_sex")
         
-        let item6 = BKCategroyItem(title: "普通状态文字+图片",selectedTitle: "选中状态文字+图片")
+        let item6 = BKCategoryItem(title: "普通状态文字+图片",selectedTitle: "选中状态文字+图片")
         item6.image = UIImage(named: "contact_icon_sex")
         item6.selectedImage = UIImage(named: "contact_icon_male")
 
-        let item7 = BKCategroyItem(title: "分类7")
-        let item8 = BKCategroyItem(title: "分类8")
+        let item7 = BKCategoryItem(title: "分类7")
+        let item8 = BKCategoryItem(title: "分类8")
 
-        bar = BKCategroyBar(items: [item1,item2,item3,item4,item5,item6,item7,item8])
+        bar = BKCategoryBar(items: [item1,item2,item3,item4,item5,item6,item7,item8])
         bar.backgroundColor = .clear
         bar.setFont(UIFont.boldSystemFont(ofSize: 15), state: .selected)
         bar.setTitleColor(.gray, state: .normal)
@@ -108,12 +108,14 @@ class CategoryViewController: UIViewController {
             bar.selectedMaskView?.image  = UIImage(named: "btn_ad_02")
         case 2:
             bar.selectedMaskView?.backgroundColor = .black
-            bar.selectedMaskStyle = .humpBackground(color: .systemGreen)
+            (bar.selectedMaskView as? BKCategoryBarSelectedBackgroundView)?.humpFillColor = .systemGreen
+            bar.selectedMaskStyle = .humpBackground
         case 3:
-            bar.selectedMaskStyle = .humpBackground(color: .systemGreen)
+            (bar.selectedMaskView as? BKCategoryBarSelectedBackgroundView)?.humpFillColor = .systemGreen
+            bar.selectedMaskStyle = .humpBackground
             bar.selectedMaskView?.image  = UIImage(named: "btn_ad_02")
         case 4:
-            bar.selectedMaskStyle = .without
+            bar.selectedMaskStyle = .none
         default:
             break
         }
